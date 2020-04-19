@@ -1,0 +1,29 @@
+BasedOnStyle: "LLVM"
+IndentWidth: 4
+---
+Language: Cpp
+ColumnLimit: 120
+DerivePointerAlignment: false
+PointerAlignment: Left
+SpacesInSquareBrackets: false
+UseTab: false
+AllowShortIfStatementsOnASingleLine: true
+IndentCaseLabels: false
+ConstructorInitializerIndentWidth: 8
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: false
+  AfterFunction: false
+  AfterClass: false
+  AfterControlStatement: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+NamespaceIndentation: Inner
+ContinuationIndentWidth: 4
+IndentWidth: 4
+AccessModifierOffset: -4

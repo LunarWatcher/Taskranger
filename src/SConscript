@@ -1,0 +1,14 @@
+Import("env")
+
+# Glob in sources 
+sources = env.Glob("taskranger/*.cpp")
+sources += env.Glob("taskranger/input/*.cpp")
+
+# Link src 
+env.appendSourcePath("#src/")
+
+# The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
+# Shell aliases can be manually added if necessary. 
+exe = env.Program("taskranger", sources)
+
+Return("exe")

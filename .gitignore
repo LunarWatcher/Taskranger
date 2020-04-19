@@ -1,0 +1,11 @@
+# Build ignores
+
+.sconsign.dblite
+build
+
+# YCM ignores
+
+conan_ycm_flags.json
+
+/env/
+/venv/
