@@ -7,5 +7,9 @@ build
 
 conan_ycm_flags.json
 
+# Ignore virtualenv 
 /env/
 /venv/
+
+# Ignore core dumps 
+/core 

@@ -28,8 +28,8 @@ flags = [
 ]
 
 def DirectoryOfThisScript():
-  return os.path.dirname( os.path.abspath( __file__ ) )
-
+  return os.path.dirname(os.path.abspath( __file__ ))
+print(DirectoryOfThisScript())
 # Config load 
 
 # Load static flags 
@@ -37,7 +37,8 @@ if os.path.isfile(DirectoryOfThisScript() + "/staticinclude.txt"):
     with open(DirectoryOfThisScript() + "/staticinclude.txt", "r") as f:
         lines = f.readlines()
         for line in lines:
-            flags.append(line)
+            flags.append(line.replace("\n", ""))
+
 
 # Load conan flags
 if os.path.isfile(DirectoryOfThisScript() + "/conan_ycm_flags.json"):

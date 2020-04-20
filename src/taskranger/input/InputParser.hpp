@@ -10,8 +10,8 @@
 namespace taskranger {
 
 /**
- * Handles the input parsing core 
- */ 
+ * Handles the input parsing core
+ */
 class InputParser {
 private:
     static const inline std::regex labelRegex = std::regex{"^([a-z]+:[^ $].*?)", std::regex_constants::icase };
@@ -23,9 +23,8 @@ public:
      */
     std::shared_ptr<InputData> parseInput(int argc, const char* args[]);
 
-    
 };
 
 }
 
-#endif 
+#endif

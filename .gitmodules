@@ -1,3 +1,6 @@
 [submodule "SConsStandard"]
 	path = SConsStandard
 	url = git@github.com:LunarWatcher/SConsStandard.git
+[submodule "tabulate"]
+	path = tabulate
+	url = git@github.com:p-ranav/tabulate.git

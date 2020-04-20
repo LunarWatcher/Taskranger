@@ -1,21 +1,16 @@
-#include <iostream>
 #include <vector>
 #include <string>
 
 #include "input/InputParser.hpp"
 #include "taskranger/input/InputData.hpp"
+#include "taskranger/commands/Commands.hpp"
 
 int main(int argc, const char* argv[]) {
 
     taskranger::InputParser parser;
     std::shared_ptr<taskranger::InputData> input = parser.parseInput(argc, argv);
 
-    std::cout << "Printing arguments.." << std::endl;
-    for (auto& [k, v] : input->tokens) {
-        std::cout << k << ": " << v << std::endl;
-    }
+    taskranger::Commands commands;
+    commands.forward(input);
 
-    for (auto& tag : input->tags) {
-        std::cout << tag << std::endl;
-    }
 }
