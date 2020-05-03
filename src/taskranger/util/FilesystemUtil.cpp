@@ -24,14 +24,6 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     // Other paths should work themselves out
     if (rawPath.at(0) != '~') return rawPath;
 
-    // used later to normalize the paths back to whichever system-default is used.
-    std::string separator =
-#if defined(__WIN32) || defined(__WIN64)
-        "\\";
-#else
-        "/";
-#endif
-
     std::optional<std::string> username;
     std::string remainingPath;
 
