@@ -1,11 +1,11 @@
 #ifndef TASKRANGER_INPUT_PARSING_HPP
 #define TASKRANGER_INPUT_PARSING_HPP
 
-#include <string>
-#include <vector>
+#include "InputData.hpp"
 #include <memory>
 #include <regex>
-#include "InputData.hpp"
+#include <string>
+#include <vector>
 
 namespace taskranger {
 
@@ -14,7 +14,11 @@ namespace taskranger {
  */
 class InputParser {
 private:
-    static const inline std::regex labelRegex = std::regex{"^([a-z]+:[^ $].*?)", std::regex_constants::icase };
+    /**
+     * Label and filter regex. 
+     */
+    static const inline std::regex labelRegex = std::regex{"^([0-9a-z\\.]+:[^ $].*)", std::regex_constants::icase};
+
 public:
     InputParser();
 
@@ -22,9 +26,8 @@ public:
      * Parses the command line input to usable tokens
      */
     std::shared_ptr<InputData> parseInput(int argc, const char* args[]);
-
 };
 
-}
+} // namespace taskranger
 
 #endif

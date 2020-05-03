@@ -1,9 +1,9 @@
-#include <vector>
 #include <string>
+#include <vector>
 
 #include "input/InputParser.hpp"
-#include "taskranger/input/InputData.hpp"
 #include "taskranger/commands/Commands.hpp"
+#include "taskranger/input/InputData.hpp"
 
 int main(int argc, const char* argv[]) {
 
@@ -12,5 +12,4 @@ int main(int argc, const char* argv[]) {
 
     taskranger::Commands commands;
     commands.forward(input);
-
 }

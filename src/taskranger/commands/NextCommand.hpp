@@ -11,7 +11,7 @@ public:
 
     }
     ~NextCommand() = default;
-    virtual void run(std::shared_ptr<InputData> input) override;
+    void run(std::shared_ptr<InputData> input) override;
 };
 
 }

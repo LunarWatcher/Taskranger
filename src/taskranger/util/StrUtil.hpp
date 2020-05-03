@@ -7,8 +7,9 @@
 namespace taskranger {
 namespace Util {
 
-    inline void splitString(std::string input, const std::string& delimiter, std::vector<std::string>& out,
+    inline std::vector<std::string> splitString(std::string input, const std::string& delimiter,
                             int limit = -1) {
+        std::vector<std::string> out;
         size_t pos = 0;
         std::string token;
         int count = 0;
@@ -19,9 +20,11 @@ namespace Util {
             count++;
             if (count == limit) {
                 out.push_back(input);
-                return;
+                break;
             }
         }
+
+        return out;
     }
 
 } // namespace Util

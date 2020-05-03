@@ -1,7 +1,9 @@
 # Build ignores
 
+.sconf_temp
 .sconsign.dblite
 build
+config.log
 
 # YCM ignores
 

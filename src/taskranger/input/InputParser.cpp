@@ -25,19 +25,6 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
         return data;
     }
 
-    /*
-      A note on various formats:
-      field:value   - NOTE: can contain quotes ("")
-      plain text
-      +tag
-      All of the above are currently supported. Additionally, there's the format
-      for filters. Whether this ends up being:
-         filter.mode (example: expires.today)
-      or a good 'ol command line flag:
-         --filter=mode (example: --expires=today)
-      is TBD at a later time, when these are actually necessary.
-     */
-
     // Identify the command
     // Taskranger uses a rigid structure on commands vs. arguments to avoid parsing guesses
     // For an instance, taken the input:
@@ -55,7 +42,6 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
 
     std::string subCommand = words[0];
     words.erase(words.begin());
-    std::cout << "Subcommand: " << subCommand << std::endl;
 
     // Static keys:
     // 1. subcommand - the invoked subcommand
@@ -81,8 +67,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             continue;
         if (std::regex_search(word, InputParser::labelRegex)){
             // Label of some type
-            std::vector<std::string> value;
-            Util::splitString(word, ":", value, 1);
+            std::vector<std::string> value = Util::splitString(word, ":", 1);
 
             tokens[value[0]] = value[1];
 
@@ -96,11 +81,16 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             tags.push_back(word);
         } else {
             if (!completedWord) {
-                currentToken += word + " ";
+                // Whitespace guarded to prevent accidental trailing spaces
+                // for no reason what so ever. 
+                if (isInWord)
+                    currentToken += " ";
+                currentToken += word;
+
                 if (!isInWord)
                     isInWord = true;
             }
-            // Exit case; if it's the last letter, it's time to abort anyway
+            // Exit case; if it's the last word, it's time to abort anyway
             if (i != words.size() - 1)
                 continue;
         }

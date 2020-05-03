@@ -1,7 +1,8 @@
 from SConsStandard import EnvMod
-import os 
+import os
 
 env = EnvMod.getEnvironment()
+env.withConan()
 
 # Minor patch for asan
 env.environment['ENV']['ASAN_OPTIONS'] = 'halt_on_error=0;detect_leaks=0'
