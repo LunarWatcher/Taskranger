@@ -8,10 +8,6 @@ namespace taskranger {
 
 /**
  * This may have performance issues over time
- *
- * TODO for later: improve performance to make this blazingly fast.
- * An idea behind splitting it up alone is to reduce the size of what
- * it has to load to work properly..
  */
 class JSONDatabase {
 private:

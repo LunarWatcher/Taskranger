@@ -14,7 +14,6 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
     std::shared_ptr<nlohmann::json> ptr = std::make_shared<nlohmann::json>();
     std::string path = databaseFolder + databaseName;
 
-    std::cout << path << std::endl;
     if (std::filesystem::exists(path)) {
         std::ifstream stream(path);
         if (!stream) {

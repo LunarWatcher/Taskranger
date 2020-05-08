@@ -18,7 +18,6 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     // Convert all backslashes to forward slashes for processing (fuck you Windows)
     std::string rawPath = std::regex_replace(inputPath, std::regex("\\\\"), "/");
 
-    std::cout << "# Expanding: " << rawPath << std::endl;
     // In order to universally support paths without doing a hacky if-check elsewhere,
     // this just returns the path itself if it isn't a home path.
     // Other paths should work themselves out
