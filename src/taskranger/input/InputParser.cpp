@@ -44,8 +44,8 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
     words.erase(words.begin());
 
     // Static keys:
-    // 1. subcommand - the invoked subcommand
-    // 2. content    - string content
+    // 1. subcommand  - the invoked subcommand
+    // 2. description - string content
     // Content may or may not be present. Aside these, there are static
     // labels associated with specific values, but these are TBD at a
     // later convenience.
@@ -62,7 +62,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
     std::string currentToken;
 
     for (unsigned long i = 0; i < words.size(); i++) {
-        auto& word = words[i];
+        std::string word = words[i];
         if (word.length() == 0)
             continue;
         if (std::regex_search(word, InputParser::labelRegex)){
@@ -70,7 +70,6 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             std::vector<std::string> value = Util::splitString(word, ":", 1);
 
             tokens[value[0]] = value[1];
-
         } else if (word.at(0) == '+') {
             // We have a tag!
             // Caveat: this cannot detect:
@@ -79,10 +78,19 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             // > +"some thing"
             // because of the way shells convert quotes into strings or whatever *shrug*
             tags.push_back(word);
+        } else if (word.at(0) == '@') {
+            // We have a project!
+            data->project = word;
         } else {
+            // Because both @ and + can result in parsing issues, this tries to detect
+            // when the first char is a backslash.
+            // This may potentially have unwanted side-effects, and may be removed
+            // if it's determined that the side-effects outweigh the benefits.
+            if (word.at(0) == '\\' && word.size() > 1 && word.at(1) != word.at(0))
+                word = word.substr(1);
             if (!completedWord) {
                 // Whitespace guarded to prevent accidental trailing spaces
-                // for no reason what so ever. 
+                // for no reason what so ever.
                 if (isInWord)
                     currentToken += " ";
                 currentToken += word;
@@ -98,7 +106,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
         if (isInWord) {
             isInWord = false;
             completedWord = true;
-            tokens["content"] = currentToken;
+            tokens["description"] = currentToken;
         }
     }
 

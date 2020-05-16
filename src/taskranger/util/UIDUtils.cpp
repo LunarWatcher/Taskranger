@@ -17,15 +17,15 @@ std::string uuid::generateUuidV4() {
     for (int i = 0; i < 30; i++) {
         if (i == 8 || i == 18) {
             ss << "-";
-        } else if (i == 12)
+        } else if (i == 12) {
             ss << "-4";
-        else if (i == 15)
+        } else if (i == 15) {
             ss << "-" << distrib2(gen);
+        }
         ss << distrib(gen);
     }
 
     return ss.str();
 }
 
-
-}
+} // namespace taskranger

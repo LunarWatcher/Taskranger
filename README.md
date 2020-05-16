@@ -24,8 +24,17 @@ The only requirements for this project are:
 * Python 3
 * [SCons](https://scons.org/) and [Conan](https://conan.io)
 
+Additionally, the use of `<filesystem>` adds additional requirements to the stdlib
+* Linux (GCC, Clang): libstdc++-8-dev or newer
+* Linux, Mac (Clang): libc++-7-dev or newer
+* Windows (MSVC): MSVC STL 15.7 or newer
+
+The stdlib makes or breaks the code. Also note that even if your compiler is C++17 compliant, the stdlib might not be up to date and cause compilation to fail anyway.
+
+---
+
 While I currently only compile and build on Linux with Clang, it should be able to run on other operating systems with other compilers. If not, open an issue and I'll look into it.
 
-VirtualEnv is highly recommended for installing SCons and Conan on Linux. Run `. ./init.sh` ([the leading dot is important](https://stackoverflow.com/a/16011496/6296561)) to set it up automatically, or do it yourself. The point being, you need both SCons and Conan in a working state to build the project.
+VirtualEnv is highly recommended for installing SCons and Conan on Linux, and especially if your distro pushes two versions of Python on you. Run `. ./init.sh` ([the leading dot is important](https://stackoverflow.com/a/16011496/6296561)) to set it up automatically, or do it yourself. The point being, you need both SCons and Conan in a working state to build the project.
 
 Conan grabs the other dependencies.

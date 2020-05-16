@@ -8,7 +8,7 @@ namespace taskranger {
 
 void AddCommand::run(std::shared_ptr<InputData> input) {
     auto& tokens = input->tokens;
-    if (tokens.find("content") == tokens.end()) {
+    if (tokens.find("description") == tokens.end()) {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
             << "You need to add a message to the todo"
@@ -28,6 +28,8 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     // the former task 3 becomes task 2. This being the add command does not deal with that.
     // It counts the amount of items and generates an ID equivalent to the size plus 1.
     // This also means IDs aren't zero-indexed
+    // As a bonus, IDs aren't explicitly declared. This variable exists for documentation,
+    // and for the "created task" comment. The ID is actually computed from the task's position in the vector.
     int id = database.getDatabase()->size() + 1;
     // But this is pretty useless after, and for various post-completion purposes, the tasks
     // also get a unique identifier.
@@ -39,7 +41,12 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     std::string uuid = uuid::generateUuidV4();
 
     mod["uuid"] = uuid;
-    mod["id"] = id;
+    // Inject the project
+    if (input->project != "")
+        mod["project"] = input->project;
+    if (input->tags.size() > 0)
+        mod["tags"] = input->tags;
+
     // TODO at a later point: add the time of the task's creation
     (*database.getDatabase()).push_back(mod);
     database.commit();

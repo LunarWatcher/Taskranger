@@ -15,7 +15,7 @@ namespace taskranger {
 class InputParser {
 private:
     /**
-     * Label and filter regex. 
+     * Label/filter regex.
      */
     static const inline std::regex labelRegex = std::regex{"^([0-9a-z\\.]+:[^ $].*)", std::regex_constants::icase};
 
