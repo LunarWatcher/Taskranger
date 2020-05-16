@@ -1,5 +1,10 @@
 Import("env")
 
+
+with env.configure() as config:
+    config.test("CheckCXX")
+    config.configureFilesystem()
+
 # Glob in sources
 # okay, fine, it's not exactly the prettiest approach, but the other alternatives require implementing
 # a recursive glob function, and I have no idea how. Definitely high on the list, in my defense. 
@@ -12,10 +17,6 @@ sources += env.Glob("taskranger/data/*.cpp")
 # Link src
 env.appendSourcePath("#src/")
 env.appendSourcePath("#tabulate/include")
-
-with env.configure() as config:
-    config.test("CheckCXX")
-    config.configureFilesystem();
 
 # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
 # Shell aliases can be manually added if necessary. 
