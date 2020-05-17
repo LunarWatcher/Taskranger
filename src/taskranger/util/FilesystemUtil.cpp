@@ -51,7 +51,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     // the path.
 
     std::string homePath = "";
-#if defined(__WIN32) || defined(__WIN64)
+#if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
         auto home = getenv("HOME");

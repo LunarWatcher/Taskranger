@@ -21,11 +21,10 @@ namespace Util {
             input.erase(0, pos + delimiter.length());
             count++;
             if (count == limit) {
-                out.push_back(input);
                 break;
             }
         }
-
+        out.push_back(input);
         return out;
     }
 

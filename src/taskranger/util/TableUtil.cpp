@@ -6,9 +6,11 @@
 namespace taskranger {
 
 tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<std::string, int> keyPriority) {
-
+    // TODO: Stress-test this in actual cases and cap the size
     tabulate::Table table;
     // clang-format off
+    // Clear the edges for a slightly slicker feel.
+    // (Borders don't make sense for this specific table)
     table.format()
         .border_top("")
         .border_bottom("")
@@ -33,6 +35,8 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
         }
     }
 
+    // Sorts the keys by priority. Unprioritized ones are sorted slightly randomly, but hopefully consistently.
+    // possibly stupid code
     std::sort(keys.begin(), keys.end(), [&keyPriority = keyPriority](const auto& rawA, const auto& rawB) -> bool {
         auto a = std::get<std::string>(rawA);
         auto b = std::get<std::string>(rawB);
@@ -52,13 +56,15 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
     });
 
     table.add_row(keys);
-    int descIdx = 0;
+    // Modify the description to stay narrow.
+    // This might need to be tweaked based on terminal width.
+    // See TermUtils.hpp for a function that gets the cols (width)
+    // of the terminal.
     for (auto& cell : table.row(0)) {
         if (cell.get_text() == "description") {
             cell.format().width(60);
             break;
         }
-        descIdx++;
     }
 
     table[0].format().font_style({tabulate::FontStyle::underline});
@@ -74,10 +80,10 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
             }
         }
         table.add_row(row);
-        
     }
+    // Minor hack; the index is required, but the table class doesn't expose
+    // any sizes, or have index-based access.
     size_t idx = 0;
-
     for (auto& row : table) {
         // grey is black according to the source code.
         // Stupid as fuck, but what can ya do?

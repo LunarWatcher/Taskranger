@@ -11,7 +11,6 @@
 namespace taskranger {
 
 void NextCommand::run(std::shared_ptr<InputData> input) {
-    typedef std::variant<std::string, tabulate::Table> GarbageType;
     JSONDatabase database("active.json");
 
     if (database.getDatabase()->size() == 0) {
@@ -23,7 +22,13 @@ void NextCommand::run(std::shared_ptr<InputData> input) {
     tabulate::Table table;
     auto& taskVec = *database.getDatabase();
     auto filteredJson = TaskFilter::filterTasks(taskVec, input, { "uuid" });
-    std::cout << TableUtil::renderTasks(filteredJson, {{"id", 1}, {"description", 2}})<< std::endl;;
+    if (filteredJson.size())
+        std::cout << TableUtil::renderTasks(filteredJson, {{"id", 1}, {"description", 2}}) << "\n\n";
+    // clang-format off
+    std::cout
+        << filteredJson.size() << " tasks found."
+        << std::endl;
+    // clang-format on
 }
 
 } // namespace taskranger

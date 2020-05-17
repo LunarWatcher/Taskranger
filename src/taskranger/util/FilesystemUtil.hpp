@@ -11,7 +11,7 @@
 // Windows is the easiest one to detect.
 // Basically, this first clause applies for everything that isn't Windows,
 // which should be able to use these.
-#if !defined(__WIN32) && !defined(__WIN64)
+#if !defined(_WIN32) && !defined(_WIN64)
 #include <pwd.h>
 // Used for getuid
 #include <unistd.h>
