@@ -1,5 +1,9 @@
 # Taskranger
 
+| --- | --- |
+| Linux and Mac | Windows |
+| [![Build Status](https://travis-ci.com/LunarWatcher/Taskranger.svg?branch=master)](https://travis-ci.com/LunarWatcher/Taskranger) | [![Build status](https://ci.appveyor.com/api/projects/status/ho4wmgl8lddu7hy7?svg=true)](https://ci.appveyor.com/project/LunarWatcher/taskranger) |
+
 Taskranger is yet another CLI-based task manager.
 
 (DISCLAIMER: the program hasn't come far enough to actually do anything meaningful. Come back in 6-8)

@@ -3,6 +3,7 @@
 #include <filesystem>
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
+#include "taskranger/exceptions/Exceptions.hpp"
 
 namespace taskranger {
 
@@ -22,8 +23,8 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
                 << ANSIFeature::FOREGROUND << 9
                 << "Failed to open a database that should exist: "
                 << path << ". Are the permissions incorrect?" << ANSIFeature::CLEAR
-                << std::endl;
-            return;
+                << "\n";
+            throw PermissionError("#0: failed to open existing database");
         }
         stream >> *ptr;
     }
@@ -43,7 +44,8 @@ void JSONDatabase::commit() {
         printer
             << ANSIFeature::FOREGROUND << 9
             << "Failed to open the file. Are the permissions correct?"
-            << ANSIFeature::CLEAR << std::endl;
+            << ANSIFeature::CLEAR
+            << "\n";
         return;
     }
     stream << *database;

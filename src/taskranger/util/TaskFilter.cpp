@@ -39,7 +39,7 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
                 if (idx > rawInput.size()) {
                     ColorPrinter printer;
                     printer << ANSIFeature::FOREGROUND << 9 << "Error: attempted to query ID " << idx
-                            << " when there's only " << rawInput.size() << " tasks." << std::endl;
+                            << " when there's only " << rawInput.size() << " tasks.\n";
                 }
                 // the idx is in a standard human counting system (the first item is 1).
                 // the array access index still starts at 0, so 1 needs to be subtracted
@@ -49,7 +49,7 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             } catch (std::out_of_range) {
                 ColorPrinter printer;
                 printer << ANSIFeature::FOREGROUND << 9 << "Error: Invalid ID: " << id << ANSIFeature::CLEAR
-                        << std::endl;
+                    << "\n";
             }
         }
     } else {

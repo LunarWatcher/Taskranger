@@ -67,7 +67,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
                     printer << ANSIFeature::FOREGROUND << 9
                         << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
                         << ANSIFeature::CLEAR
-                        << std::endl;
+                        << "\n";
                     return "";
                 }
                 homePath = homeDrive + getenv("HOMEPATH");
@@ -83,8 +83,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
             << " Due to Windows having a very limited API for expanding user paths, and it relies on environment "
             << "variables and assumptions, me (the developer), has decided to not implement ~user expansion on Windows. "
             << "I cannot easily test it, nor can I find any reassuring information for a universal pattern I can use. "
-            << "Replace your path with an absolute path instead. An implementation for this feature may be available in the future."
-            << std::endl;
+            << "Replace your path with an absolute path instead. An implementation for this feature may be available in the future.\n";
     }
 #else
     /*
@@ -131,7 +130,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9 << "Failed to expand the user path for " << rawPath
                 << ANSIFeature::CLEAR << ". The system seems to think you don't exist. "
-                << "Please specify the path to use - don't abbreviate it with ~." << std::endl;
+                << "Please specify the path to use - don't abbreviate it with ~.\n";
         return "";
     } else if (homePath == "")
         homePath = passwdPtr->pw_dir;

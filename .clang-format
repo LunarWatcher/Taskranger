@@ -2,7 +2,7 @@ BasedOnStyle: "LLVM"
 IndentWidth: 4
 ---
 Language: Cpp
-ColumnLimit: 120
+ColumnLimit: 80
 DerivePointerAlignment: false
 PointerAlignment: Left
 SpacesInSquareBrackets: false
@@ -11,6 +11,14 @@ AllowShortIfStatementsOnASingleLine: true
 IndentCaseLabels: false
 ConstructorInitializerIndentWidth: 8
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+AlignAfterOpenBracket: DontAlign
+BinPackArguments: true
+BinPackParameters: true
+
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterEnum: false
@@ -27,3 +35,5 @@ NamespaceIndentation: Inner
 ContinuationIndentWidth: 4
 IndentWidth: 4
 AccessModifierOffset: -4
+
+# vim:ft=yaml

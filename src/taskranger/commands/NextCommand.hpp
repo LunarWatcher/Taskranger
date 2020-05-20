@@ -7,13 +7,11 @@ namespace taskranger {
 
 class NextCommand : public Command {
 public:
-    NextCommand() : Command("next") {
-
-    }
+    NextCommand() : Command("next") {}
     ~NextCommand() = default;
     void run(std::shared_ptr<InputData> input) override;
 };
 
-}
+} // namespace taskranger
 
 #endif

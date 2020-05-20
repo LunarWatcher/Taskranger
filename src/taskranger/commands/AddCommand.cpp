@@ -11,8 +11,7 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     if (tokens.find("description") == tokens.end()) {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
-            << "You need to add a message to the todo"
-            << std::endl;
+            << "You need to add a message to the todo.\n";
         return;
     }
 
@@ -50,7 +49,7 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     // TODO at a later point: add the time of the task's creation
     (*database.getDatabase()).push_back(mod);
     database.commit();
-    std::cout << "Successfully created task " << id  << "."<< std::endl;
+    std::cout << "Successfully created task " << id  << ".\n";
 }
 
 }

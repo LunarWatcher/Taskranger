@@ -14,7 +14,7 @@ void InputData::removeTokens(const std::vector<std::string>& invalidFields) {
                 << " is not valid in this context, and it has been dropped."
                 << " If you believe this to be a mistake, open an issue on GitHub: "
                 << "https://github.com/lunarwatcher/taskranger"
-                << std::endl;
+                << "\n";
         }
     }
 }

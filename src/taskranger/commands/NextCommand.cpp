@@ -15,19 +15,25 @@ void NextCommand::run(std::shared_ptr<InputData> input) {
 
     if (database.getDatabase()->size() == 0) {
         ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9 << "No tasks found." << ANSIFeature::CLEAR << std::endl;
+        // clang-format off
+        printer
+            << ANSIFeature::FOREGROUND << 9
+            << "No tasks found."
+            << ANSIFeature::CLEAR
+            << "\n";
+        // clang-format on
         return;
     }
 
     tabulate::Table table;
     auto& taskVec = *database.getDatabase();
-    auto filteredJson = TaskFilter::filterTasks(taskVec, input, { "uuid" });
+    auto filteredJson = TaskFilter::filterTasks(taskVec, input, {"uuid"});
     if (filteredJson.size())
         std::cout << TableUtil::renderTasks(filteredJson, {{"id", 1}, {"description", 2}}) << "\n\n";
     // clang-format off
     std::cout
         << filteredJson.size() << " tasks found."
-        << std::endl;
+        << "\n";
     // clang-format on
 }
 
