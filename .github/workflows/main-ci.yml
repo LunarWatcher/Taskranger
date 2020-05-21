@@ -76,6 +76,7 @@ jobs:
         conan profile new --detect $CXX
         profile=$CXX scons
     - name: Run
+      run: |
         ./build/${{ matrix.folder }}.64bit.dbg/src/bin/taskranger
   build-windows:
     # Because Windows doesn't like the other kids
@@ -88,9 +89,15 @@ jobs:
     - name: Install dependencies
       run: |
         python3 -m pip install scons conan
-    - name: build:
-      conan profile new --detect default
-      scons
+    - name: Build
+      # Use the default profile instead of a custom specified one, because I have no idea
+      # what version of MSVC is used. It's not listed on the "installed software" page
+      # Not sure if I can do this either, or if it needs a special workflow included to
+      # work at all.
+      run: |
+        conan profile new --detect default
+        scons
     - name: Run
-      ./build/msvc.windows.64bit.dbg/src/bin/taskranger
+      run: |
+        ./build/msvc.windows.64bit.dbg/src/bin/taskranger
 
