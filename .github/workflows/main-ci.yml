@@ -40,7 +40,7 @@ jobs:
           - g++-9-ubuntu
           - clang++-9-ubuntu
           - clang++-10-macos
-          - msvc-idontevenfuckingknow-windows
+
         include:
           # This contains the actual definition of usable stuff for each configuration.
           # This can also include packages in the future, if I can find out 
@@ -49,23 +49,15 @@ jobs:
             os: ubuntu-latest
             compiler: g++-9
             folder: gcc.posix
-            pip: ""
           - config: clang++-9-ubuntu
             os: ubuntu-latest
             compiler: clang++-9
             folder: clang.posix
-            pip: ""
           - config: clang++-10-macos
             os: macos-latest
             compiler: clang++
             folder: clang.darwin
-            pip: ""
-          - config: msvc-idontevenfuckingknow-windows
-            os: windows-latest
-            compiler: cl
-            folder: msvc.windows
-            pip: "wheel"
-            
+
     # The OS to run on
     runs-on: ${{ matrix.os }}
     
@@ -77,11 +69,28 @@ jobs:
     - uses: actions/setup-python@v2
     - name: Install dependencies
       run: |
-        python -m pip install ${{ matrix.pip }} scons conan
+        python -m pip install scons conan
     - name: Build
       run: |
         export CXX=${{ matrix.compiler }}
         conan profile new --detect $CXX
         profile=$CXX scons
+    - name: Run
         ./build/${{ matrix.folder }}.64bit.dbg/src/bin/taskranger
+  build-windows:
+    # Because Windows doesn't like the other kids
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - uses: actions/setup-python@v2
+    - name: Install dependencies
+      run: |
+        python3 -m pip install scons conan
+    - name: build:
+      conan profile new --detect default
+      scons
+    - name: Run
+      ./build/msvc.windows.64bit.dbg/src/bin/taskranger
 
