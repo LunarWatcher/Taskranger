@@ -20,6 +20,11 @@ jobs:
     strategy:
       matrix:
         compiler: [g++-9, clang++-9]
+        include:
+          - compiler: g++-9
+            folder: gcc
+          - compiler: clang++-9
+            folder: clang
     steps:
     - uses: actions/checkout@v2
       with:
@@ -34,5 +39,5 @@ jobs:
         export CXX=${{ matrix.compiler }}
         conan profile new --detect $CXX
         profile=$CXX scons
-        ./build/${CXX}.posix.64bit.dbg/src/bin/taskranger
+        ./build/${{ matrix.folder }}.posix.64bit.dbg/src/bin/taskranger
         
