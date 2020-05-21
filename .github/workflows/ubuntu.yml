@@ -31,7 +31,7 @@ jobs:
       env:
         CXX: ${{ matrix.compiler }}
       run: |
-        conan profile create --detect $CXX
+        conan profile new --detect $CXX
         profile=$CXX scons
         ./build/${CXX}.posix.64bit.dbg/src/bin/taskranger
         
