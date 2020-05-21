@@ -85,10 +85,9 @@ namespace Util {
             [](const std::string& id) -> unsigned long long {
                 try {
                     return std::stoull(id);
-                } catch (std::invalid_argument) {
+                } catch (std::invalid_argument&) {
                     // Silently fail dead IDs.
                     // This might not be the best idea.
-                std::cout << "bad girl! >:C" << std::endl;
                     return 0;
                 }
             });

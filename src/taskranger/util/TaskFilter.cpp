@@ -3,6 +3,7 @@
 #include "taskranger/util/StrUtil.hpp"
 #include <algorithm>
 #include <cstring>
+#include <stdexcept>
 
 namespace taskranger {
 
@@ -46,7 +47,7 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
                 // from the ID
                 reworked.push_back(rawInput.at(idx - 1));
                 reworked.back()["id"] = idx;
-            } catch (std::out_of_range) {
+            } catch (std::invalid_argument&) {
                 ColorPrinter printer;
                 printer << ANSIFeature::FOREGROUND << 9 << "Error: Invalid ID: " << id << ANSIFeature::CLEAR
                     << "\n";
