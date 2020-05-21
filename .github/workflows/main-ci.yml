@@ -49,18 +49,22 @@ jobs:
             os: ubuntu-latest
             compiler: g++-9
             folder: gcc.posix
+            pip: ""
           - config: clang++-9-ubuntu
             os: ubuntu-latest
             compiler: clang++-9
             folder: clang.posix
+            pip: ""
           - config: clang++-10-macos
             os: macos-latest
-            compiler: clang++-10
+            compiler: clang++
             folder: clang.darwin
+            pip: ""
           - config: msvc-idontevenfuckingknow-windows
             os: windows-latest
             compiler: cl
             folder: msvc.windows
+            pip: "wheel"
             
     # The OS to run on
     runs-on: ${{ matrix.os }}
@@ -73,7 +77,7 @@ jobs:
     - uses: actions/setup-python@v2
     - name: Install dependencies
       run: |
-        python -m pip install scons conan
+        python -m pip install ${{ matrix.pip }} scons conan
     - name: Build
       run: |
         export CXX=${{ matrix.compiler }}
