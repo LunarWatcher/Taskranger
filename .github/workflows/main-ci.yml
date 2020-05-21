@@ -1,0 +1,83 @@
+#  _____ _                         _               ___ ___               _      _   
+# |_   _| |_  ___    _ __  __ _ __| |_ ___ _ _    / __|_ _|   ___ __ _ _(_)_ __| |_ 
+#   | | | ' \/ -_)  | '  \/ _` (_-<  _/ -_) '_|  | (__ | |   (_-</ _| '_| | '_ \  _|
+#   |_| |_||_\___|  |_|_|_\__,_/__/\__\___|_|     \___|___|  /__/\__|_| |_| .__/\__|
+#                                                                         |_|       
+# 
+# This file contains the master CI script. This is in charge of doing the CI testing
+# against pull requests and pushed commits to the master branch.
+# This also runs against several operating systems and compilers, but it doesn't do
+# other major versions. This is mainly because installing additional compilers
+# would end up taking more time than the build itself, and because there's relatively
+# few compilers that actually supports C++17, and specifically some of the requirements
+# for this project. This includes <filesystem>, but it's not just limited to that.
+#
+# This is very experimental, and will evolve whenever I figure out how I do shit.
+# Build with confusion, <3, yaml, and that euphoria when shit finally starts
+# to fucking work :D
+
+# Defines a CI workflow
+name: CI
+
+# ... which is run when:
+on:
+  # ... something is pushed to one or more branches, or;
+  push:
+    branches: [ master ]
+  # ... a PR is made to one or more branches.
+  pull_request:
+    branches: [ master ]
+
+# When the trigger conditions are met, run the jobs
+jobs:
+  # This job installs the base dependencies.
+  build:
+    # Contains the build matrix, and yes, it's a bit of a clusterfuck
+    strategy:
+      matrix:
+        # Config: contains the system setup. 
+        config: 
+          - g++-9-ubuntu
+          - clang++-9-ubuntu
+          - clang++-10-macos
+          - msvc-idontevenfuckingknow-windows
+        include:
+          # This contains the actual definition of usable stuff for each configuration.
+          # This can also include packages in the future, if I can find out 
+          # how GH Actions "if" works. /shrug
+          - config: g++-9-ubuntu
+            os: ubuntu-latest
+            compiler: g++-9
+            folder: gcc.posix
+          - config: clang++-9-ubuntu
+            os: ubuntu-latest
+            compiler: clang++-9
+            folder: clang.posix
+          - config: clang++-10-macos
+            os: macos-latest
+            compiler: clang++-10
+            folder: clang.darwin
+          - config: msvc-idontevenfuckingknow-windows
+            os: windows
+            compiler: cl
+            folder: msvc.windows
+            
+    # The OS to run on
+    runs-on: ${{ matrix.os }}
+    
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    # Set up python; requires for SCons and Conan
+    - uses: actions/setup-python@v2
+    - name: Install dependencies
+      run: |
+        python -m pip install scons conan
+    - name: Build
+      run: |
+        export CXX=${{ matrix.compiler }}
+        conan profile new --detect $CXX
+        profile=$CXX scons
+        ./build/${{ matrix.folder }}.64bit.dbg/src/bin/taskranger
+
