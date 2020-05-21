@@ -58,7 +58,7 @@ jobs:
             compiler: clang++-10
             folder: clang.darwin
           - config: msvc-idontevenfuckingknow-windows
-            os: windows
+            os: windows-latest
             compiler: cl
             folder: msvc.windows
             
