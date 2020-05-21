@@ -99,5 +99,5 @@ jobs:
         scons
     - name: Run
       run: |
-        ./build/msvc.windows.64bit.dbg/src/bin/taskranger
+        ./build/msvc.win32.64bit.dbg/src/bin/taskranger
 
