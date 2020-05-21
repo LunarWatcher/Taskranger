@@ -61,8 +61,8 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
                 auto homeDrive = getenv("HOMEDRIVE");
                 if (!homeDrive)
                     homeDrive = ""; // Let the OS resolve the path
-                auto homePath = getenv("HOMEPATH");
-                if (!homePath) {
+                auto envHomePath = getenv("HOMEPATH");
+                if (!envHomePath) {
                     ColorPrinter printer;
                     printer << ANSIFeature::FOREGROUND << 9
                         << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
@@ -70,7 +70,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
                         << "\n";
                     return "";
                 }
-                homePath = std::string(homeDrive) + std::string(homePath);
+                homePath = std::string(homeDrive) + std::string(envHomePath);
             } else
                 homePath = userProfile;
         } else
