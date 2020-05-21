@@ -70,7 +70,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
                         << "\n";
                     return "";
                 }
-                homePath = homeDrive + getenv("HOMEPATH");
+                homePath = std::string(*homeDrive) + *homePath;
             } else
                 homePath = userProfile;
         } else
