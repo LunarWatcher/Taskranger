@@ -56,10 +56,10 @@ jobs:
             compiler: clang++-9
             ccompiler: clang-9
             folder: clang.posix
-          - config: clang++-10-macos
+          - config: clang++-11-macos
             os: macos-latest
-            compiler: clang++
-            ccompiler: clang
+            compiler: clang++-11
+            ccompiler: clang-11
             folder: clang.darwin
           - config: msvc-bundled-windows
             os: windows-latest
