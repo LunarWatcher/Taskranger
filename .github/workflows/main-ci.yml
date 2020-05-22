@@ -58,8 +58,8 @@ jobs:
             folder: clang.posix
           - config: clang++-11-macos
             os: macos-latest
-            compiler: clang++-11
-            ccompiler: clang-11
+            compiler: clang++
+            ccompiler: clang
             folder: clang.darwin
           - config: msvc-bundled-windows
             os: windows-latest
