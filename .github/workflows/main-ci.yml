@@ -71,15 +71,14 @@ jobs:
         submodules: recursive
     # Set up python; requires for SCons and Conan
     - uses: actions/setup-python@v2
+    - name: Set env
+      run: |
+        echo "::set-env name=CXX::${{ matrix.compiler }}"
     - uses: LunarWatcher/install-conan@master
-      with:
-        CXX: ${{ matrix.compiler }}
     - name: Install dependencies
       run: |
         python -m pip install scons
     - name: Build
-      env:
-        CXX: ${{ matrix.compiler }}
       run: |
         scons
     - name: Run
