@@ -49,18 +49,22 @@ jobs:
           - config: g++-9-ubuntu
             os: ubuntu-latest
             compiler: g++-9
+            ccompiler: gcc-9
             folder: gcc.posix
           - config: clang++-9-ubuntu
             os: ubuntu-latest
             compiler: clang++-9
+            ccompiler: clang-9
             folder: clang.posix
           - config: clang++-10-macos
             os: macos-latest
             compiler: clang++
+            ccompiler: clang
             folder: clang.darwin
           - config: msvc-bundled-windows
             os: windows-latest
-            compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe 
+            compiler: cl
+            ccompiler: cl
             folder: msvc.win32
     # The OS to run on
     runs-on: ${{ matrix.os }}
@@ -74,6 +78,7 @@ jobs:
     - name: Set env
       run: |
         echo "::set-env name=CXX::${{ matrix.compiler }}"
+        echo "::set-env name=CC::${{ matrix.ccompiler }}"
     - uses: LunarWatcher/install-conan@master
     - name: Install dependencies
       run: |
