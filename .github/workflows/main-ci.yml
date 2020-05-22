@@ -39,7 +39,7 @@ jobs:
         config: 
           - g++-9-ubuntu
           - clang++-9-ubuntu
-          - clang++-10-macos
+          - clang++-11-macos
           - msvc-bundled-windows
 
         include:
