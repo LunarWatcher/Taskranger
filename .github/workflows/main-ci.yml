@@ -80,6 +80,7 @@ jobs:
       run: |
         echo "::set-env name=CXX::${{ matrix.compiler }}"
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
+        ${{ matrix.compiler }} --version
     # Install conan
     - uses: LunarWatcher/install-conan@master
     # Install SCons
