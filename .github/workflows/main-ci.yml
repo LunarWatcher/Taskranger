@@ -76,7 +76,7 @@ jobs:
     # Set up python; requires for SCons and Conan
     - uses: actions/setup-python@v2
     - name: Set env
-      if: matrix.os != windows-latest
+      if: matrix.os != 'windows-latest'
       run: |
         echo "::set-env name=CXX::${{ matrix.compiler }}"
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
