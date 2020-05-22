@@ -74,7 +74,6 @@ jobs:
     - uses: LunarWatcher/install-conan@master
       with:
         CXX: ${{ matrix.compiler }}
-    - name: export
     - name: Install dependencies
       run: |
         python -m pip install scons
