@@ -74,19 +74,8 @@ jobs:
     - name: Build release
       run: |
         scons debug=False
-    # Create the release here
-    # This might be tricky re: race conditions, but we'll see.
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: ${{ steps.release_type.outputs.isRelease }}
-
+    # This is currently not supported. Stored for future use:
+    # prerelease: ${{ steps.release_type.outputs.isRelease }}
     - name: Upload assets
       uses: svenstaro/upload-release-action@v1-release
       with:
