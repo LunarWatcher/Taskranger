@@ -10,12 +10,14 @@ This is created as an alternative to Taskwarrior, with changes to some of the co
 
 ## Q&A
 
-* Q: Why make another task manager?
+### Q: Why make another task manager?
+
 A: Because I had several problems with Taskwarrior that were labeled wontfix, or issues that have been around for a long time without being fixed. Still loving the idea behind Taskwarrior, why not make something that works for me?
 
 Also because the vast majority of the other task managers out there either lack flexibility (Any.do, Todoist, etc.), or ended up being too simple (todo.txt).
 
-* Q: Why code from scratch?
+### Q: Why code from scratch?
+
 A: Because rewriting code (as in forking and modifying) will arguably take more time than rewriting from scratch. Additionally, it lets me rewrite mechanics from scratch, instead of reworking code I don't understand how works.
 
 ## Dev setup
