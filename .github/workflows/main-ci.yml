@@ -60,7 +60,7 @@ jobs:
             folder: clang.darwin
           - config: msvc-bundled-windows
             os: windows-latest
-            compiler: cl 
+            compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Tools/MSVC/14.25.28610/bin/Hostx64/x64/cl.exe 
             folder: msvc.win32
     # The OS to run on
     runs-on: ${{ matrix.os }}
