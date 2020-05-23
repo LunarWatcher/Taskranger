@@ -3,6 +3,8 @@
 #include <regex>
 #include <stdexcept>
 
+#define _CRT_SECURE_NO_WARNINGS
+
 namespace taskranger {
 
 std::string FilesystemUtil::joinPath(const std::string& a, const std::string& b) {
@@ -54,16 +56,16 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 #if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
-        auto home = windoze::windowsGetEnv("HOME");
+        auto home = std::getenv("HOME");
         if (!home) {
-            auto userProfile = windoze::windowsGetEnv("USERPROFILE");
+            auto userProfile = std::getenv("USERPROFILE");
 
             if (!userProfile) {
-                auto homeDrive = windoze::windowsGetEnv("HOMEDRIVE");
+                auto homeDrive = std::getenv("HOMEDRIVE");
 
                 if (!homeDrive)
                     homeDrive = ""; // Let the OS resolve the path
-                auto envHomePath = windoze::windowsGetEnv("HOMEPATH");
+                auto envHomePath = std::getenv("HOMEPATH");
 
                 if (!envHomePath) {
                     ColorPrinter printer;
