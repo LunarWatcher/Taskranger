@@ -100,10 +100,12 @@ jobs:
     - name: Build
       run: |
         scons
-    - name: Test
+    - name: Build test
       # The test doesn't strictly have to be run separately, but as the test base grows,
       # I'd like to be able to separate test failure from build failure
       run: |
         scons test
-
+    - name: Run test
+      run: |
+        ./build/{folder}.64bit.dbg/tests/bin/tests
 
