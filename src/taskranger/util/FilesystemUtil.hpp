@@ -26,10 +26,10 @@ inline const char* windowsGetEnv(const char* name) {
     std::wstring buff;
     buff.resize(buffSize);
 
-    bufferSize = GetEnvironmentVariableA(name, buffer, buffSize);
-    if(!bufferSize)
+    buffSize = GetEnvironmentVariableA(name, buffer, buffSize);
+    if(!buffSize)
         return nullptr;
-    buff.resize(bufferSize);
+    buff.resize(buffSize);
     return buff;
 }
 
