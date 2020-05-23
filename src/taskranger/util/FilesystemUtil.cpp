@@ -78,7 +78,6 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
                 homePath = userProfile;
         } else
             homePath = home;
-        std::cout << homePath << std::endl;
     } else {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
