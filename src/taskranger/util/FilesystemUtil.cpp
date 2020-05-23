@@ -56,30 +56,24 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 #if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
-        auto home = std::getenv("HOME");
-        if (!home) {
-            auto userProfile = std::getenv("USERPROFILE");
+        auto userProfile = windoze::safeGet("USERPROFILE");
 
-            if (!userProfile) {
-                auto homeDrive = std::getenv("HOMEDRIVE");
+        if (userProfile == "") {
+            auto homeDrive = windoze::safeGet("HOMEDRIVE");
+            auto envHomePath = windoze::safeGet("HOMEPATH");
 
-                if (!homeDrive)
-                    homeDrive = ""; // Let the OS resolve the path
-                auto envHomePath = std::getenv("HOMEPATH");
-
-                if (!envHomePath) {
-                    ColorPrinter printer;
-                    printer << ANSIFeature::FOREGROUND << 9
-                        << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
-                        << ANSIFeature::CLEAR
-                        << "\n";
-                    return "";
-                }
-                homePath = std::string(homeDrive) + std::string(envHomePath);
-            } else
-                homePath = userProfile;
+            if (envHomePath == "") {
+                ColorPrinter printer;
+                printer << ANSIFeature::FOREGROUND << 9
+                    << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
+                    << ANSIFeature::CLEAR
+                    << "\n";
+                return "";
+            }
+            homePath = homeDrive + envHomePath;
         } else
-            homePath = home;
+            homePath = userProfile;
+
     } else {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
@@ -113,19 +107,12 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     struct passwd* passwdPtr = nullptr;
 
     if (!username.has_value()) {
-        auto home = std::getenv("HOME");
-        if (home != nullptr) {
-            // okay, we good.
-            // This path leads to the current user home.
-            // There are some caveats, and it's not always set, however. For this reason, there's a fallback clause.
-            homePath = home;
-        } else {
-            // Fallback; HOME isn't anways defined on UNIX-based systems.
-            // This is a complicated clusterfuck in terms of when it's there
-            // and when it isn't, so this is implemented here as a universal
-            // fallback. This should work:tm:
-            passwdPtr = getpwuid(getuid());
-        }
+        // While the home environment variable can be used,
+        // getenv() is considered insecure
+        // secure_getenv is only available on GNU/Linux, and not Mac.
+        // Mac is still compatible with the rest of the code,
+        // so no environment variables are used
+        passwdPtr = getpwuid(getuid());
     } else {
         auto& name = *username;
         passwdPtr = getpwnam(name.c_str());
