@@ -64,7 +64,7 @@ jobs:
     - name: Set type
       id: release_type
       run: |
-        echo "::set-output name=isRelease::${{ !endsWith(github.ref, a) }}"
+        echo "::set-output name=isRelease::${{ !endsWith(github.ref, 'a') }}"
     # Install conan
     - uses: LunarWatcher/install-conan@master
     # Install SCons
