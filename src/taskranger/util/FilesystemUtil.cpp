@@ -57,14 +57,14 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
         auto home = getenv("HOME");
         if (!home) {
             auto userProfile = getenv("USERPROFILE");
-            std::cout << userProfile << std::endl;
+
             if (!userProfile) {
                 auto homeDrive = getenv("HOMEDRIVE");
-                std::cout << homeDrive << std::endl;
+
                 if (!homeDrive)
                     homeDrive = ""; // Let the OS resolve the path
                 auto envHomePath = getenv("HOMEPATH");
-                std::cout << envHomePath << std::endl;
+
                 if (!envHomePath) {
                     ColorPrinter printer;
                     printer << ANSIFeature::FOREGROUND << 9
@@ -78,6 +78,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
                 homePath = userProfile;
         } else
             homePath = home;
+        std::cout << homePath << std::endl;
     } else {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
