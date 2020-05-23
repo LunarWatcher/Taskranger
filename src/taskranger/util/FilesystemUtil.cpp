@@ -85,7 +85,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
             << "Replace your path with an absolute path instead. An implementation for this feature may be available in the future.\n";
         return "";
     }
-    homePath = std::regex_replace(homePath, std::regex("/"), "\\")
+    homePath = std::regex_replace(homePath, std::regex("/"), "\\");
 
 #else
     /*

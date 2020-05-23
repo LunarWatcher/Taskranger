@@ -83,13 +83,6 @@ jobs:
         echo "::set-env name=CXX::${{ matrix.compiler }}"
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
         ${{ matrix.compiler }} --version
-    - name: Windows set env
-      if: matrix.os == 'windows-latest'
-      shell: cmd
-      run: |
-        echo ::set-env name=USERPROFILE::%USERPROFILE%
-        echo ::set-env name=HOMEDRIVE::%HOMEDRIVE%
-        echo ::set-env name=HOMEPATH::%HOMEPATH%
 
     # Install conan
     - uses: LunarWatcher/install-conan@master
@@ -105,7 +98,3 @@ jobs:
       # I'd like to be able to separate test failure from build failure
       run: |
         scons test
-    - name: Run test
-      run: |
-        ./build/${{ matrix.folder }}.64bit.dbg/tests/bin/tests
-
