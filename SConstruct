@@ -5,7 +5,7 @@ from sys import platform
 env = EnvMod.getEnvironment()
 env.withConan()
 # Required to fix testing
-if (platform == "win32")
+if (platform == "win32"):
     env.includeSysVars("USERPROFILE", "HOMEDRIVE", "HOMEPATH")
 
 # Minor patch for asan
