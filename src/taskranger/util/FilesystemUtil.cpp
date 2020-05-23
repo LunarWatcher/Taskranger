@@ -83,7 +83,10 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
             << "variables and assumptions, me (the developer), has decided to not implement ~user expansion on Windows. "
             << "I cannot easily test it, nor can I find any reassuring information for a universal pattern I can use. "
             << "Replace your path with an absolute path instead. An implementation for this feature may be available in the future.\n";
+        return "";
     }
+    homePath = std::regex_replace(homePath, std::regex("/"), "\\")
+
 #else
     /*
      The unixes are more complicated, but the API should be universal and make
