@@ -107,5 +107,5 @@ jobs:
         scons test
     - name: Run test
       run: |
-        ./build/{folder}.64bit.dbg/tests/bin/tests
+        ./build/${{ matrix.folder }}.64bit.dbg/tests/bin/tests
 
