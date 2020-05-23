@@ -16,8 +16,6 @@
 // Used for getuid
 #include <unistd.h>
 #include <sys/types.h>
-#else
-
 #endif
 
 // required for getenv. Allegedly cross-platform
