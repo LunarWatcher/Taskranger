@@ -4,9 +4,9 @@
 
 Taskranger is yet another CLI-based task manager.
 
-(DISCLAIMER: the program hasn't come far enough to actually do anything meaningful. Come back in 6-8)
-
 This is created as an alternative to Taskwarrior, with changes to some of the core task management principles in mind. This is also written entirely from scratch, in pure C++ (looking aside the build system and package manager) to make sure it offers exactly the right experience.
+
+**Status**: Usable, lacks a significant amount of features.
 
 ## Q&A
 

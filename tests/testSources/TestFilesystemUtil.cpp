@@ -22,3 +22,11 @@ TEST_CASE("Testing path expansion", "[FilesystemUtilPath]") {
     REQUIRE(std::regex_match(expansion, match, regexObj));
 }
 
+#ifdef _WIN32
+
+TEST_CASE("Fail", "[fail]") {
+    REQUIRE(false)
+}
+
+#endif
+
