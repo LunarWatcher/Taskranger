@@ -8,7 +8,7 @@ env.withConan()
 env.environment['ENV']['ASAN_OPTIONS'] = 'halt_on_error=0;detect_leaks=0'
 
 if platform == "win32":
-    env.includeSysVars("HOMEPROFILE", "HOMEDRIVE", "HOMEPATH")
+    env.includeSysVars("USERPROFILE", "HOMEDRIVE", "HOMEPATH")
 
 # Run the executable submodule
 libtaskranger = env.SConscript("src/SConscript", variant_dir="src", duplicate = 0)
