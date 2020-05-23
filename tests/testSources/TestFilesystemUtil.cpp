@@ -25,7 +25,7 @@ TEST_CASE("Testing path expansion", "[FilesystemUtilPath]") {
 #ifdef _WIN32
 
 TEST_CASE("Fail", "[fail]") {
-    REQUIRE(false)
+    REQUIRE(false);
 }
 
 #endif
