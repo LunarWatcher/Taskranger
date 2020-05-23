@@ -22,11 +22,12 @@
 namespace windoze {
 
 inline std::string safeGet(const char* name) {
-    char* value;
-    size_t len;
+    char* value = nullptr;
+    size_t len = 0;
     errno_t err = _dupenv_s(&value, &len, name);
-    if (err)
+    if (err != 0 || value == nullptr)
         return "";
+
     std::string retVal(value);
     return retVal;
 }
