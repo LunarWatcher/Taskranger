@@ -32,6 +32,7 @@ on:
 jobs:
   # This job installs the base dependencies.
   build:
+    if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     # Contains the build matrix, and yes, it's a bit of a clusterfuck
     strategy:
       matrix:
