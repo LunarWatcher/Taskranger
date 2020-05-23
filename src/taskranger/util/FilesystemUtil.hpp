@@ -21,7 +21,7 @@
 
 namespace windoze {
 
-inline const char* windowsGetEnv(const char* name) {
+inline std::wstring windowsGetEnv(const char* name) {
     const DWORD buffSize = 65535;
     std::wstring buff;
     buff.resize(buffSize);
