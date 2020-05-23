@@ -83,14 +83,6 @@ jobs:
         echo "::set-env name=CXX::${{ matrix.compiler }}"
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
         ${{ matrix.compiler }} --version
-    - name: Fuck you Windows
-      if: matrix.os == 'windows-latest'
-      run: |
-        echo $env:HOME
-        echo $env:USERPROFILE
-        echo $env:HOMEDRIVE
-        echo $env:HOMEPATH
-        echo "Fuck you too, Windows"
     # Install conan
     - uses: LunarWatcher/install-conan@master
     # Install SCons

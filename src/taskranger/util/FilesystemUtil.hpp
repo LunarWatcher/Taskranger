@@ -16,6 +16,24 @@
 // Used for getuid
 #include <unistd.h>
 #include <sys/types.h>
+#else
+#include <windows.h>
+
+namespace windoze {
+
+inline const char* windowsGetEnv(const char* name) {
+    const DWORD buffSize = 65535;
+    std::wstring buff;
+    buff.resize(buffSize);
+
+    bufferSize = GetEnvironmentVariableA(name, buffer, buffSize);
+    if(!bufferSize)
+        return nullptr;
+    buff.resize(bufferSize);
+    return buff;
+}
+
+}
 #endif
 
 // required for getenv. Allegedly cross-platform

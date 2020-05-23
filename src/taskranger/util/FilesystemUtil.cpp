@@ -54,16 +54,16 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 #if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
-        auto home = getenv("HOME");
+        auto home = windoze::windowsGetEnv("HOME");
         if (!home) {
-            auto userProfile = getenv("USERPROFILE");
+            auto userProfile = windoze::windowsGetEnv("USERPROFILE");
 
             if (!userProfile) {
-                auto homeDrive = getenv("HOMEDRIVE");
+                auto homeDrive = windoze::windowsGetEnv("HOMEDRIVE");
 
                 if (!homeDrive)
                     homeDrive = ""; // Let the OS resolve the path
-                auto envHomePath = getenv("HOMEPATH");
+                auto envHomePath = windoze::windowsGetEnv("HOMEPATH");
 
                 if (!envHomePath) {
                     ColorPrinter printer;
