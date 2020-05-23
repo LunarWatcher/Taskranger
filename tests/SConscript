@@ -1,0 +1,16 @@
+Import("env")
+Import("libtr")
+
+localEnv = env.Clone()
+localEnv.withLibraries(libtr, append = False)
+localEnv.appendSourcePath("#Catch2/single_include")
+localEnv.appendSourcePath("#tests/testSources")
+
+testSources = [
+    "testSources/runner.cpp",
+    "testSources/TestFilesystemUtil.cpp"
+]
+
+tests = localEnv.Program("tests", testSources)
+
+Return("tests")

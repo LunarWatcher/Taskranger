@@ -3,6 +3,8 @@
 #include <regex>
 #include <stdexcept>
 
+#define _CRT_SECURE_NO_WARNINGS
+
 namespace taskranger {
 
 std::string FilesystemUtil::joinPath(const std::string& a, const std::string& b) {
@@ -54,27 +56,24 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 #if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
-        auto home = getenv("HOME");
-        if (!home) {
-            auto userProfile = getenv("USERPROFILE");
-            if (!userProfile) {
-                auto homeDrive = getenv("HOMEDRIVE");
-                if (!homeDrive)
-                    homeDrive = ""; // Let the OS resolve the path
-                auto envHomePath = getenv("HOMEPATH");
-                if (!envHomePath) {
-                    ColorPrinter printer;
-                    printer << ANSIFeature::FOREGROUND << 9
-                        << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
-                        << ANSIFeature::CLEAR
-                        << "\n";
-                    return "";
-                }
-                homePath = std::string(homeDrive) + std::string(envHomePath);
-            } else
-                homePath = userProfile;
+        auto userProfile = windoze::safeGet("USERPROFILE");
+
+        if (userProfile == "") {
+            auto homeDrive = windoze::safeGet("HOMEDRIVE");
+            auto envHomePath = windoze::safeGet("HOMEPATH");
+
+            if (envHomePath == "") {
+                ColorPrinter printer;
+                printer << ANSIFeature::FOREGROUND << 9
+                    << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
+                    << ANSIFeature::CLEAR
+                    << "\n";
+                return "";
+            }
+            homePath = homeDrive + envHomePath;
         } else
-            homePath = home;
+            homePath = userProfile;
+
     } else {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
@@ -84,7 +83,11 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
             << "variables and assumptions, me (the developer), has decided to not implement ~user expansion on Windows. "
             << "I cannot easily test it, nor can I find any reassuring information for a universal pattern I can use. "
             << "Replace your path with an absolute path instead. An implementation for this feature may be available in the future.\n";
+        return "";
     }
+    // Force forward slashes
+    homePath = std::regex_replace(homePath, std::regex("\\\\"), "/");
+
 #else
     /*
      The unixes are more complicated, but the API should be universal and make
@@ -108,19 +111,12 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     struct passwd* passwdPtr = nullptr;
 
     if (!username.has_value()) {
-        auto home = std::getenv("HOME");
-        if (home != nullptr) {
-            // okay, we good.
-            // This path leads to the current user home.
-            // There are some caveats, and it's not always set, however. For this reason, there's a fallback clause.
-            homePath = home;
-        } else {
-            // Fallback; HOME isn't anways defined on UNIX-based systems.
-            // This is a complicated clusterfuck in terms of when it's there
-            // and when it isn't, so this is implemented here as a universal
-            // fallback. This should work:tm:
-            passwdPtr = getpwuid(getuid());
-        }
+        // While the home environment variable can be used,
+        // getenv() is considered insecure
+        // secure_getenv is only available on GNU/Linux, and not Mac.
+        // Mac is still compatible with the rest of the code,
+        // so no environment variables are used
+        passwdPtr = getpwuid(getuid());
     } else {
         auto& name = *username;
         passwdPtr = getpwnam(name.c_str());

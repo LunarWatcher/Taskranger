@@ -1,6 +1,5 @@
 Import("env")
 
-
 with env.configure() as config:
     config.test("CheckCXX")
     config.configureFilesystem()
@@ -8,8 +7,8 @@ with env.configure() as config:
 # Glob in sources
 # okay, fine, it's not exactly the prettiest approach, but the other alternatives require implementing
 # a recursive glob function, and I have no idea how. Definitely high on the list, in my defense. 
-sources = env.Glob("taskranger/*.cpp")
-sources += env.Glob("taskranger/input/*.cpp")
+
+sources = env.Glob("taskranger/input/*.cpp")
 sources += env.Glob("taskranger/commands/*.cpp")
 sources += env.Glob("taskranger/util/*.cpp")
 sources += env.Glob("taskranger/data/*.cpp")
@@ -18,8 +17,20 @@ sources += env.Glob("taskranger/data/*.cpp")
 env.appendSourcePath("#src/")
 env.appendSourcePath("#tabulate/include")
 
+
 # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
 # Shell aliases can be manually added if necessary. 
-exe = env.Program("taskranger", sources)
+lib = env.Library("taskranger", sources)
+# preLibs = env.environment["LIBS"]
 
-Return("exe")
+# if (type(preLibs) is str):
+    # cache = preLibs
+    # preLibs = [ ]
+    # preLibs.append(cache)
+# preLibs = [lib] + preLibs
+exeEnv = env.Clone()
+# The library needs to be prepended for static linking
+exeEnv.withLibraries(lib, append = False)
+exe = exeEnv.Program("taskranger", env.Glob("taskranger/*.cpp"))
+
+Return("lib")

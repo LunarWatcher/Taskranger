@@ -60,6 +60,7 @@ void DoneCommand::run(std::shared_ptr<InputData> input) {
     ColorPrinter printer;
     printer << ANSIFeature::FOREGROUND << 10
         << "Marked " << complete << " task" << (complete == 1 ? "" : "s") << " as completed."
+        << ANSIFeature::CLEAR
         << std::endl;
 }
 

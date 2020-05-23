@@ -11,7 +11,8 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     if (tokens.find("description") == tokens.end()) {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9
-            << "You need to add a message to the todo.\n";
+            << "You need to add a message to the todo.\n"
+            << ANSIFeature::CLEAR;
         return;
     }
 
