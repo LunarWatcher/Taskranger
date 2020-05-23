@@ -1,5 +1,4 @@
 Import("env")
-import copy
 
 with env.configure() as config:
     config.test("CheckCXX")
@@ -21,8 +20,17 @@ env.appendSourcePath("#tabulate/include")
 
 # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
 # Shell aliases can be manually added if necessary. 
-lib = env.SharedLibrary("taskranger.lib", sources)
+lib = env.Library("taskranger", sources)
+# preLibs = env.environment["LIBS"]
 
-exe = env.Program("taskranger", env.Glob("taskranger/*.cpp"), LIBS=[lib])
+# if (type(preLibs) is str):
+    # cache = preLibs
+    # preLibs = [ ]
+    # preLibs.append(cache)
+# preLibs = [lib] + preLibs
+exeEnv = env.Clone()
+# The library needs to be prepended for static linking
+exeEnv.withLibraries(lib, append = False)
+exe = exeEnv.Program("taskranger", env.Glob("taskranger/*.cpp"))
 
 Return("lib")
