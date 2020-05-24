@@ -97,16 +97,4 @@ jobs:
       # The test doesn't strictly have to be run separately, but as the test base grows,
       # I'd like to be able to separate test failure from build failure
       run: |
-        scons test coverage=True
-    - name: Generate Linux coverage
-      if: matrix.compiler == 'g++-9'
-      run: |
-        sudo apt install -y lcov
-        lcov --capture --directory . --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' --output-file coverage.info
-    - name: Linux coverage
-      if: matrix.compiler == 'g++-9'
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./coverage.info
+        scons test
