@@ -101,6 +101,7 @@ jobs:
     - name: Generate Linux coverage
       if: matrix.os == 'ubuntu-latest'
       run: |
+        sudo apt install -y lcov
         lcov --capture --directory . --output-file coverage.info
         lcov --remove coverage.info '/usr/*' --output-file coverage.info
     - name: Linux coverage
