@@ -98,3 +98,14 @@ jobs:
       # I'd like to be able to separate test failure from build failure
       run: |
         scons test
+    - name: Generate Linux coverage
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        lcov --capture --directory . --output-file coverage.info
+        lcov --remove coverage.info '/usr/*' --output-file coverage.info
+    - name: Linux coverage
+      if: matrix.os == 'ubuntu-latest'
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        path-to-lcov: ./coverage.info
