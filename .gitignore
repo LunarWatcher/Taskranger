@@ -18,3 +18,5 @@ conan_ycm_flags.json
 
 # Ignore symlink used for easy debugging
 /task
+
+coverage.info
