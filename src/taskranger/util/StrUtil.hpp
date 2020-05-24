@@ -84,6 +84,11 @@ namespace Util {
         std::transform(strIds.begin(), strIds.end(), std::back_inserter(out),
             [](const std::string& id) -> unsigned long long {
                 try {
+                    // This saves some cycles. Drop empty strings
+                    // and return 0 for negative numbers.
+                    // stoull on negative numbers has weird behavior.
+                    if(id.length() == 0 || id.at(0) == '-')
+                        return 0;
                     return std::stoull(id);
                 } catch (std::invalid_argument&) {
                     // Silently fail dead IDs.
