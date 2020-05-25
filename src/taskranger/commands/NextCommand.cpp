@@ -10,6 +10,12 @@
 
 namespace taskranger {
 
+NextCommand::NextCommand() {
+    this->name = "next";
+    this->help = "Shows the currently active tasks.";
+    this->usage = "taskranger next <filter>";
+}
+
 void NextCommand::run(std::shared_ptr<InputData> input) {
     JSONDatabase database("active.json");
 
@@ -27,7 +33,7 @@ void NextCommand::run(std::shared_ptr<InputData> input) {
 
     tabulate::Table table;
     auto& taskVec = *database.getDatabase();
-    auto filteredJson = TaskFilter::filterTasks(taskVec, input, {"uuid"});
+    auto filteredJson = TaskFilter::filterTasks(taskVec, input, true, {"uuid"});
     if (filteredJson.size())
         std::cout << TableUtil::renderTasks(filteredJson, {{"id", 1}, {"description", 2}}) << "\n\n";
     // clang-format off

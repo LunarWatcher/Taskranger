@@ -7,7 +7,7 @@ namespace taskranger {
 
 class NextCommand : public Command {
 public:
-    NextCommand() : Command("next") {}
+    NextCommand();
     ~NextCommand() = default;
     void run(std::shared_ptr<InputData> input) override;
 };

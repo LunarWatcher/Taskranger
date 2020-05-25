@@ -9,9 +9,11 @@ namespace taskranger {
 
 class Command {
 protected:
+    // Metadata
     std::string name;
+    std::string help;
+    std::string usage;
 public:
-    Command(const std::string& name) : name(name) {}
     virtual ~Command() = default;
 
     virtual void run(std::shared_ptr<InputData> data) = 0;
@@ -19,7 +21,6 @@ public:
     const std::string& getName() {
         return this->name;
     }
-
 };
 
 }

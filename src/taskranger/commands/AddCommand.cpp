@@ -6,6 +6,12 @@
 
 namespace taskranger {
 
+AddCommand::AddCommand() {
+    this->name = "add";
+    this->help = "Adds a new task.";
+    this->usage = "taskranger add <description> <attributes>";
+}
+
 void AddCommand::run(std::shared_ptr<InputData> input) {
     auto& tokens = input->tokens;
     if (tokens.find("description") == tokens.end()) {

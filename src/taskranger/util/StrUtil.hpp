@@ -1,17 +1,41 @@
 #ifndef TASKRANGER_UTIL_STRUTIL_HPP
 #define TASKRANGER_UTIL_STRUTIL_HPP
 
+#include <cstdio>
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <sstream>
 
 namespace taskranger {
 namespace Util {
 
+    inline std::vector<std::string> splitString(std::string input, const char delimiter) {
+        if (delimiter == 0)
+            return { input };
+
+        std::vector<std::string> out;
+        std::stringstream stream(input);
+        std::string line;
+        while (getline(stream, line, delimiter)) {
+            out.push_back(line);
+        }
+        return out;
+    }
     inline std::vector<std::string> splitString(
         std::string input, const std::string& delimiter, int limit = -1) {
+        // Special case: no delimiter.
+        if (delimiter == "")
+            return { input };
+
+        // Optimize: use a stringstream instead of memory
+        // altering operations when the delimiter is a single
+        // char, and there is no limit
+        if (limit == -1 && delimiter.size() == 1)
+            return splitString(input, delimiter.at(0));
+
         std::vector<std::string> out;
         size_t pos = 0;
         std::string token;

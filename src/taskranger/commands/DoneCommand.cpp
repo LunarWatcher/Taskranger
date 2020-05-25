@@ -7,6 +7,12 @@
 
 namespace taskranger {
 
+DoneCommand::DoneCommand() {
+    this->name = "done";
+    this->help = "Marks one or more tasks as done";
+    this->help = "taskranger done <ids>";
+}
+
 void DoneCommand::run(std::shared_ptr<InputData> input) {
     auto& tokens = input->tokens;
 
