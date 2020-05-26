@@ -8,6 +8,10 @@ config.log
 # YCM ignores
 
 conan_ycm_flags.json
+staticinclude.txt
+compile_commands.json
+.ycm_extra_conf.py
+.clangd/
 
 # Ignore virtualenv
 /env/
@@ -19,4 +23,6 @@ conan_ycm_flags.json
 # Ignore symlink used for easy debugging
 /task
 
+# Not used anymore
 coverage.info
+

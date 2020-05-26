@@ -1,3 +1,11 @@
+// Note to editors:
+// This text is partially C++, but everything between
+// the start and end of the string is plain text.
+// All characters are interpreted literally, so there's
+// no need to manually escape stuff like in a regular text.
+// Newlines in the text itself are also interpreted
+// literally. What you see inside the string is what the
+// output is gonna be in the terminal
 R"RAWDEL(
 
 Welcome to the incomplete help command. This will at some point contain some useful stuff. This is not the main documentation - this just covers some of the basics. There's eventually going to be a complete documentation, covering every aspect of Taskranger. This is also going to expand whenever I find things worth adding to it.

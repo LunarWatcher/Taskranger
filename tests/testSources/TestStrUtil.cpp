@@ -4,8 +4,9 @@
 
 TEST_CASE("Splitting", "[StrSplit]") {
     const std::string raw = "this,is,a,string";
-    std::vector<std::string> output1 = taskranger::Util::splitString(raw, ",");
-    std::vector<std::string> output2 = taskranger::Util::splitString(raw, ",", 2);
+    std::vector<std::string> output1 = taskranger::StrUtil::splitString(raw, ",");
+    std::vector<std::string> output2 =
+        taskranger::StrUtil::splitString(raw, ",", 2);
 
     // Test limits
     REQUIRE(output1.size() == 4);
@@ -26,7 +27,7 @@ TEST_CASE("Conversion", "[StrConv]") {
     };
 
     std::vector<unsigned long long> outputVector = {};
-    taskranger::Util::strVecToUll(rawNums, outputVector);
+    taskranger::StrUtil::strVecToUll(rawNums, outputVector);
     REQUIRE(outputVector.size() == rawNums.size());
     for (size_t i = 0; i < outputVector.size(); i++) {
         REQUIRE(outputVector.at(i) == expected.at(i));

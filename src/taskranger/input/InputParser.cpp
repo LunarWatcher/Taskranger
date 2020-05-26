@@ -67,7 +67,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             continue;
         if (std::regex_search(word, InputParser::labelRegex)){
             // Label of some type
-            std::vector<std::string> value = Util::splitString(word, ":", 1);
+            std::vector<std::string> value = StrUtil::splitString(word, ":", 1);
 
             tokens[value[0]] = value[1];
         } else if (word.at(0) == '+') {

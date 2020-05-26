@@ -10,9 +10,10 @@
 #include <sstream>
 
 namespace taskranger {
-namespace Util {
+namespace StrUtil {
 
-    inline std::vector<std::string> splitString(std::string input, const char delimiter) {
+    inline std::vector<std::string> splitString(
+        std::string input, const char delimiter) {
         if (delimiter == 0)
             return { input };
 

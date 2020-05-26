@@ -2,6 +2,7 @@
 #include "Commands.hpp"
 #include "tabulate/table.hpp"
 #include <iostream>
+#include <memory>
 
 namespace taskranger {
 
@@ -27,7 +28,6 @@ void HelpCommand::run(std::shared_ptr<InputData>) {
     // Used to retrieve command help
     Commands& commands = *Commands::getInstance();
     this->printCommands(commands);
-
     // help.txt contains a raw string. Due to various annoying
     // issues with C++, adding the include statement to a raw
     // string here to make this statement slightly less ugly 

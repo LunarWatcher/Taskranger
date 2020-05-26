@@ -44,7 +44,7 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput,
         if (!includeIds)
             return {};
 
-        for (auto& id : Util::splitString(filters["ids"], ",")) {
+        for (auto& id : StrUtil::splitString(filters["ids"], ",")) {
             try {
                 unsigned long long idx = std::stoull(id);
                 if (idx > rawInput.size()) {

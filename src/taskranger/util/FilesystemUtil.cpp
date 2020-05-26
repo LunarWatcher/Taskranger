@@ -32,7 +32,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     // and grab the rest of the path. This is necessary to reconstruct
     // the path afterwards.
     std::string mod = rawPath.substr(1);
-    std::vector<std::string> pathSplit = Util::splitString(mod, "/", 1);
+    std::vector<std::string> pathSplit = StrUtil::splitString(mod, "/", 1);
 
     //  Parse off the username
     if (rawPath.length() >= 2 && !isSeparator(rawPath.at(1))) {

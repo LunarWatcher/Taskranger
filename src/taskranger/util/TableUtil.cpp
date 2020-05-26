@@ -76,7 +76,7 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
             if (value == task.end()) {
                 row.push_back("");
             } else {
-                row.push_back(Util::toString(*value));
+                row.push_back(StrUtil::toString(*value));
             }
         }
         table.add_row(row);

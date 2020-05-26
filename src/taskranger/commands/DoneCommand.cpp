@@ -20,14 +20,14 @@ void DoneCommand::run(std::shared_ptr<InputData> input) {
 
     if (tokens.find("description") != tokens.end()) {
         // The description ones are space separated
-        auto strIds = Util::splitString(tokens.at("description"), " ");
+        auto strIds = StrUtil::splitString(tokens.at("description"), " ");
         if (strIds.size() > 0)
-            Util::strVecToUll(strIds, ids);
+            StrUtil::strVecToUll(strIds, ids);
     }
     if (tokens.find("ids") != tokens.end()) {
-        auto strIds = Util::splitString(tokens.at("ids"), ",");
+        auto strIds = StrUtil::splitString(tokens.at("ids"), ",");
         if (strIds.size() > 0)
-            Util::strVecToUll(strIds, ids);
+            StrUtil::strVecToUll(strIds, ids);
     }
 
     if (ids.size() == 0) {
