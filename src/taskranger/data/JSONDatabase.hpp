@@ -14,13 +14,15 @@ private:
     std::string dbName;
     std::string dbFolder;
     std::shared_ptr<nlohmann::json> database;
+
 public:
     JSONDatabase(const std::string& databaseName);
 
-    void commit(); 
+    void commit();
 
-    std::shared_ptr<nlohmann::json> getDatabase() { return database; }
-
+    std::shared_ptr<nlohmann::json> getDatabase() {
+        return database;
+    }
 };
 
 } // namespace taskranger

@@ -1,0 +1,34 @@
+// Note to editors:
+// This text is partially C++, but everything between
+// the start and end of the string is plain text.
+// All characters are interpreted literally, so there's
+// no need to manually escape stuff like in a regular text.
+// Newlines in the text itself are also interpreted
+// literally. What you see inside the string is what the
+// output is gonna be in the terminal
+R"RAWDEL(
+
+Welcome to the incomplete help command. This will at some point contain some useful stuff. This is not the main documentation - this just covers some of the basics. There's eventually going to be a complete documentation, covering every aspect of Taskranger. This is also going to expand whenever I find things worth adding to it.
+
+~ Special symbols
+
+Shells interpret some characters as special symbols. These may need to be escaped appropriately, depending on your shell. Some symbols that may have a special meaning are:
+
+    " ' ! ` * ; & | \ ( )
+
+These may be escaped with quotes or a backslash:
+
+    taskranger add '; text'
+    taskranger add "; text"
+    taskranger add \; text
+
+Some shells may require different types of quotes. Moreover, some characters in some contexts are interpreted differently on a shell to shell basis. For an instance:
+
+    taskranger add "test!"
+
+in zsh is handled differently from bash. In this specific example, if you're using zsh, you'll need to escape the exclamation mark. Note that this:
+
+    taskranger add test!
+
+is valid in Bash and zsh. The point being, some characters are handled differently, and may need to be escaped. If you get weird behavior when using certain characters, try to escape it. This is something Taskranger can't help with, unfortunately.
+)RAWDEL"

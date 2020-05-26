@@ -1,3 +1,0 @@
--Itabulate/include/
--ICatch2/single_include/
--Itests/testSources/

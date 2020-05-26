@@ -23,10 +23,10 @@ name: CI
 on:
   # ... something is pushed to one or more branches, or;
   push:
-    branches: [ master ]
+    branches: [ master, develop ]
   # ... a PR is made to one or more branches.
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop ]
 
 # When the trigger conditions are met, run the jobs
 jobs:

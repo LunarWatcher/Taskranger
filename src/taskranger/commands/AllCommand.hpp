@@ -1,13 +1,13 @@
-#ifndef TASKRANGER_COMMANDS_DONECOMMAND_HPP
-#define TASKRANGER_COMMANDS_DONECOMMAND_HPP
+#ifndef TASKRANGER_COMMAND_ALLCOMMAND_HPP
+#define TASKRANGER_COMMAND_ALLCOMMAND_HPP
 
 #include "Command.hpp"
 
 namespace taskranger {
 
-class DoneCommand : public Command {
+class AllCommand : public Command {
 public:
-    DoneCommand();
+    AllCommand();
     void run(std::shared_ptr<InputData> input) override;
 };
 

@@ -7,9 +7,11 @@
 
 int main(int argc, const char* argv[]) {
 
+    using taskranger::Commands;
+
     taskranger::InputParser parser;
     std::shared_ptr<taskranger::InputData> input = parser.parseInput(argc, argv);
 
-    taskranger::Commands commands;
+    Commands& commands = *Commands::getInstance();
     commands.forward(input);
 }

@@ -3,8 +3,8 @@
 
 #include "tabulate/table.hpp"
 #include <nlohmann/json.hpp>
-#include <vector>
 #include <variant>
+#include <vector>
 
 namespace taskranger {
 
@@ -19,8 +19,8 @@ typedef std::variant<std::string, tabulate::Table> TableRow;
  */
 tabulate::Table renderTasks(nlohmann::json& renderTarget, std::map<std::string, int> keyPriority = {});
 
-}
+} // namespace TableUtil
 
-}
+} // namespace taskranger
 
 #endif

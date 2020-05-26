@@ -8,9 +8,12 @@
     class className : public std::runtime_error { \
     private: \
         const char* msg; \
+\
     public: \
         className(const char* msg) : std::runtime_error(msg), msg(msg) {} \
-        const char* what() const noexcept override { return msg; } \
+        const char* what() const noexcept override { \
+            return msg; \
+        } \
     };
 
 namespace taskranger {

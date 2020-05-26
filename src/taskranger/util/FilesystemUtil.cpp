@@ -13,7 +13,9 @@ std::string FilesystemUtil::joinPath(const std::string& a, const std::string& b)
     return a + "/" + b;
 }
 
-bool FilesystemUtil::isSeparator(const char x) { return x == '/' || x == '\\'; }
+bool FilesystemUtil::isSeparator(const char x) {
+    return x == '/' || x == '\\';
+}
 
 std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 
@@ -23,7 +25,8 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     // In order to universally support paths without doing a hacky if-check elsewhere,
     // this just returns the path itself if it isn't a home path.
     // Other paths should work themselves out
-    if (rawPath.at(0) != '~') return rawPath;
+    if (rawPath.at(0) != '~')
+        return rawPath;
 
     std::optional<std::string> username;
     std::string remainingPath;
@@ -32,7 +35,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     // and grab the rest of the path. This is necessary to reconstruct
     // the path afterwards.
     std::string mod = rawPath.substr(1);
-    std::vector<std::string> pathSplit = Util::splitString(mod, "/", 1);
+    std::vector<std::string> pathSplit = StrUtil::splitString(mod, "/", 1);
 
     //  Parse off the username
     if (rawPath.length() >= 2 && !isSeparator(rawPath.at(1))) {
@@ -43,7 +46,8 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
     } else if (rawPath.find('/') != std::string::npos) {
         // The path contains a slash.
         if (pathSplit.size() == 1) {
-            throw std::runtime_error("There is absolutely no reason for this to trigger, at all. If it is, hit Olivia with a rolled up newspaper c:");
+            throw std::runtime_error("There is absolutely no reason for this to trigger, at all. If it is, hit Olivia "
+                                     "with a rolled up newspaper c:");
         }
 
         remainingPath = pathSplit.at(1);
@@ -65,9 +69,8 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
             if (envHomePath == "") {
                 ColorPrinter printer;
                 printer << ANSIFeature::FOREGROUND << 9
-                    << "Unable to find %HOMEPATH%. Specify the path explicitly instead."
-                    << ANSIFeature::CLEAR
-                    << "\n";
+                        << "Unable to find %HOMEPATH%. Specify the path explicitly instead." << ANSIFeature::CLEAR
+                        << "\n";
                 return "";
             }
             homePath = homeDrive + envHomePath;
@@ -76,13 +79,14 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 
     } else {
         ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9
-            << "This doesn't work."
-            << ANSIFeature::CLEAR
-            << " Due to Windows having a very limited API for expanding user paths, and it relies on environment "
-            << "variables and assumptions, me (the developer), has decided to not implement ~user expansion on Windows. "
-            << "I cannot easily test it, nor can I find any reassuring information for a universal pattern I can use. "
-            << "Replace your path with an absolute path instead. An implementation for this feature may be available in the future.\n";
+        printer << ANSIFeature::FOREGROUND << 9 << "This doesn't work." << ANSIFeature::CLEAR
+                << " Due to Windows having a very limited API for expanding user paths, and it relies on environment "
+                << "variables and assumptions, me (the developer), has decided to not implement ~user expansion on "
+                   "Windows. "
+                << "I cannot easily test it, nor can I find any reassuring information for a universal pattern I can "
+                   "use. "
+                << "Replace your path with an absolute path instead. An implementation for this feature may be "
+                   "available in the future.\n";
         return "";
     }
     // Force forward slashes

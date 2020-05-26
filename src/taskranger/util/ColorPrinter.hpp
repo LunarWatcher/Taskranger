@@ -1,15 +1,15 @@
 #ifndef TASKRANGER_UTIL_COLORPRINTER_HPP
 #define TASKRANGER_UTIL_COLORPRINTER_HPP
 
-#include <iostream>
-#include <string>
-#include <sstream>
 #include <any>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 namespace taskranger {
 
 // Enable forwarding of std::endl
-typedef std::basic_ostream<char, std::char_traits<char> > CoutType;
+typedef std::basic_ostream<char, std::char_traits<char>> CoutType;
 typedef CoutType& (*StandardEndLine)(CoutType&);
 
 /**
@@ -18,7 +18,7 @@ typedef CoutType& (*StandardEndLine)(CoutType&);
 enum class ANSIFeature {
     CLEAR = 0,
     BOLD = 1,
-    ITALIC = 3, // According to Wikipedia, this is some times treated as inverse 
+    ITALIC = 3, // According to Wikipedia, this is some times treated as inverse
     UNDERLINE = 4,
     BLINK = 5,
     STRIKE = 9,
@@ -29,13 +29,12 @@ enum class ANSIFeature {
 class ColorPrinter {
 private:
     bool processing256 = false;
-public:
 
+public:
     friend ColorPrinter& operator<<(ColorPrinter& printer, ANSIFeature feature);
     friend ColorPrinter& operator<<(ColorPrinter& printer, const std::string& str);
     friend ColorPrinter& operator<<(ColorPrinter& printer, int code);
 };
-
 
 template <typename T>
 ColorPrinter& operator<<(ColorPrinter& printer, T type) {
@@ -48,6 +47,6 @@ ColorPrinter& operator<<(ColorPrinter& printer, const std::string& str);
 ColorPrinter& operator<<(ColorPrinter& printer, int code);
 ColorPrinter& operator<<(ColorPrinter& printer, StandardEndLine manip);
 
-}
+} // namespace taskranger
 
 #endif
