@@ -1,8 +1,8 @@
 #ifndef TASKRANGER_COMMANDS_ADDCOMMAND_HPP
 #define TASKRANGER_COMMANDS_ADDCOMMAND_HPP
 
-#include <iostream>
 #include "Command.hpp"
+#include <iostream>
 
 namespace taskranger {
 
@@ -12,6 +12,6 @@ public:
     void run(std::shared_ptr<InputData> input) override;
 };
 
-}
+} // namespace taskranger
 
 #endif

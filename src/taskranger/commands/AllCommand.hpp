@@ -7,10 +7,10 @@ namespace taskranger {
 
 class AllCommand : public Command {
 public:
-    AllCommand(); 
+    AllCommand();
     void run(std::shared_ptr<InputData> input) override;
 };
 
-}
+} // namespace taskranger
 
 #endif

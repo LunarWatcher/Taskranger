@@ -11,6 +11,6 @@ public:
     void run(std::shared_ptr<InputData> input) override;
 };
 
-}
+} // namespace taskranger
 
 #endif

@@ -1,8 +1,8 @@
 #include "catch2/catch.hpp"
-#include <cstdlib>
-#include <string>
-#include <regex>
 #include "taskranger/util/FilesystemUtil.hpp"
+#include <cstdlib>
+#include <regex>
+#include <string>
 
 /**
  * Tests whether or not path expansion works as expected.
@@ -21,4 +21,3 @@ TEST_CASE("Testing path expansion", "[FilesystemUtilPath]") {
     INFO("System expanded to " + expansion);
     REQUIRE(std::regex_match(expansion, match, regexObj));
 }
-

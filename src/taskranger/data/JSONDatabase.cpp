@@ -1,15 +1,16 @@
 #include "JSONDatabase.hpp"
-#include <fstream>
-#include <filesystem>
+#include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
-#include "taskranger/exceptions/Exceptions.hpp"
+#include <filesystem>
+#include <fstream>
 
 namespace taskranger {
 
 JSONDatabase::JSONDatabase(const std::string& databaseName) {
     std::string databaseFolder = "~/.taskranger"; // TODO: fix and make portable (and add config)
-    if (databaseFolder.back() != '/') databaseFolder += "/";
+    if (databaseFolder.back() != '/')
+        databaseFolder += "/";
     databaseFolder = FilesystemUtil::expandUserPath(databaseFolder);
 
     std::shared_ptr<nlohmann::json> ptr = std::make_shared<nlohmann::json>();
@@ -19,11 +20,8 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
         std::ifstream stream(path);
         if (!stream) {
             ColorPrinter printer;
-            printer
-                << ANSIFeature::FOREGROUND << 9
-                << "Failed to open a database that should exist: "
-                << path << ". Are the permissions incorrect?" << ANSIFeature::CLEAR
-                << "\n";
+            printer << ANSIFeature::FOREGROUND << 9 << "Failed to open a database that should exist: " << path
+                    << ". Are the permissions incorrect?" << ANSIFeature::CLEAR << "\n";
             throw PermissionError("#0: failed to open existing database");
         }
         stream >> *ptr;
@@ -39,13 +37,10 @@ void JSONDatabase::commit() {
         std::filesystem::create_directories(this->dbFolder);
     std::ofstream stream(this->dbFolder + this->dbName);
 
-    if(!stream) {
+    if (!stream) {
         ColorPrinter printer;
-        printer
-            << ANSIFeature::FOREGROUND << 9
-            << "Failed to open the file. Are the permissions correct?"
-            << ANSIFeature::CLEAR
-            << "\n";
+        printer << ANSIFeature::FOREGROUND << 9 << "Failed to open the file. Are the permissions correct?"
+                << ANSIFeature::CLEAR << "\n";
         return;
     }
     stream << *database;

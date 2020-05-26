@@ -13,6 +13,7 @@ protected:
     std::string name;
     std::string help;
     std::string usage;
+
 public:
     virtual ~Command() = default;
 
@@ -31,6 +32,6 @@ public:
     }
 };
 
-}
+} // namespace taskranger
 
 #endif

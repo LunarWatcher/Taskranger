@@ -10,12 +10,12 @@ namespace taskranger {
 class HelpCommand : public Command {
 private:
     void printCommands(Commands& commands);
+
 public:
     HelpCommand();
     void run(std::shared_ptr<InputData> input) override;
 };
 
-
-}
+} // namespace taskranger
 
 #endif

@@ -25,7 +25,7 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
         for (auto& [k, v] : task.items()) {
             // Because std::variant doesn't define an operator==, this is a hack to work around
             // that.
-            if (std::find_if(keys.begin(), keys.end(), [& key = k](const auto& arg) {
+            if (std::find_if(keys.begin(), keys.end(), [&key = k](const auto& arg) {
                     // The following exception should never be thrown.
                     if (!std::holds_alternative<std::string>(arg))
                         throw std::runtime_error("This is why we can't have nice things");
@@ -48,10 +48,12 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
         int valA, valB;
         if (itA != keyPriority.end())
             valA = itA->second;
-        else valA = 5;
+        else
+            valA = 5;
         if (itB != keyPriority.end())
             valB = itB->second;
-        else valB = 5;
+        else
+            valB = 5;
         return valA < valB;
     });
 
@@ -95,4 +97,3 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
 }
 
 } // namespace taskranger
-

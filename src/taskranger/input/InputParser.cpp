@@ -1,15 +1,13 @@
 #include "InputParser.hpp"
 #include "InputData.hpp"
+#include "taskranger/util/StrUtil.hpp"
 #include <iostream>
 #include <map>
-#include "taskranger/util/StrUtil.hpp"
 #include <regex>
 
 namespace taskranger {
 
-InputParser::InputParser() {
-
-}
+InputParser::InputParser() {}
 
 std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[]) {
 
@@ -65,7 +63,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
         std::string word = words[i];
         if (word.length() == 0)
             continue;
-        if (std::regex_search(word, InputParser::labelRegex)){
+        if (std::regex_search(word, InputParser::labelRegex)) {
             // Label of some type
             std::vector<std::string> value = StrUtil::splitString(word, ":", 1);
 
@@ -113,4 +111,4 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
     return data;
 }
 
-}
+} // namespace taskranger

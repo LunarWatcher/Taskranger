@@ -30,7 +30,8 @@ const nlohmann::json baseJson = {
 TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
     auto mutableCopy = baseJson;
 
-    std::shared_ptr<InputData> dataPtr = std::make_shared<InputData>();
+    std::shared_ptr<InputData> dataPtr 
+        = std::make_shared<InputData>();
     std::vector<std::string> keys = {"test", "@test"};
 
     for (auto& project : keys) {
@@ -49,7 +50,7 @@ TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
 TEST_CASE("TestFilterTags", "[TaskFilterTags]") {
     auto mutableCopy = baseJson;
     std::shared_ptr<InputData> dataPtr = std::make_shared<InputData>();
-    dataPtr->tags = { "+tag" };
+    dataPtr->tags = {"+tag"};
     nlohmann::json testTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
     REQUIRE(testTags.size() == 2);
     for (auto& task : testTags) {

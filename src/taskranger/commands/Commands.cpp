@@ -36,9 +36,7 @@ void Commands::forward(std::shared_ptr<InputData> input) {
         commands[input->tokens.at("subcommand")]->run(input);
     else {
         ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9
-                << "Command not found: " << subcommand << ".\n"
-                << ANSIFeature::CLEAR;
+        printer << ANSIFeature::FOREGROUND << 9 << "Command not found: " << subcommand << ".\n" << ANSIFeature::CLEAR;
     }
 }
 

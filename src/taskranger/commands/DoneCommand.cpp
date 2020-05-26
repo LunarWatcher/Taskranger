@@ -1,9 +1,9 @@
 #include "DoneCommand.hpp"
+#include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <functional>
 #include <stdexcept>
-#include "taskranger/data/JSONDatabase.hpp"
 
 namespace taskranger {
 
@@ -32,9 +32,7 @@ void DoneCommand::run(std::shared_ptr<InputData> input) {
 
     if (ids.size() == 0) {
         ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9
-                << "Specify some task IDs to complete." << ANSIFeature::CLEAR
-                << "\n";
+        printer << ANSIFeature::FOREGROUND << 9 << "Specify some task IDs to complete." << ANSIFeature::CLEAR << "\n";
         return;
     }
     JSONDatabase active("active.json");
@@ -64,10 +62,8 @@ void DoneCommand::run(std::shared_ptr<InputData> input) {
     active.commit();
     completed.commit();
     ColorPrinter printer;
-    printer << ANSIFeature::FOREGROUND << 10
-        << "Marked " << complete << " task" << (complete == 1 ? "" : "s") << " as completed."
-        << ANSIFeature::CLEAR
-        << std::endl;
+    printer << ANSIFeature::FOREGROUND << 10 << "Marked " << complete << " task" << (complete == 1 ? "" : "s")
+            << " as completed." << ANSIFeature::CLEAR << std::endl;
 }
 
 } // namespace taskranger

@@ -11,7 +11,7 @@ namespace taskranger {
 AllCommand::AllCommand() {
     this->name = "all";
     this->help = "Shows all the tasks, including completed ones. "
-        "For obvious reasons, this won't be able to show deleted tasks.";
+                 "For obvious reasons, this won't be able to show deleted tasks.";
     this->usage = "taskranger all <filters>";
 }
 
@@ -28,7 +28,7 @@ void AllCommand::run(std::shared_ptr<InputData> input) {
             filtered = hFiltered;
     }
     if (filtered.size() == 0) {
-        
+
         ColorPrinter printer;
         // clang-format off
         printer
@@ -40,10 +40,8 @@ void AllCommand::run(std::shared_ptr<InputData> input) {
         return;
     }
 
-    std::cout << TableUtil::renderTasks(filtered, {{"id", 1}, {"description", 2}})
-        << "\n\n";
+    std::cout << TableUtil::renderTasks(filtered, {{"id", 1}, {"description", 2}}) << "\n\n";
     std::cout << filtered.size() << " tasks found.\n";
 }
 
-}
-
+} // namespace taskranger

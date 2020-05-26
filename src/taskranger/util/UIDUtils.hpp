@@ -6,14 +6,13 @@
 namespace taskranger {
 namespace uuid {
 
-
 /**
  * Generates a random v4 UUID.
  */
 std::string generateUuidV4();
 
-}
+} // namespace uuid
 
-}
+} // namespace taskranger
 
 #endif

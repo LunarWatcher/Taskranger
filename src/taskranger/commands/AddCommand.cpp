@@ -1,7 +1,7 @@
 #include "AddCommand.hpp"
-#include "taskranger/util/ColorPrinter.hpp"
-#include "taskranger/data/JSONDatabase.hpp"
 #include "tabulate/table.hpp"
+#include "taskranger/data/JSONDatabase.hpp"
+#include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/UIDUtils.hpp"
 
 namespace taskranger {
@@ -16,9 +16,7 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     auto& tokens = input->tokens;
     if (tokens.find("description") == tokens.end()) {
         ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9
-            << "You need to add a message to the todo.\n"
-            << ANSIFeature::CLEAR;
+        printer << ANSIFeature::FOREGROUND << 9 << "You need to add a message to the todo.\n" << ANSIFeature::CLEAR;
         return;
     }
 
@@ -56,7 +54,7 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     // TODO at a later point: add the time of the task's creation
     (*database.getDatabase()).push_back(mod);
     database.commit();
-    std::cout << "Successfully created task " << id  << ".\n";
+    std::cout << "Successfully created task " << id << ".\n";
 }
 
-}
+} // namespace taskranger

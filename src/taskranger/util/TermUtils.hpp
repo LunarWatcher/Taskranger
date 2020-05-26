@@ -15,7 +15,7 @@ namespace TermUtils {
 inline int getWidth() {
 #if defined(_WIN32) || defined(_WIN64)
     // Windows likes to yell. {{{
-    CONSOLE_SCREEN_BUFFER_INFO csbi; 
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
     return csbi.srWindow.Right - csbi.srWindow.Left + 1;
     // }}}
@@ -26,8 +26,8 @@ inline int getWidth() {
 #endif
 }
 
-}
+} // namespace TermUtils
 
-}
+} // namespace taskranger
 
 #endif

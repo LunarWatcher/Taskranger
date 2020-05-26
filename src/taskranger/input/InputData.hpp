@@ -30,6 +30,6 @@ public:
     void removeInternalFields();
 };
 
-}
+} // namespace taskranger
 
 #endif

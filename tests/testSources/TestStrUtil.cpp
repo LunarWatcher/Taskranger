@@ -5,8 +5,7 @@
 TEST_CASE("Splitting", "[StrSplit]") {
     const std::string raw = "this,is,a,string";
     std::vector<std::string> output1 = taskranger::StrUtil::splitString(raw, ",");
-    std::vector<std::string> output2 =
-        taskranger::StrUtil::splitString(raw, ",", 2);
+    std::vector<std::string> output2 = taskranger::StrUtil::splitString(raw, ",", 2);
 
     // Test limits
     REQUIRE(output1.size() == 4);
@@ -19,12 +18,8 @@ TEST_CASE("Splitting", "[StrSplit]") {
 }
 
 TEST_CASE("Conversion", "[StrConv]") {
-    const std::vector<std::string> rawNums = {
-        "-14", "15", "7721678321", "42", "997321"
-    };
-    const std::vector<unsigned long long> expected = {
-        0ul, 15ul, 7721678321ul, 42ul, 997321ul
-    };
+    const std::vector<std::string> rawNums = {"-14", "15", "7721678321", "42", "997321"};
+    const std::vector<unsigned long long> expected = {0ul, 15ul, 7721678321ul, 42ul, 997321ul};
 
     std::vector<unsigned long long> outputVector = {};
     taskranger::StrUtil::strVecToUll(rawNums, outputVector);
@@ -33,4 +28,3 @@ TEST_CASE("Conversion", "[StrConv]") {
         REQUIRE(outputVector.at(i) == expected.at(i));
     }
 }
-

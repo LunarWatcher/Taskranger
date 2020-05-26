@@ -6,7 +6,7 @@ with env.configure() as config:
 
 # Glob in sources
 # okay, fine, it's not exactly the prettiest approach, but the other alternatives require implementing
-# a recursive glob function, and I have no idea how. Definitely high on the list, in my defense. 
+# a recursive glob function, and I have no idea how. Definitely high on the list, in my defense.
 
 sources = env.Glob("taskranger/input/*.cpp")
 sources += env.Glob("taskranger/commands/*.cpp")
@@ -19,7 +19,7 @@ env.appendSourcePath("#tabulate/include")
 
 
 # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
-# Shell aliases can be manually added if necessary. 
+# Shell aliases can be manually added if necessary.
 lib = env.Library("taskranger", sources)
 # preLibs = env.environment["LIBS"]
 
