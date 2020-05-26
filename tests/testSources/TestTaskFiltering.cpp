@@ -30,8 +30,7 @@ const nlohmann::json baseJson = {
 TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
     auto mutableCopy = baseJson;
 
-    std::shared_ptr<InputData> dataPtr 
-        = std::make_shared<InputData>();
+    std::shared_ptr<InputData> dataPtr = std::make_shared<InputData>();
     std::vector<std::string> keys = {"test", "@test"};
 
     for (auto& project : keys) {
