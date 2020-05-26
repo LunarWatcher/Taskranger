@@ -10,6 +10,7 @@
 TEST_CASE("Testing path expansion", "[FilesystemUtilPath]") {
     std::string expansion = taskranger::FilesystemUtil::expandUserPath("~/.taskranger/");
     std::string matchRegex;
+
 #if defined(_WIN32) || defined(_WIN64)
     matchRegex = "(\\w:)?/users/[\\w \\.-]+/.taskranger/";
 #else
