@@ -3,6 +3,7 @@
 #include "DoneCommand.hpp"
 #include "NextCommand.hpp"
 #include "taskranger/commands/AllCommand.hpp"
+#include "taskranger/commands/HelpCommand.hpp"
 #include "taskranger/commands/VersionCommand.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include <iostream>
@@ -26,6 +27,7 @@ Commands::Commands() {
 
     // Meta
     this->commands["version"] = std::make_shared<VersionCommand>();
+    this->commands["help"] = std::make_shared<HelpCommand>();
 }
 
 void Commands::forward(std::shared_ptr<InputData> input) {

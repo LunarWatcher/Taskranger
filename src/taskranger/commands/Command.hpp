@@ -21,6 +21,14 @@ public:
     const std::string& getName() {
         return this->name;
     }
+
+    const std::string& getHelp() {
+        return this->help;
+    }
+
+    const std::string& getUsage() {
+        return usage;
+    }
 };
 
 }

@@ -1,0 +1,17 @@
+R"RAWDEL(
+
+Welcome to the incomplete help command. This will at some point contain some useful stuff. This is not the main documentation - this just covers some of the basics. There's eventually going to be a complete documentation, covering every aspect of Taskranger. This is also going to expand whenever I find things worth adding to it.
+
+~ Special symbols
+
+Shells interpret some characters as special symbols. These may need to be escaped appropriately, depending on your shell. Some symbols that may have a special meaning are:
+
+    " ' ! ` * ; & | \ ( )
+
+These may be escaped with quotes or a backslash:
+
+    taskranger add 'task!'
+    taskranger add task\!
+
+Some shells may require different types of quotes. To escape the exclamation mark in zsh, only single quotes can be used. With double quotes, it still interprets the exclapation mark as a special character. Meanwhile, Bash doesn't treat the character as a special character, which means it doesn't need to be escaped. What you need to escape, and how, depends on your shell. Some type of quotes and backslashes, however, are generally used in most shells.
+)RAWDEL"
