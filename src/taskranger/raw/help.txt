@@ -10,8 +10,17 @@ Shells interpret some characters as special symbols. These may need to be escape
 
 These may be escaped with quotes or a backslash:
 
-    taskranger add 'task!'
-    taskranger add task\!
+    taskranger add '; text'
+    taskranger add "; text"
+    taskranger add \; text
 
-Some shells may require different types of quotes. To escape the exclamation mark in zsh, only single quotes can be used. With double quotes, it still interprets the exclapation mark as a special character. Meanwhile, Bash doesn't treat the character as a special character, which means it doesn't need to be escaped. What you need to escape, and how, depends on your shell. Some type of quotes and backslashes, however, are generally used in most shells.
+Some shells may require different types of quotes. Moreover, some characters in some contexts are interpreted differently on a shell to shell basis. For an instance:
+
+    taskranger add "test!"
+
+in zsh is handled differently from bash. In this specific example, if you're using zsh, you'll need to escape the exclamation mark. Note that this:
+
+    taskranger add test!
+
+is valid in Bash and zsh. The point being, some characters are handled differently, and may need to be escaped. If you get weird behavior when using certain characters, try to escape it. This is something Taskranger can't help with, unfortunately.
 )RAWDEL"
