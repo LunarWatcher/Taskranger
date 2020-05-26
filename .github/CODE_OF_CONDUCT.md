@@ -1,4 +1,4 @@
-Anthony_B_Russo10Today# Contributor Covenant Code of Conduct
+# Contributor Covenant Code of Conduct
 
 ## Our Pledge
 
