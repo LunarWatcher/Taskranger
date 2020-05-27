@@ -41,7 +41,8 @@ jobs:
       - uses: actions/setup-python@v2
       - name: Run hooks
         run: |
-          sudo apt-add-repository deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main" >> /etc/apt/sources.list
           sudo apt update
           sudo apt install clang-format-10
           sudo ln -sf /usr/bin/clang-format-10 /usr/bin/clang-format
