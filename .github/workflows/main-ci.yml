@@ -48,6 +48,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install scons
+          # Assert lcov is up to date
           wget http://ftp.ubuntu.com/ubuntu/ubuntu/pool/universe/l/lcov/lcov_1.14-2_all.deb
           sudo apt install -y ./lcov_1.14-2_all.deb
       - name: Generate coverage
@@ -57,7 +58,7 @@ jobs:
       - name: Run lcov
         run: |
           export PATH=/usr/local/gcc9/bin/:$PATH
-          lcov --capture --directory . --output-file lcov.info
+          lcov --capture --directory . --output-file lcov.info --gcov-tool /usr/bin/gcov-9
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
