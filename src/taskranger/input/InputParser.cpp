@@ -57,28 +57,37 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
     // completedWord: whether we've processed the word or not. Any
     // further words are discarded for semantic reasons.
     bool isInWord = false, completedWord = false;
+
+    // whether or not everything should be considered plain text.
+    // This is set to true of -- is detected
+    bool rawText = false;
+
     std::string currentToken;
 
     for (unsigned long i = 0; i < words.size(); i++) {
         std::string word = words[i];
         if (word.length() == 0)
             continue;
-        if (std::regex_search(word, InputParser::labelRegex)) {
-            // Label of some type
-            std::vector<std::string> value = StrUtil::splitString(word, ":", 1);
+        if (word == "--") {
+            rawText = true;
+        } else if (!rawText) {
+            if (std::regex_search(word, InputParser::labelRegex)) {
+                // Label of some type
+                std::vector<std::string> value = StrUtil::splitString(word, ":", 1);
 
-            tokens[value[0]] = value[1];
-        } else if (word.at(0) == '+') {
-            // We have a tag!
-            // Caveat: this cannot detect:
-            // > "+some thing"
-            // vs
-            // > +"some thing"
-            // because of the way shells convert quotes into strings or whatever *shrug*
-            tags.push_back(word);
-        } else if (word.at(0) == '@') {
-            // We have a project!
-            data->project = word;
+                tokens[value[0]] = value[1];
+            } else if (word.at(0) == '+' || word.at(0) == '-') {
+                // We have a tag!
+                // Caveat: this cannot detect:
+                // > "+some thing"
+                // vs
+                // > +"some thing"
+                // because of the way shells convert quotes into strings or whatever *shrug*
+                tags.push_back(word);
+            } else if (word.at(0) == '@') {
+                // We have a project!
+                data->project = word;
+            }
         } else {
             // Because both @ and + can result in parsing issues, this tries to detect
             // when the first char is a backslash.

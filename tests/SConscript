@@ -1,11 +1,13 @@
 Import("env")
-Import("libtr")
+Import("lpath")
 
-localEnv = env.Clone()
-localEnv.withLibraries(libtr, append = False)
-localEnv.appendSourcePath("#Catch2/single_include")
-localEnv.appendSourcePath("#tests/testSources")
+env.withLibraries("taskranger", append = False)
+env.appendLibPath("#" + lpath)
 
-tests = localEnv.Program("tests", localEnv.Glob("testSources/*.cpp"))
+env.appendSourcePath("#Catch2/single_include")
+env.appendSourcePath("#tests/testSources")
 
-Return("tests")
+tests = env.Program("tests", env.Glob("testSources/*.cpp"))
+
+testAlias = env.environment.Alias("test", [ tests ], tests[0].abspath)
+AlwaysBuild(testAlias)
