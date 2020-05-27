@@ -30,7 +30,36 @@ on:
 
 # When the trigger conditions are met, run the jobs
 jobs:
-  # This job installs the base dependencies.
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      - uses: actions/setup-python@v2
+      - name: Set env
+        run: |
+          echo "::set-env name=CXX::g++-9"
+          echo "::set-env name=CC::gcc-9"
+          ${{ matrix.compiler }} --version
+
+      # Install conan
+      - uses: LunarWatcher/install-conan@master
+      # Install SCons
+      - name: Install dependencies
+        run: |
+          python -m pip install scons
+      - name: Generate coverage
+        run: |
+          scons test coverage=1
+      - name: Run lcov
+        run: lcov --capture --directory . --output-file lcov.info
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ./lcov.info
+
   build:
     if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     # Contains the build matrix, and yes, it's a bit of a clusterfuck
