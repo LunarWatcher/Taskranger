@@ -30,42 +30,6 @@ on:
 
 # When the trigger conditions are met, run the jobs
 jobs:
-  coverage:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          submodules: recursive
-      - uses: actions/setup-python@v2
-      - name: Set env
-        run: |
-          echo "::set-env name=CXX::g++-9"
-          echo "::set-env name=CC::gcc-9"
-
-      # Install conan
-      - uses: LunarWatcher/install-conan@master
-      # Install SCons
-      - name: Install dependencies
-        run: |
-          python -m pip install scons
-          # Assert lcov is up to date
-          wget http://ftp.ubuntu.com/ubuntu/ubuntu/pool/universe/l/lcov/lcov_1.14-2_all.deb
-          sudo apt install -y ./lcov_1.14-2_all.deb
-      - name: Generate coverage
-        run: |
-          export PATH=/usr/local/gcc9/bin/:$PATH
-          scons test coverage=1 -j 2
-      - name: Run lcov
-        run: |
-          export PATH=/usr/local/gcc9/bin/:$PATH
-          lcov --capture --directory . --output-file lcov.info --gcov-tool /usr/bin/gcov-9
-          lcov -r lcov.info /usr/include/\* $(pwd)/tabulate/\* $(pwd)/tests/\* $(pwd)/Catch2/\* ~/.conan/\* -o lcov.info
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ./lcov.info
-
   build:
     if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     # Contains the build matrix, and yes, it's a bit of a clusterfuck
