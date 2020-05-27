@@ -59,7 +59,7 @@ jobs:
         run: |
           export PATH=/usr/local/gcc9/bin/:$PATH
           lcov --capture --directory . --output-file lcov.info --gcov-tool /usr/bin/gcov-9
-          lcov -r lcov.info /usr/include/\* $(pwd)/tabulate/* $(pwd)/Catch2/\* ~/.conan/\* -o lcov.info
+          lcov -r lcov.info /usr/include/\* $(pwd)/tabulate/\* $(pwd)/tests/\* $(pwd)/Catch2/\* ~/.conan/\* -o lcov.info
       - name: Coveralls
         uses: coverallsapp/github-action@master
         with:
