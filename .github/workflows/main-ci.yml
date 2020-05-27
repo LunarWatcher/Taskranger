@@ -48,7 +48,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install scons
-          sudo apt install lcov
+          wget http://ftp.ubuntu.com/ubuntu/ubuntu/pool/universe/l/lcov/lcov_1.14-2_all.deb
+          sudo apt install -y ./lcov_1.14-2_all.deb
       - name: Generate coverage
         run: |
           export PATH=/usr/local/gcc9/bin/:$PATH
