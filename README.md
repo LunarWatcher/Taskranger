@@ -1,6 +1,7 @@
 # Taskranger
 
 ![CI](https://github.com/LunarWatcher/Taskranger/workflows/CI/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/LunarWatcher/Taskranger/badge.svg?branch=master)](https://coveralls.io/github/LunarWatcher/Taskranger?branch=master)
 
 Taskranger is yet another CLI-based task manager.
 
