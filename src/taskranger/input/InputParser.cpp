@@ -18,7 +18,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
         // When this ends up being properly installed, the first argument
         // will for an instance be "taskranger"
         // By default, this shows the upcoming tasks
-        data->tokens["subcommand"] = "next";
+        data->data["subcommand"] = "next";
 
         return data;
     }
@@ -49,7 +49,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
     // later convenience.
     // Custom labels can also go in here.
 
-    auto& tokens = data->tokens;
+    auto& tokens = data->data;
     auto& tags = data->tags;
     tokens["subcommand"] = subCommand;
 
@@ -57,36 +57,52 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
     // completedWord: whether we've processed the word or not. Any
     // further words are discarded for semantic reasons.
     bool isInWord = false, completedWord = false;
+
+    // whether or not everything should be considered plain text.
+    // This is set to true of -- is detected
+    bool rawText = false;
+
     std::string currentToken;
 
     for (unsigned long i = 0; i < words.size(); i++) {
         std::string word = words[i];
+        bool processed = false;
         if (word.length() == 0)
             continue;
-        if (std::regex_search(word, InputParser::labelRegex)) {
-            // Label of some type
-            std::vector<std::string> value = StrUtil::splitString(word, ":", 1);
+        if (word == "--") {
+            rawText = true;
+            continue;
+        } else if (!rawText) {
+            if (std::regex_search(word, InputParser::labelRegex)) {
+                // Label of some type
+                std::vector<std::string> value = StrUtil::splitString(word, ":", 1);
 
-            tokens[value[0]] = value[1];
-        } else if (word.at(0) == '+') {
-            // We have a tag!
-            // Caveat: this cannot detect:
-            // > "+some thing"
-            // vs
-            // > +"some thing"
-            // because of the way shells convert quotes into strings or whatever *shrug*
-            tags.push_back(word);
-        } else if (word.at(0) == '@') {
-            // We have a project!
-            data->project = word;
-        } else {
-            // Because both @ and + can result in parsing issues, this tries to detect
-            // when the first char is a backslash.
-            // This may potentially have unwanted side-effects, and may be removed
-            // if it's determined that the side-effects outweigh the benefits.
-            if (word.at(0) == '\\' && word.size() > 1 && word.at(1) != word.at(0))
-                word = word.substr(1);
+                tokens[value[0]] = value[1];
+                processed = true;
+            } else if (word.at(0) == '+' || word.at(0) == '-') {
+                // We have a tag!
+                // Caveat: this cannot detect:
+                // > "+some thing"
+                // vs
+                // > +"some thing"
+                // because of the way shells convert quotes into strings or whatever *shrug*
+                tags.push_back(word);
+                processed = true;
+            } else if (word.at(0) == '@') {
+                // We have a project!
+                tokens["project"] = word;
+                processed = true;
+            }
+        }
+        if (!processed) {
             if (!completedWord) {
+                // Because both @ and + can result in parsing issues, this tries to detect
+                // when the first char is a backslash.
+                // This may potentially have unwanted side-effects, and may be removed
+                // if it's determined that the side-effects outweigh the benefits.
+                if (word.at(0) == '\\' && word.size() > 1 && word.at(1) != word.at(0))
+                    word = word.substr(1);
+
                 // Whitespace guarded to prevent accidental trailing spaces
                 // for no reason what so ever.
                 if (isInWord)
@@ -100,7 +116,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             if (i != words.size() - 1)
                 continue;
         }
-
+        // Cleans up the word. Basically, this sets the description.
         if (isInWord) {
             isInWord = false;
             completedWord = true;

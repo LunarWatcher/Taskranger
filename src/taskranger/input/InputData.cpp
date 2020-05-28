@@ -5,7 +5,7 @@ namespace taskranger {
 
 void InputData::removeTokens(const std::vector<std::string>& invalidFields) {
     for (const auto& key : invalidFields) {
-        if (this->tokens.find(key) != this->tokens.end()) {
+        if (this->data.find(key) != this->data.end()) {
             ColorPrinter printer;
             printer << ANSIFeature::FOREGROUND << 9 << "WARNING!" << ANSIFeature::CLEAR
                     << " Attempted use of parameter \"" << key << "\""

@@ -15,16 +15,8 @@ public:
      *
      * Depending on the command context, this may also contain filters.
      */
-    std::map<std::string, std::string> tokens;
-
-    /**
-     * Vector of the tags. Can be empty if no tags are supplied, or
-     * they're not relevant for the context.
-     */
+    std::map<std::string, std::string> data;
     std::vector<std::string> tags;
-
-    // The project, group, category, or whatever other term works.
-    std::string project;
 
     void removeTokens(const std::vector<std::string>& invalidFields);
     void removeInternalFields();

@@ -16,10 +16,17 @@ If any part of the issue template you used feels weird or is unclear, feel free 
 
 [Pull requests](http://help.github.com/pull-requests/) are always welcome! Note that there are a couple things that must be included:
 
-* A description of the changes. 
+* A description of the changes.
 * If applicable: issues it fixes or works towards fixing.
 
-Additionally, code must follow the project code style.
+Additionally, code must follow the project code style. Running the [pre-commit hooks](https://pre-commit.com/) are highly recommended before pushing. Note that the code will be tested for compliance when pushed. To get started:
+
+```
+pip3 install -r requirements.txt
+pre-commit install
+```
+
+Pre-commit will also clean up common problems when you try to commit.
 
 ## Code style
 
@@ -27,6 +34,6 @@ Additionally, code must follow the project code style.
 * Variable and function names are camelCase.
 * Class names and namespaces used to emulate a class-like scope must start with an upper-case letter.
 
-[.clang-format](https://github.com/LunarWatcher/Taskranger/blob/master/.clang-format) defines general style conventions that it can fix. 
+[.clang-format](https://github.com/LunarWatcher/Taskranger/blob/master/.clang-format) defines general style conventions that it can fix.
 
 [1]: https://github.com/LunarWatcher/Taskranger/issues

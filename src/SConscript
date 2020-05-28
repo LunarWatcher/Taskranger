@@ -9,6 +9,7 @@ with env.configure() as config:
 # a recursive glob function, and I have no idea how. Definitely high on the list, in my defense.
 
 sources = env.Glob("taskranger/input/*.cpp")
+sources += env.Glob("taskranger/input/operators/*.cpp")
 sources += env.Glob("taskranger/commands/*.cpp")
 sources += env.Glob("taskranger/util/*.cpp")
 sources += env.Glob("taskranger/data/*.cpp")
@@ -21,16 +22,10 @@ env.appendSourcePath("#tabulate/include")
 # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
 # Shell aliases can be manually added if necessary.
 lib = env.Library("taskranger", sources)
-# preLibs = env.environment["LIBS"]
 
-# if (type(preLibs) is str):
-    # cache = preLibs
-    # preLibs = [ ]
-    # preLibs.append(cache)
-# preLibs = [lib] + preLibs
 exeEnv = env.Clone()
-# The library needs to be prepended for static linking
-exeEnv.withLibraries(lib, append = False)
-exe = exeEnv.Program("taskranger", env.Glob("taskranger/*.cpp"))
+exeEnv.appendLibPath("#" + env.getBinPath())
+exeEnv.withLibraries("taskranger", append=False)
 
-Return("lib")
+exe = exeEnv.Program("taskranger", env.Glob("taskranger/*.cpp"))
+Default(exe, lib)

@@ -30,6 +30,24 @@ on:
 
 # When the trigger conditions are met, run the jobs
 jobs:
+  pre-commit:
+    if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+      # Set up python; requires for SCons and Conan
+      - uses: actions/setup-python@v2
+      - name: Run hooks
+        run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          echo "deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-10 main" | sudo tee -a /etc/apt/sources.list
+          sudo apt update
+          sudo apt install clang-format-10
+          sudo ln -sf /usr/bin/clang-format-10 /usr/bin/clang-format
+          python3 -m pip install -r requirements.txt
+          pre-commit run --all-files
   build:
     if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
     # Contains the build matrix, and yes, it's a bit of a clusterfuck
