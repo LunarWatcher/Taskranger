@@ -5,6 +5,7 @@
 #include <algorithm>
 
 using taskranger::InputData;
+typedef std::shared_ptr<InputData> InputPtr;
 // clang-format off
 const nlohmann::json baseJson = {
     {
@@ -30,12 +31,12 @@ const nlohmann::json baseJson = {
 TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
     auto mutableCopy = baseJson;
 
-    std::shared_ptr<InputData> dataPtr = std::make_shared<InputData>();
+    InputPtr dataPtr = std::make_shared<InputData>();
     std::vector<std::string> keys = {"test", "@test"};
 
     for (auto& project : keys) {
         INFO(project);
-        dataPtr->project = project;
+        dataPtr->data["project"] = project;
 
         nlohmann::json testLegacyProject = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
         REQUIRE(testLegacyProject.size() == 2);
@@ -48,7 +49,7 @@ TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
 
 TEST_CASE("TestFilterTags", "[TaskFilterTags]") {
     auto mutableCopy = baseJson;
-    std::shared_ptr<InputData> dataPtr = std::make_shared<InputData>();
+    InputPtr dataPtr = std::make_shared<InputData>();
     dataPtr->tags = {"+tag"};
     nlohmann::json testTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
     REQUIRE(testTags.size() == 2);
@@ -57,4 +58,33 @@ TEST_CASE("TestFilterTags", "[TaskFilterTags]") {
         auto& tags = task.at("tags");
         REQUIRE(std::find(tags.begin(), tags.end(), "+tag") != tags.end());
     }
+}
+
+TEST_CASE("Filter operator: not", "[TaskFilterOpNot]") {
+    auto mutableCopy = baseJson;
+    InputPtr dataPtr = std::make_shared<InputData>();
+
+    // Test if tag exclusion works
+    dataPtr->data["tags.not"] = "+tag";
+    nlohmann::json testNotTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+    REQUIRE(testNotTags.size() == 2);
+
+    // Make sure we excluded the right shit
+    // If this worked, +tag shouldn't be present anywhere.
+    for (auto& task : testNotTags) {
+        if (task.find("tags") != task.end()) {
+            auto& tags = task.at("tags");
+            REQUIRE(std::find(tags.begin(), tags.end(), "+tag") == tags.end());
+        }
+    }
+}
+
+TEST_CASE("Filter operator: contains", "[TaskFilterOpContains]") {
+    auto mutableCopy = baseJson;
+    InputPtr dataPtr = std::make_shared<InputData>();
+
+    dataPtr->data["description.contains"] = "Test task 4";
+    nlohmann::json testContains = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+    // Only one of the test tasks match this criteria
+    REQUIRE(testContains.size() == 1);
 }

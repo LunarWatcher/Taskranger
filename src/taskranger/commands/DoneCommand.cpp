@@ -3,6 +3,7 @@
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <functional>
+#include <set>
 #include <stdexcept>
 
 namespace taskranger {
@@ -14,18 +15,18 @@ DoneCommand::DoneCommand() {
 }
 
 void DoneCommand::run(std::shared_ptr<InputData> input) {
-    auto& tokens = input->tokens;
+    auto& data = input->data;
 
     std::vector<unsigned long long> ids;
 
-    if (tokens.find("description") != tokens.end()) {
+    if (data.find("description") != data.end()) {
         // The description ones are space separated
-        auto strIds = StrUtil::splitString(tokens.at("description"), " ");
+        auto strIds = StrUtil::splitString(data.at("description"), " ");
         if (strIds.size() > 0)
             StrUtil::strVecToUll(strIds, ids);
     }
-    if (tokens.find("ids") != tokens.end()) {
-        auto strIds = StrUtil::splitString(tokens.at("ids"), ",");
+    if (data.find("ids") != data.end()) {
+        auto strIds = StrUtil::splitString(data.at("ids"), ",");
         if (strIds.size() > 0)
             StrUtil::strVecToUll(strIds, ids);
     }
@@ -41,7 +42,10 @@ void DoneCommand::run(std::shared_ptr<InputData> input) {
     auto currentSetPtr = active.getDatabase();
     auto completedSetPtr = completed.getDatabase();
     unsigned int complete = 0;
-    std::sort(ids.begin(), ids.end(), std::less<unsigned long long>());
+    std::set<unsigned long long> mSet;
+    for (auto& id : ids)
+        mSet.insert(id);
+    ids.assign(mSet.begin(), mSet.end());
     // unsigned types do not play well with reverse for loops
     for (long long i = ids.size() - 1; i >= 0; i--) {
 

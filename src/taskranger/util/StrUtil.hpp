@@ -24,15 +24,21 @@ inline std::vector<std::string> splitString(std::string input, const char delimi
     }
     return out;
 }
+
+/**
+ * Splits a string by a provided delimiter. If the length of the delimiter is 1,
+ * splitString(std::string, const char) will be used instead, provided the limit
+ * is -1.
+ */
 inline std::vector<std::string> splitString(std::string input, const std::string& delimiter, int limit = -1) {
     // Special case: no delimiter.
-    if (delimiter == "")
+    if (delimiter.length() == 0 || limit == 0)
         return {input};
 
     // Optimize: use a stringstream instead of memory
     // altering operations when the delimiter is a single
     // char, and there is no limit
-    if (limit == -1 && delimiter.size() == 1)
+    if (limit == -1 && delimiter.length() == 1)
         return splitString(input, delimiter.at(0));
 
     std::vector<std::string> out;
@@ -47,6 +53,29 @@ inline std::vector<std::string> splitString(std::string input, const std::string
         if (count == limit) {
             break;
         }
+    }
+    out.push_back(input);
+    return out;
+}
+
+/**
+ * Equivalent to splitString, but it uses rfind (reverse find) instead of find.
+ */
+inline std::vector<std::string> reverseSplitString(std::string input, const std::string& delimiter, int limit = -1) {
+    if (delimiter.length() == 0)
+        return {input};
+
+    std::vector<std::string> out;
+    size_t pos = 0;
+    int count = 0;
+    std::string token;
+    while ((pos = input.rfind(delimiter)) != std::string::npos) {
+        token = input.substr(pos + delimiter.length());
+        out.push_back(token);
+        input.erase(pos, input.length() - pos);
+        count++;
+        if (count == limit)
+            break;
     }
     out.push_back(input);
     return out;

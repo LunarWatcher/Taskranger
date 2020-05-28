@@ -3,6 +3,7 @@
 
 #include "nlohmann/json.hpp"
 #include "taskranger/input/InputData.hpp"
+#include "taskranger/input/operators/InputParserOperators.hpp"
 #include <map>
 #include <memory>
 #include <vector>
@@ -30,6 +31,7 @@ void mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::v
  */
 nlohmann::json filterTasks(const nlohmann::json& rawInput, std::shared_ptr<InputData> input, bool includeIds,
         std::vector<std::string> dropKeys = {});
+
 } // namespace TaskFilter
 
 } // namespace taskranger

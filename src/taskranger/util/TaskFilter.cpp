@@ -1,4 +1,6 @@
 #include "TaskFilter.hpp"
+#include "taskranger/data/Task.hpp"
+#include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <algorithm>
@@ -32,12 +34,23 @@ void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, 
 nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shared_ptr<InputData> input,
         bool includeIds, std::vector<std::string> dropKeys) {
     using namespace std::literals;
-    auto& filters = input->tokens;
+    auto filters = input->data;
+    if (input->tags.size() != 0) {
+        std::string builder;
+        for (size_t i = 0; i < input->tags.size(); i++) {
+            builder += input->tags.at(i);
+            // Commas are used to conform to the strlist format
+            if (i != input->tags.size() - 1)
+                builder += ",";
+        }
+        filters["tags"] = builder;
+    }
     nlohmann::json reworked;
 
     if (filters.find("ids") != filters.end()) {
         if (!includeIds)
             return {};
+        std::vector<unsigned long long> vec;
 
         for (auto& id : StrUtil::splitString(filters["ids"], ",")) {
             try {
@@ -50,6 +63,15 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
                 // the idx is in a standard human counting system (the first
                 // item is 1). the array access index still starts at 0, so 1
                 // needs to be subtracted from the ID
+                bool skip = false;
+                for (auto& task : reworked) {
+                    if (task.at("id") == idx) {
+                        skip = true;
+                    }
+                }
+                if (skip) {
+                    continue;
+                }
                 reworked.push_back(rawInput.at(idx - 1));
                 reworked.back()["id"] = idx;
             } catch (std::invalid_argument&) {
@@ -70,23 +92,30 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
         }
     }
 
-    if (input->project != "") {
-        // This makes sure all projects contain an @, similarly
-        // to how tags contain a +. This is intended for compatibility
-        // with project:name
-        if (input->project.at(0) != '@')
-            input->project = "@"s + input->project;
+    // Filter the tasks
+    for (auto& filter : filters) {
+        auto baseKey = filter.first;
+        if (baseKey == "ids" || baseKey == "subcommand")
+            continue;
+        auto calcPair = InputParserOperators::determineOperator(baseKey);
+        InputParserOperators::Operator op = calcPair.first;
+        const std::string& key = calcPair.second;
+        std::string filterValue = filter.second;
+        // For now: skip empty filters.
+        // Will have to revisit this in the future
+        if (filterValue.size() == 0)
+            continue;
 
-        mutateModifyJson(reworked, "project", input->project);
+        if (key == "project" && filterValue.at(0) != '@')
+            filterValue = "@" + filterValue;
+        Task::convertAndEval(op, key, filterValue, reworked);
     }
 
-    if (input->tags.size()) {
-        mutateModifyJson(reworked, "tags", input->tags);
-    }
-
-    for (auto& json : reworked) {
-        for (auto& key : dropKeys) {
-            json.erase(key);
+    if (reworked.size() != 0) {
+        for (auto& json : reworked) {
+            for (auto& key : dropKeys) {
+                json.erase(key);
+            }
         }
     }
 

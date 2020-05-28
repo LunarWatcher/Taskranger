@@ -13,15 +13,15 @@ AddCommand::AddCommand() {
 }
 
 void AddCommand::run(std::shared_ptr<InputData> input) {
-    auto& tokens = input->tokens;
-    if (tokens.find("description") == tokens.end()) {
+    auto& data = input->data;
+    if (data.find("description") == data.end()) {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9 << "You need to add a message to the todo.\n" << ANSIFeature::CLEAR;
         return;
     }
 
     JSONDatabase database("active.json");
-    nlohmann::json mod = tokens;
+    nlohmann::json mod = data;
     mod.erase("subcommand");
 
     // deal with IDs
@@ -46,8 +46,8 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
 
     mod["uuid"] = uuid;
     // Inject the project
-    if (input->project != "")
-        mod["project"] = input->project;
+    if (input->data.find("project") != input->data.end())
+        mod["project"] = input->data.at("project");
     if (input->tags.size() > 0)
         mod["tags"] = input->tags;
 

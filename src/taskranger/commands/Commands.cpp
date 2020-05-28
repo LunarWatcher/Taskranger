@@ -31,9 +31,9 @@ Commands::Commands() {
 }
 
 void Commands::forward(std::shared_ptr<InputData> input) {
-    const std::string& subcommand = input->tokens.at("subcommand");
+    const std::string& subcommand = input->data.at("subcommand");
     if (commands.find(subcommand) != commands.end())
-        commands[input->tokens.at("subcommand")]->run(input);
+        commands[input->data.at("subcommand")]->run(input);
     else {
         ColorPrinter printer;
         printer << ANSIFeature::FOREGROUND << 9 << "Command not found: " << subcommand << ".\n" << ANSIFeature::CLEAR;

@@ -28,3 +28,29 @@ TEST_CASE("Conversion", "[StrConv]") {
         REQUIRE(outputVector.at(i) == expected.at(i));
     }
 }
+
+TEST_CASE("Reverse splitting", "[RevStrSplit]") {
+    const std::string raw = "this,is,a,string";
+    std::vector<std::string> output1 = taskranger::StrUtil::reverseSplitString(raw, ",");
+    std::vector<std::string> output2 = taskranger::StrUtil::reverseSplitString(raw, ",", 2);
+
+    // Test limits
+    REQUIRE(output1.size() == 4);
+    REQUIRE(output2.size() == 3);
+
+    // Verify splits
+    REQUIRE(output1.at(0) == "string");
+    REQUIRE(output1.at(3) == "this");
+
+    REQUIRE(output2.at(2) == "this,is");
+    REQUIRE(output2.at(0) == "string");
+
+    const std::string extDel = "Thisdelisdeladellongerdelstringdel!";
+    std::vector<std::string> expected = {"!", "string", "longer", "a", "Thisdelis"};
+    std::vector<std::string> output3 = taskranger::StrUtil::reverseSplitString(extDel, "del", 4);
+
+    REQUIRE(output3.size() == expected.size());
+    for (size_t i = 0; i < output3.size(); i++) {
+        REQUIRE(output3.at(i) == expected.at(i));
+    }
+}
