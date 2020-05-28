@@ -67,6 +67,7 @@ TEST_CASE("Filter operator: not", "[TaskFilterOpNot]") {
     // Test if tag exclusion works
     dataPtr->data["tags.not"] = "+tag";
     nlohmann::json testNotTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+    // Note: tag exclusion also includes tagless posts (because technically, they match the criteria).
     REQUIRE(testNotTags.size() == 2);
 
     // Make sure we excluded the right shit
