@@ -31,11 +31,11 @@ template <>
 bool InputParserOperators::evalOperator(Operator op, const std::string& input, const std::string& relativeTo) {
     switch (op) {
     case Operator::IS:
-        return input == relativeTo;
+        return StrUtil::istrEquals(input, relativeTo);
     case Operator::NOT:
-        return input != relativeTo;
+        return StrUtil::istrEquals(input, relativeTo);
     case Operator::CONTAINS:
-        return relativeTo.find(input) != std::string::npos;
+        return StrUtil::toLower(relativeTo).find(StrUtil::toLower(input)) != std::string::npos;
     default:
         return true;
     }

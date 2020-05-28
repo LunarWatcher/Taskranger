@@ -1,8 +1,10 @@
 #pragma once
 
+#include "taskranger/util/StrUtil.hpp"
 #include <iostream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -76,7 +78,11 @@ bool evalOperator(Operator op, const std::vector<G>& input, const std::vector<G>
         for (auto& a : input) {
             bool found = false;
             for (auto& b : relativeTo) {
-                if (a == b) {
+                if constexpr (std::is_same<G, std::string>::value) {
+                    if (StrUtil::istrEquals(a, b)) {
+                        found = true;
+                    }
+                } else if (a == b) {
                     found = true;
                 }
             }
@@ -87,8 +93,13 @@ bool evalOperator(Operator op, const std::vector<G>& input, const std::vector<G>
     case Operator::NOT:
         for (auto& a : input) {
             for (auto& b : relativeTo) {
-                if (b == a)
-                    return false;
+                if constexpr (std::is_same<G, std::string>::value) {
+                    if (!StrUtil::istrEquals(a, b)) {
+                        return true;
+                    }
+                } else if (a != b) {
+                    return true;
+                }
             }
         }
         return true;
