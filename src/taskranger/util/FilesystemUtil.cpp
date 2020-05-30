@@ -3,7 +3,10 @@
 #include <regex>
 #include <stdexcept>
 
-#define _CRT_SECURE_NO_WARNINGS
+#if defined(_WIN32) || defined(_WIN64)
+// Used for the environment variable function
+#include "taskranger/input/EnvVars.hpp"
+#endif
 
 namespace taskranger {
 
@@ -60,11 +63,14 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 #if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
-        auto userProfile = windoze::safeGet("USERPROFILE");
+        auto userProfile = Env::getEnv("USERPROFILE");
 
         if (userProfile == "") {
-            auto homeDrive = windoze::safeGet("HOMEDRIVE");
-            auto envHomePath = windoze::safeGet("HOMEPATH");
+            auto homeDrive = Env::getEnv("HOMEDRIVE");
+            if (!homeDrive)
+                homeDrive = "";
+
+            auto envHomePath = Env::getEnv("HOMEPATH");
 
             if (envHomePath == "") {
                 ColorPrinter printer;
@@ -94,14 +100,15 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 
 #else
     /*
-     The unixes are more complicated, but the API should be universal and make
-     this a lot easier.
+     The unixes are easier, because they should in theory share a single
+     API that makes this a whole lot easier.
 
      The idea is checking for HOME if we're looking for the current user.
      If we can't find the home variable, fall back to a UNIX-specific^1
      function that retrieves the path, along with a few other details.
      see getpwnam(3) for more info on the functions, and passwd(5)
-     for details on the struct.
+     for details on the struct. This code drops the HOME variable for
+     various reasons.
 
      If a username has been supplied (~username/), getpwnam is used instead
      of getpwuid. This returns the same type of struct as getpwuid().

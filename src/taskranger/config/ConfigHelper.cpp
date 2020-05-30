@@ -1,5 +1,6 @@
 #include "ConfigHelper.hpp"
 #include "taskranger/data/Environment.hpp"
+#include "taskranger/input/EnvVars.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <fstream>
@@ -18,19 +19,24 @@ void Config::loadStandards() {
 }
 
 void Config::ensureLoaded() {
-    const static std::string configBasePath = "~/.trconf";
     if (this->config.size() != 0) {
         // this function is a lazy load function. If the data already has been initialized,
         // don't reinitialize.
         return;
     }
+    std::string configBasePath = "~/.trconf";
+
+    auto reassigned = Env::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
+    if (reassigned != configBasePath && reassigned != "") {
+        configBasePath = FilesystemUtil::joinPath(reassigned, ".trconf");
+    }
 
     auto expandedPath = FilesystemUtil::expandUserPath(configBasePath);
-    if (expandedPath == configBasePath) {
-        // If, for whatever reason, this fails, it means this approach is fundementally flawed
-        // and needs to have a plan B.
-        std::cout << "ABORT LOADING CONFIG! This should never happen - open an issue on GitHub: "
-                  << "https://github.com/lunarwatcher/taskranger" << std::endl;
+    if (configBasePath.at(0) == '~' && expandedPath == configBasePath) {
+
+        std::cout << "ABORT LOADING CONFIG! This should not happen. Please set the environment variable "
+                     "\"TASKRANGER_CONFIG_LOCATION\""
+                  << std::endl;
         throw std::runtime_error("FATAL: config path expansion failed.");
     }
 

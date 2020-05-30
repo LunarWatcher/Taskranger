@@ -1,8 +1,33 @@
 Import("env")
 
+from sys import platform
+
+def checkSecure(context):
+    """
+    Checks whether secure_getenv is present or not
+    """
+    context.Message("Checking secure_getenv... ")
+
+    secureProbe = """
+    #define _GNU_SOURCE
+    #include <stdlib.h>
+    int main() {
+        secure_getenv("fakeVar");
+    }
+    """
+
+    compiled = context.TryCompile(secureProbe, ".cpp")
+
+    context.Result("yes" if compiled else "no")
+    return compiled
+
 with env.configure() as config:
     config.test("CheckCXX")
     config.configureFilesystem()
+
+    if platform != "win32":
+        if config.test("CheckSecureGetEnv", callback=checkSecure):
+            env.define("HAS_SECURE_GETENV")
 
 # Glob in sources
 # okay, fine, it's not exactly the prettiest approach, but the other alternatives require implementing
