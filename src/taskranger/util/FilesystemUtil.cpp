@@ -67,7 +67,7 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 
         if (userProfile == "") {
             auto homeDrive = Env::getEnv("HOMEDRIVE");
-            if (!homeDrive)
+            if (homeDrive == "")
                 homeDrive = "";
 
             auto envHomePath = Env::getEnv("HOMEPATH");
