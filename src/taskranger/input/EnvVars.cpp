@@ -9,7 +9,7 @@ namespace taskranger {
 
 #ifdef IS_WINDOZE
 
-std::string Env::safeGet(const char* name, const std::string& fail) {
+std::string Env::safeGetWindows(const char* name, const std::string& fail) {
     char* value = nullptr;
     size_t len = 0;
     errno_t err = _dupenv_s(&value, &len, name);

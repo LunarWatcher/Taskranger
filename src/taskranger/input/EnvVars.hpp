@@ -17,7 +17,11 @@ std::string safeGetWindows(const char* name, const std::string& fail);
 
 /**
  * Wrapper around getenv() on Unix, and secure_getenv() on distros
- * supporting the GNU extension
+ * supporting the GNU extension.
+ *
+ * This is not guaranteed to be a secure_getenv() call. Compatibility
+ * to cover as many secure variants as possible, where one exists, is
+ * one of this function's goals.
  */
 std::string getUnix(const char* name, const std::string& fail);
 
