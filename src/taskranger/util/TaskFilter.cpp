@@ -37,13 +37,22 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
     auto filters = input->data;
     if (input->tags.size() != 0) {
         std::string builder;
+        std::string subBuilder;
         for (size_t i = 0; i < input->tags.size(); i++) {
-            builder += input->tags.at(i);
-            // Commas are used to conform to the strlist format
-            if (i != input->tags.size() - 1)
-                builder += ",";
+            auto tag = input->tags.at(i);
+            if (tag.at(0) == '-') {
+                subBuilder += (subBuilder.length() != 0 ? ","s : ""s) + "+" + tag.substr(1);
+            } else {
+                builder += (builder.length() != 0 ? ","s : ""s) + tag;
+            }
         }
-        filters["tags"] = builder;
+        if (builder != "") {
+            filters["tags"] = builder;
+        }
+        if (subBuilder != "") {
+            filters["tags.not"] = subBuilder;
+        }
+        std::cout << builder << std::endl << subBuilder << std::endl;
     }
     nlohmann::json reworked;
 
