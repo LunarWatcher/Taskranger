@@ -25,6 +25,8 @@ The various entries on both environment variables and types will usually contain
     * **Unsigned**: Unsigned is a modifier combined with one of the two above. For an instance, a type can be an `unsigned int`. `Unsigned` means the number cannot be negative.
 * **String**: Plain text. Nothing fancy, just text.
 
+1: Unless otherwise noted, numbers are signed. This means they can be positive or negative. Unsigned numbers can only be positive. Integer types are usually stored as 64 bit longs, while floats are stored as doubles.
+
 ### The config file
 
 The config file, regardless of location, is always called `.trconf`. By default, it tries locating this file in the home directory. The location of the file itself can be configured (see [`TASKRANGER_CONFIG_LOCATION`](#TASKRANGER_CONFIG_LOCATION)), but the file name is always constant.
