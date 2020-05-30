@@ -42,7 +42,7 @@ std::string Env::getUnix(const char* name, const std::string& fail) {
 
 std::string Env::getEnv(const std::string& key, const std::string& fail) {
 #ifdef IS_WINDOZE
-    return safeGet(key.c_str(), fail);
+    return safeGetWindows(key.c_str(), fail);
 #else
     return getUnix(key.c_str(), fail);
 #endif
