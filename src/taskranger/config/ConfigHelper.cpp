@@ -43,7 +43,7 @@ void Config::ensureLoaded() {
             if (line.length() == 0 || line.at(0) == '#')
                 continue;
 
-            auto keyValuePair = StrUtil::splitString("=", 1);
+            auto keyValuePair = StrUtil::splitString(line, "=", 1);
             if (keyValuePair.size() != 2) {
                 std::cout << "Warning: invalid configuration line:\n" << line << std::endl;
                 continue;
@@ -54,10 +54,16 @@ void Config::ensureLoaded() {
 }
 
 std::string Config::getString(const std::string& key) {
+    if (this->config.find(key) == this->config.end()) {
+        return "";
+    }
     return this->config.at(key);
 }
 
 unsigned long long Config::getULLong(const std::string& key) {
+    if (this->config.find(key) == this->config.end()) {
+        return 0;
+    }
     return std::stoull(this->config.at(key));
 }
 

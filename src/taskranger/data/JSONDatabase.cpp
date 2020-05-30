@@ -1,4 +1,5 @@
 #include "JSONDatabase.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
@@ -8,7 +9,8 @@
 namespace taskranger {
 
 JSONDatabase::JSONDatabase(const std::string& databaseName) {
-    std::string databaseFolder = "~/.taskranger"; // TODO: fix and make portable (and add config)
+    auto config = Environment::getInstance()->getConfig();
+    std::string databaseFolder = config->getString("dataDir");
     if (databaseFolder.back() != '/')
         databaseFolder += "/";
     databaseFolder = FilesystemUtil::expandUserPath(databaseFolder);
