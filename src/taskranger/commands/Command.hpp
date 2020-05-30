@@ -17,7 +17,7 @@ protected:
 public:
     virtual ~Command() = default;
 
-    virtual void run(std::shared_ptr<InputData> data) = 0;
+    virtual void run() = 0;
 
     const std::string& getName() {
         return this->name;

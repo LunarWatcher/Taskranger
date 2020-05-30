@@ -1,5 +1,6 @@
 #include "AddCommand.hpp"
 #include "tabulate/table.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/UIDUtils.hpp"
@@ -12,7 +13,8 @@ AddCommand::AddCommand() {
     this->usage = "taskranger add <description> <attributes>";
 }
 
-void AddCommand::run(std::shared_ptr<InputData> input) {
+void AddCommand::run() {
+    auto input = Environment::getInstance()->getInputData();
     auto& data = input->data;
     if (data.find("description") == data.end()) {
         ColorPrinter printer;

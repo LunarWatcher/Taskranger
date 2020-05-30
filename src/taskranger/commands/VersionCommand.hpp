@@ -8,7 +8,7 @@ namespace taskranger {
 class VersionCommand : public Command {
 public:
     VersionCommand();
-    void run(std::shared_ptr<InputData> input) override;
+    void run() override;
 };
 
 } // namespace taskranger

@@ -9,7 +9,7 @@ class NextCommand : public Command {
 public:
     NextCommand();
     ~NextCommand() = default;
-    void run(std::shared_ptr<InputData> input) override;
+    void run() override;
 };
 
 } // namespace taskranger

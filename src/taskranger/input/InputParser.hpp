@@ -25,7 +25,7 @@ public:
     /**
      * Parses the command line input to usable tokens
      */
-    std::shared_ptr<InputData> parseInput(int argc, const char* args[]);
+    void parseInput(int argc, const char* args[]);
 };
 
 } // namespace taskranger

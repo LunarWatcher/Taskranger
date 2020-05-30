@@ -1,4 +1,5 @@
 #include "DoneCommand.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
@@ -14,7 +15,8 @@ DoneCommand::DoneCommand() {
     this->help = "taskranger done <ids>";
 }
 
-void DoneCommand::run(std::shared_ptr<InputData> input) {
+void DoneCommand::run() {
+    auto input = Environment::getInstance()->getInputData();
     auto& data = input->data;
 
     std::vector<unsigned long long> ids;

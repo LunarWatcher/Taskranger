@@ -20,8 +20,9 @@ compile_commands.json
 # Ignore core dumps
 /core
 
-# Ignore symlink used for easy debugging
+# Ignore symlinks used for easy debugging
 /task
+/test
 
 # Not used anymore
 coverage.info
