@@ -31,16 +31,21 @@ The various entries on both environment variables and types will usually contain
 
 The config file, regardless of location, is always called `.trconf`. By default, it tries locating this file in the home directory. The location of the file itself can be configured (see [`TASKRANGER_CONFIG_LOCATION`](#TASKRANGER_CONFIG_LOCATION)), but the file name is always constant.
 
-The syntax is very simple:
+The config file is in the JSON format, or:
 
 ```
-# Commented lines start with a # sign
-# Aside comments, this file can contain variable assignment:
-key=value
-# Due to implementation practices, there cannot be a space between the key or value and equal sign.
-# The key syntax allows for dots in the names themselves:
-some.have.scopes=/home
+{
+    "config": "value", 
+    "scopes": {
+        "are": {
+            "maps": "because it's pretty and works with formatting",
+            "multivalues": "and helps deal with multiple values. This is especially important for UDAs"
+        }
+    }
+}
 ```
+
+Note that scoped variables are often referred to by a shorthand. In the example above, the `maps` key could be referred to as `scopes.are.maps`. Keep this in mind, as this notation is some times used to demonstrate certain config.
 
 ## Environment variables
 
@@ -69,9 +74,9 @@ Type: path
 This determines where the databases are stored. Examples:
 
 ```
-dataDir=~/.taskranger
-dataDir=/mnt/ExternalDrive/taskranger
-dataDir=D:/tasks/
+"dataDir": "~/.taskranger"
+"dataDir": "/mnt/ExternalDrive/taskranger"
+"dataDir": "D:/tasks/"
 ```
 
 By switching between data directories, you can also split up tasks any way you want. Note that there currently isn't a way to specify where to store tasks on a per-command basis, but this will be implemented eventuallyBy switching between data directories, you can also split up tasks any way you want. Note that there currently isn't a way to specify where to store tasks on a per-command basis, but this will be implemented eventually
