@@ -23,11 +23,22 @@ std::shared_ptr<Commands> Environment::getCommands() {
     return commands;
 }
 
+std::shared_ptr<Attribute> Environment::getAttribute(const std::string& attribName) {
+    if (attributes.find(attribName) == attributes.end()) {
+        auto tryGet = Attribute::createAttrib(attribName);
+        if (!tryGet) {
+            return nullptr;
+        }
+        attributes[attribName] = tryGet;
+        return tryGet;
+    }
+    return attributes.at(attribName);
+}
+
 std::shared_ptr<Environment> Environment::getInstance() {
     if (INSTANCE == nullptr) {
         INSTANCE = std::make_shared<Environment>();
     }
     return INSTANCE;
 }
-
 } // namespace taskranger

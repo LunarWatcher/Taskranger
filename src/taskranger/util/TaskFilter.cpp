@@ -1,5 +1,5 @@
 #include "TaskFilter.hpp"
-#include "taskranger/data/Task.hpp"
+#include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -14,5 +15,12 @@ int main(int argc, const char* argv[]) {
     InputParser parser;
     parser.parseInput(argc, argv);
 
-    Environment::getInstance()->getCommands()->forward();
+    try {
+        Environment::getInstance()->getCommands()->forward();
+    } catch (std::string& err) {
+        // It makes most sense to throw string errors. These can universally be caught here.
+        // This mostly makes sense anyway, at least for errors that can't really be recovered from..
+        std::cerr << err << std::endl;
+        return -1;
+    }
 }

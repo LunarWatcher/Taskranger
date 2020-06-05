@@ -1,5 +1,6 @@
 #include "AddCommand.hpp"
 #include "tabulate/table.hpp"
+#include "taskranger/data/Attribute.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
@@ -14,6 +15,8 @@ AddCommand::AddCommand() {
 }
 
 void AddCommand::run() {
+    using namespace std::literals;
+
     auto input = Environment::getInstance()->getInputData();
     auto& data = input->data;
     if (data.find("description") == data.end()) {
@@ -53,6 +56,13 @@ void AddCommand::run() {
     if (input->tags.size() > 0)
         mod["tags"] = input->tags;
 
+    for (auto& [key, value] : mod.items()) {
+        auto attrib = Environment::getInstance()->getAttribute(key);
+        if (!attrib) {
+            throw "Attribute doesn't exist: " + key;
+        }
+        attrib->validate(value);
+    }
     // TODO at a later point: add the time of the task's creation
     (*database.getDatabase()).push_back(mod);
     database.commit();

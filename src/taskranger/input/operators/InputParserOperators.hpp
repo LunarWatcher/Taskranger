@@ -48,9 +48,12 @@ std::pair<Operator, std::string> determineOperator(const std::string& attribKey)
  *  - GREATER
  *  - LESS
  * Strings:
- *  - IS
- *  - NOT
+ *  - IS (case-insensitive)
+ *  - NOT (case-insensitive)
  *  - CONTAINS
+ * Vector<*> (searches items):
+ *  - IS (strings: case-intensive)
+ *  - NOT (strings: case-intensitive)
  */
 template <typename T>
 bool evalOperator(Operator op, const T& input, const T& relativeTo) {

@@ -44,33 +44,16 @@ void Config::ensureLoaded() {
     loadStandards();
 
     if (input) {
-        std::string line;
-        while (std::getline(input, line)) {
-            if (line.length() == 0 || line.at(0) == '#')
-                continue;
-
-            auto keyValuePair = StrUtil::splitString(line, "=", 1);
-            if (keyValuePair.size() != 2) {
-                std::cout << "Warning: invalid configuration line:\n" << line << std::endl;
-                continue;
-            }
-            this->config[keyValuePair.at(0)] = keyValuePair.at(1);
-        }
+        input >> config;
     }
 }
 
 std::string Config::getString(const std::string& key) {
-    if (this->config.find(key) == this->config.end()) {
-        return "";
-    }
-    return this->config.at(key);
+    return this->config.value(key, "");
 }
 
 unsigned long long Config::getULLong(const std::string& key) {
-    if (this->config.find(key) == this->config.end()) {
-        return 0;
-    }
-    return std::stoull(this->config.at(key));
+    return this->config.value(key, 0);
 }
 
 } // namespace taskranger
