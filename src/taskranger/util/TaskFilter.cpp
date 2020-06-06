@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 
 namespace taskranger {
 
@@ -52,7 +53,6 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
         if (subBuilder != "") {
             filters["tags.not"] = subBuilder;
         }
-        std::cout << builder << std::endl << subBuilder << std::endl;
     }
     nlohmann::json reworked;
 
@@ -62,13 +62,21 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
         std::vector<unsigned long long> vec;
 
         for (auto& id : StrUtil::splitString(filters["ids"], ",")) {
+
             try {
-                unsigned long long idx = std::stoull(id);
-                if (idx > rawInput.size()) {
-                    ColorPrinter printer;
-                    printer << ANSIFeature::FOREGROUND << 9 << "Error: attempted to query ID " << idx
-                            << " when there's only " << rawInput.size() << " tasks.\n";
+                size_t endPos = 0;
+                unsigned long long idx = std::stoull(id, &endPos);
+
+                if (endPos != id.length()) {
+                    // if the position where stoull stops processing isn't equal to the length, the number is invalid.
+                    continue;
                 }
+
+                if (idx - 1 >= rawInput.size()) {
+                    // Silently skip out of range IDs
+                    continue;
+                }
+
                 // the idx is in a standard human counting system (the first
                 // item is 1). the array access index still starts at 0, so 1
                 // needs to be subtracted from the ID
@@ -84,8 +92,8 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
                 reworked.push_back(rawInput.at(idx - 1));
                 reworked.back()["id"] = idx;
             } catch (std::invalid_argument&) {
-                ColorPrinter printer;
-                printer << ANSIFeature::FOREGROUND << 9 << "Error: Invalid ID: " << id << ANSIFeature::CLEAR << "\n";
+                // Silently fail invalid IDs
+                continue;
             }
         }
     } else {

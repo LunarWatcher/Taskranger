@@ -38,7 +38,7 @@ TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
         INFO(project);
         dataPtr->data["project"] = project;
 
-        nlohmann::json testLegacyProject = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+        nlohmann::json testLegacyProject = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
         REQUIRE(testLegacyProject.size() == 2);
         for (auto& task : testLegacyProject) {
             REQUIRE(task.find("project") != task.end());
@@ -51,7 +51,7 @@ TEST_CASE("TestFilterTags", "[TaskFilterTags]") {
     auto mutableCopy = baseJson;
     InputPtr dataPtr = std::make_shared<InputData>();
     dataPtr->tags = {"+tag"};
-    nlohmann::json testTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+    nlohmann::json testTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
     REQUIRE(testTags.size() == 2);
     for (auto& task : testTags) {
         REQUIRE(task.find("tags") != task.end());
@@ -66,7 +66,7 @@ TEST_CASE("Filter operator: not", "[TaskFilterOpNot]") {
 
     // Test if tag exclusion works
     dataPtr->data["tags.not"] = "+tag";
-    nlohmann::json testNotTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+    nlohmann::json testNotTags = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
     // Note: tag exclusion also includes tagless posts (because technically, they match the criteria).
     REQUIRE(testNotTags.size() == 2);
 
@@ -85,7 +85,31 @@ TEST_CASE("Filter operator: contains", "[TaskFilterOpContains]") {
     InputPtr dataPtr = std::make_shared<InputData>();
 
     dataPtr->data["description.contains"] = "Test task 4";
-    nlohmann::json testContains = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, {});
+    nlohmann::json testContains = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
     // Only one of the test tasks match this criteria
     REQUIRE(testContains.size() == 1);
+}
+
+TEST_CASE("Invalid and out of range IDs", "[TaskFilterIDs]") {
+    auto mutableCopy = baseJson;
+    InputPtr dataPtr = std::make_shared<InputData>();
+    // Subtest 1: check out of range
+    {
+        dataPtr->data["ids"] = "1,2,3,67483,42,31415";
+        nlohmann::json testOutOfRange = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
+        // There's 4 tasks in the test data, and only 3 valid IDs passed.
+        // This should return a JSON object containing 3 items, and it
+        // should not throw.
+        REQUIRE(testOutOfRange.size() == 3);
+    }
+
+    // Subtest 2: check invalid numbers
+    {
+        // Additionally, entirely invalid IDs should fail silently
+        dataPtr->data["ids"] = "1,2,sqrt(3),3^4,LOOKATMEI'MSHOUTYTEXT:DDDD";
+        nlohmann::json testInvalid = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
+        // 1 and 2 are the only valid IDs.
+        // Not throwing is the main test
+        REQUIRE(testInvalid.size() == 2);
+    }
 }
