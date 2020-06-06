@@ -1,4 +1,5 @@
 #include "TaskInfo.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
@@ -15,10 +16,9 @@ void Task::loadUserDefinedAttribs() {
 
 void Task::convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, const std::string& rawInput,
         nlohmann::json& reworked) {
-    if (Task::attribTypeMap.find(fieldName) == Task::attribTypeMap.end()) {
-        ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9 << "Invalid attribute: " << fieldName << std::endl;
-        return;
+    using namespace std::literals;
+    if (Environment::getInstance()->getAttribute(fieldName) == nullptr) {
+        throw "Invalid attribute: " + fieldName;
     }
 
     // Note: this silently fails the exceptions, but doesn't filter.
@@ -37,25 +37,21 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
     // Note: the result from evalOperator has to be inverted in this specific function.
     // This is because it returns whether or not it's true, but remove_if removes
     // if the call is true. The bool therefore has to be inverted.
-    auto type = Task::attribTypeMap.at(fieldName);
-    if (type == "string") {
+    auto type = Environment::getInstance()->getAttribute(fieldName)->getType();
+    switch (type) {
+    case FieldType::STRING:
         Task::eraseItems(reworked, fieldName, op, rawInput);
-    } else if (type == "strlist") {
+        break;
+    case FieldType::STRLIST: {
         auto strVec = StrUtil::splitString(rawInput, ",");
         Task::eraseItems(reworked, fieldName, op, strVec);
-    } else if (type == "ullong") {
+    } break;
+    case FieldType::ULLONG:
         NUMCATCH(std::stoull)
-    } else if (type == "number" || type == "integer" || type == "int") {
-        // Under the hood, store numbers and ints as signed long longs.
-        NUMCATCH(std::stoll)
-    } else if (type == "float" || type == "double") {
-        // float and double is stored as a long double, which may contain
-        // 128 bits. Compiler and arch dependent: https://stackoverflow.com/a/3454586/6296561
-        NUMCATCH(std::stold)
-    } else {
-        std::cout << "Unrecognized type: " << type << ". This should not happen." << std::endl;
+        break;
+    default:
+        throw "This type hasn't been implemented yet."s;
     }
-
 #undef NUMCATCH
 }
 

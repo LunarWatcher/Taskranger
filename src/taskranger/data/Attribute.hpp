@@ -94,6 +94,10 @@ public:
         return name;
     }
 
+    FieldType getType() {
+        return type;
+    }
+
     /**
      * Returns whether a given value is allowed for the field or not.
      *
