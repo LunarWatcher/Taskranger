@@ -1,0 +1,26 @@
+name: Changelog
+
+on:
+  pull_request:
+    types: [closed]
+
+  release:
+    types: [published]
+
+  issues:
+    types: [closed, edited]
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Generate changelog
+        uses: charmixer/auto-changelog-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          date_format: "%d.%m.%Y"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v2
