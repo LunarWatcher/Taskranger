@@ -37,7 +37,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 Note: v0.0.3 is the first version to have a changelog written to fit a specific system. Earlier versions won't have the same standard.
 
-# [v0.0.2] (28.05.2020)
+# [v0.0.2] - 28.05.2020
 
 ## Added
 * Case-insensitive filters.
@@ -57,4 +57,4 @@ Base release. Unknown release date, because the Git tag was lost to unexpected a
 <!-- Links -->
 [Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...HEAD
 [v0.0.3]: //github.com/LunarWatcher/Taskranger/compare/v0.0.2...v0.0.3
-[v0.0.1]: //github.com/LunarWatcher/Taskranger/releases/tag/v0.0.2
+[v0.0.2]: //github.com/LunarWatcher/Taskranger/releases/tag/v0.0.2
