@@ -16,23 +16,6 @@
 // Used for getuid
 #include <sys/types.h>
 #include <unistd.h>
-#else
-#include <stdlib.h>
-
-namespace windoze {
-
-inline std::string safeGet(const char* name) {
-    char* value = nullptr;
-    size_t len = 0;
-    errno_t err = _dupenv_s(&value, &len, name);
-    if (err != 0 || value == nullptr)
-        return "";
-
-    std::string retVal(value);
-    return retVal;
-}
-
-} // namespace windoze
 #endif
 
 // required for getenv. Allegedly cross-platform

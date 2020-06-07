@@ -9,7 +9,7 @@ namespace taskranger {
 class AddCommand : public Command {
 public:
     AddCommand();
-    void run(std::shared_ptr<InputData> input) override;
+    void run() override;
 };
 
 } // namespace taskranger

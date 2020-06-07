@@ -1,6 +1,7 @@
 #include "HelpCommand.hpp"
 #include "Commands.hpp"
 #include "tabulate/table.hpp"
+#include "taskranger/data/Environment.hpp"
 #include <iostream>
 #include <memory>
 
@@ -20,9 +21,9 @@ void HelpCommand::printCommands(Commands& commands) {
     }
 }
 
-void HelpCommand::run(std::shared_ptr<InputData>) {
+void HelpCommand::run() {
     // Used to retrieve command help
-    Commands& commands = *Commands::getInstance();
+    Commands& commands = *Environment::getInstance()->getCommands();
     this->printCommands(commands);
     // help.txt contains a raw string. Due to various annoying
     // issues with C++, adding the include statement to a raw

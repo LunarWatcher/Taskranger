@@ -11,10 +11,11 @@ VersionCommand::VersionCommand() {
     this->usage = "taskranger version";
 }
 
-void VersionCommand::run(std::shared_ptr<InputData>) {
+void VersionCommand::run() {
     ColorPrinter printer;
     printer << ANSIFeature::BOLD << "Taskranger " << TASKRANGER_VERSION << ANSIFeature::CLEAR << "\n"
-            << "License: " << TASKRANGER_LICENSE << "\n\n";
+            << "License: " << TASKRANGER_LICENSE << "\n\n"
+            << TASKRANGER_CHANGELOG << std::endl;
 }
 
 } // namespace taskranger

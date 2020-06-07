@@ -1,5 +1,6 @@
 #include "NextCommand.hpp"
 #include "tabulate/table.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/TableUtil.hpp"
@@ -16,7 +17,8 @@ NextCommand::NextCommand() {
     this->usage = "taskranger next <filter>";
 }
 
-void NextCommand::run(std::shared_ptr<InputData> input) {
+void NextCommand::run() {
+    auto input = Environment::getInstance()->getInputData();
     JSONDatabase database("active.json");
 
     if (database.getDatabase()->size() == 0) {

@@ -1,4 +1,5 @@
 #include "AllCommand.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/input/InputData.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
@@ -15,7 +16,8 @@ AllCommand::AllCommand() {
     this->usage = "taskranger all <filters>";
 }
 
-void AllCommand::run(std::shared_ptr<InputData> input) {
+void AllCommand::run() {
+    auto input = Environment::getInstance()->getInputData();
     JSONDatabase active("active.json");
     JSONDatabase historical("completed.json");
 

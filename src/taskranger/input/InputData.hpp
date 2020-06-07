@@ -2,6 +2,7 @@
 #define TASKRANGER_INPUT_INPUTDATA_HPP
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 

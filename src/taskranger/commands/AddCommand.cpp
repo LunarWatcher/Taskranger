@@ -1,5 +1,7 @@
 #include "AddCommand.hpp"
 #include "tabulate/table.hpp"
+#include "taskranger/data/Attribute.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/UIDUtils.hpp"
@@ -12,12 +14,13 @@ AddCommand::AddCommand() {
     this->usage = "taskranger add <description> <attributes>";
 }
 
-void AddCommand::run(std::shared_ptr<InputData> input) {
+void AddCommand::run() {
+    using namespace std::literals;
+
+    auto input = Environment::getInstance()->getInputData();
     auto& data = input->data;
     if (data.find("description") == data.end()) {
-        ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9 << "You need to add a message to the todo.\n" << ANSIFeature::CLEAR;
-        return;
+        throw "You need to add a message to the task."s;
     }
 
     JSONDatabase database("active.json");
@@ -51,6 +54,13 @@ void AddCommand::run(std::shared_ptr<InputData> input) {
     if (input->tags.size() > 0)
         mod["tags"] = input->tags;
 
+    for (auto& [key, value] : mod.items()) {
+        auto attrib = Environment::getInstance()->getAttribute(key);
+        if (!attrib) {
+            throw "Attribute doesn't exist: " + key;
+        }
+        attrib->validate(value);
+    }
     // TODO at a later point: add the time of the task's creation
     (*database.getDatabase()).push_back(mod);
     database.commit();

@@ -1,11 +1,12 @@
 #include "TaskFilter.hpp"
-#include "taskranger/data/Task.hpp"
+#include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <algorithm>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 
 namespace taskranger {
 
@@ -37,13 +38,21 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
     auto filters = input->data;
     if (input->tags.size() != 0) {
         std::string builder;
+        std::string subBuilder;
         for (size_t i = 0; i < input->tags.size(); i++) {
-            builder += input->tags.at(i);
-            // Commas are used to conform to the strlist format
-            if (i != input->tags.size() - 1)
-                builder += ",";
+            auto tag = input->tags.at(i);
+            if (tag.at(0) == '-') {
+                subBuilder += (subBuilder.length() != 0 ? ","s : ""s) + "+" + tag.substr(1);
+            } else {
+                builder += (builder.length() != 0 ? ","s : ""s) + tag;
+            }
         }
-        filters["tags"] = builder;
+        if (builder != "") {
+            filters["tags"] = builder;
+        }
+        if (subBuilder != "") {
+            filters["tags.not"] = subBuilder;
+        }
     }
     nlohmann::json reworked;
 
@@ -53,13 +62,21 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
         std::vector<unsigned long long> vec;
 
         for (auto& id : StrUtil::splitString(filters["ids"], ",")) {
+
             try {
-                unsigned long long idx = std::stoull(id);
-                if (idx > rawInput.size()) {
-                    ColorPrinter printer;
-                    printer << ANSIFeature::FOREGROUND << 9 << "Error: attempted to query ID " << idx
-                            << " when there's only " << rawInput.size() << " tasks.\n";
+                size_t endPos = 0;
+                unsigned long long idx = std::stoull(id, &endPos);
+
+                if (endPos != id.length()) {
+                    // if the position where stoull stops processing isn't equal to the length, the number is invalid.
+                    continue;
                 }
+
+                if (idx - 1 >= rawInput.size()) {
+                    // Silently skip out of range IDs
+                    continue;
+                }
+
                 // the idx is in a standard human counting system (the first
                 // item is 1). the array access index still starts at 0, so 1
                 // needs to be subtracted from the ID
@@ -75,8 +92,8 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
                 reworked.push_back(rawInput.at(idx - 1));
                 reworked.back()["id"] = idx;
             } catch (std::invalid_argument&) {
-                ColorPrinter printer;
-                printer << ANSIFeature::FOREGROUND << 9 << "Error: Invalid ID: " << id << ANSIFeature::CLEAR << "\n";
+                // Silently fail invalid IDs
+                continue;
             }
         }
     } else {

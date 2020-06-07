@@ -1,5 +1,7 @@
 #include "InputParser.hpp"
 #include "InputData.hpp"
+#include "taskranger/data/Environment.hpp"
+#include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <iostream>
 #include <map>
@@ -9,9 +11,9 @@ namespace taskranger {
 
 InputParser::InputParser() {}
 
-std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[]) {
+void InputParser::parseInput(int argc, const char* argv[]) {
 
-    std::shared_ptr<InputData> data = std::make_shared<InputData>();
+    std::shared_ptr<InputData> data = Environment::getInstance()->getInputData();
 
     if (argc == 1) {
         // The first argument is always the binary execution.
@@ -20,7 +22,7 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
         // By default, this shows the upcoming tasks
         data->data["subcommand"] = "next";
 
-        return data;
+        return;
     }
 
     // Identify the command
@@ -123,8 +125,6 @@ std::shared_ptr<InputData> InputParser::parseInput(int argc, const char* argv[])
             tokens["description"] = currentToken;
         }
     }
-
-    return data;
 }
 
 } // namespace taskranger
