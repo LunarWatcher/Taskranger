@@ -31,7 +31,7 @@ on:
 # When the trigger conditions are met, run the jobs
 jobs:
   pre-commit:
-    if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -49,7 +49,7 @@ jobs:
           python3 -m pip install -r requirements.txt
           pre-commit run --all-files
   build:
-    if: "!contains(toJSON(github.event.commits.*.message), '[skip-ci]')"
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     # Contains the build matrix, and yes, it's a bit of a clusterfuck
     strategy:
       matrix:
