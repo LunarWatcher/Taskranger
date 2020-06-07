@@ -7,9 +7,11 @@
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/input/InputData.hpp"
+#include "taskranger/util/ColorPrinter.hpp"
 
 int main(int argc, const char* argv[]) {
 
+    using taskranger::ANSIFeature;
     using taskranger::Environment;
     using taskranger::InputParser;
 
@@ -21,7 +23,8 @@ int main(int argc, const char* argv[]) {
     } catch (std::string& err) {
         // It makes most sense to throw string errors. These can universally be caught here.
         // This mostly makes sense anyway, at least for errors that can't really be recovered from..
-        std::cerr << err << std::endl;
+        taskranger::ColorPrinter printer(std::wcerr);
+        printer << ANSIFeature::FOREGROUND << 9 << err << ANSIFeature::CLEAR << std::endl;
         return -1;
     } catch (taskranger::PermissionError& permErr) {
         std::cerr << "Critical error: permission error:\n"

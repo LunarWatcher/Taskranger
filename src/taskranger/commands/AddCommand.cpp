@@ -20,9 +20,7 @@ void AddCommand::run() {
     auto input = Environment::getInstance()->getInputData();
     auto& data = input->data;
     if (data.find("description") == data.end()) {
-        ColorPrinter printer;
-        printer << ANSIFeature::FOREGROUND << 9 << "You need to add a message to the todo.\n" << ANSIFeature::CLEAR;
-        return;
+        throw "You need to add a message to the task."s;
     }
 
     JSONDatabase database("active.json");

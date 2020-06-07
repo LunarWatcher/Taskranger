@@ -14,7 +14,8 @@ VersionCommand::VersionCommand() {
 void VersionCommand::run() {
     ColorPrinter printer;
     printer << ANSIFeature::BOLD << "Taskranger " << TASKRANGER_VERSION << ANSIFeature::CLEAR << "\n"
-            << "License: " << TASKRANGER_LICENSE << "\n\n";
+            << "License: " << TASKRANGER_LICENSE << "\n\n"
+            << TASKRANGER_CHANGELOG << std::endl;
 }
 
 } // namespace taskranger
