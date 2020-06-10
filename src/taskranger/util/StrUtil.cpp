@@ -127,4 +127,8 @@ std::string StrUtil::toLower(std::string input) {
     return input;
 }
 
+bool StrUtil::startsWith(const std::string& in, const std::string& prefix) {
+    return in.rfind(prefix, 0) == 0;
+}
+
 } // namespace taskranger

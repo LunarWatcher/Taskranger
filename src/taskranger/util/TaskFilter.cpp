@@ -67,34 +67,46 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
                 size_t endPos = 0;
                 unsigned long long idx = std::stoull(id, &endPos);
 
-                if (endPos != id.length()) {
-                    // if the position where stoull stops processing isn't equal to the length, the number is invalid.
-                    continue;
-                }
+                if (endPos == id.length() && idx - 1 < rawInput.size()) {
+                    // Silently skip out of range IDs and incomplete conversions.
+                    // The if statement is inversed to enable failed cases to skip on to UUID checks
 
-                if (idx - 1 >= rawInput.size()) {
-                    // Silently skip out of range IDs
-                    continue;
-                }
-
-                // the idx is in a standard human counting system (the first
-                // item is 1). the array access index still starts at 0, so 1
-                // needs to be subtracted from the ID
-                bool skip = false;
-                for (auto& task : reworked) {
-                    if (task.at("id") == idx) {
-                        skip = true;
+                    // the idx is in a standard human counting system (the first
+                    // item is 1). the array access index still starts at 0, so 1
+                    // needs to be subtracted from the ID
+                    bool skip = false;
+                    for (auto& task : reworked) {
+                        if (task.at("id") == idx) {
+                            skip = true;
+                        }
                     }
-                }
-                if (skip) {
+                    if (skip) {
+                        continue;
+                    }
+                    auto cache = rawInput.at(idx - 1);
+                    cache["id"] = idx;
+                    reworked.push_back(cache);
                     continue;
                 }
-                reworked.push_back(rawInput.at(idx - 1));
-                reworked.back()["id"] = idx;
             } catch (std::invalid_argument&) {
-                // Silently fail invalid IDs
+                // Silently ignore failed IDs. Also required for UUID checking
+            }
+            if (id.size() > 36) {
+                // Invalid IDs can be skipped. (The UUID length is 36)
                 continue;
             }
+            // Inefficient?
+            for (size_t i = 0; i < rawInput.size(); i++) {
+                auto& task = rawInput.at(i);
+                auto uuid = task.at("uuid").get<std::string>();
+                if (uuid == id || StrUtil::startsWith(uuid, id)) {
+                    auto cache = task;
+                    cache["id"] = i + 1;
+                    reworked.push_back(cache);
+                    break;
+                }
+            }
+            continue;
         }
     } else {
         // If no IDs are specified, the tasks still need some preprocessing.

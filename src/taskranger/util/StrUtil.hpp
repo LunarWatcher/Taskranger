@@ -47,14 +47,21 @@ std::string toString(
  * This should not be used with conversions where 0 is a valid ID.
  */
 void strVecToUll(const std::vector<std::string>& strIds, std::vector<unsigned long long>& out);
+
 /**
  * Compares two strings. Not case-sensitive
  */
 bool istrEquals(const std::string& a, const std::string& b);
+
 /**
  * Converts a string to lower-case
  */
 std::string toLower(std::string input);
+
+/**
+ * Checks if a string starts with a given prefix
+ */
+bool startsWith(const std::string& in, const std::string& prefix);
 
 } // namespace StrUtil
 } // namespace taskranger

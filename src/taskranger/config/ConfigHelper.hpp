@@ -27,6 +27,7 @@ public:
     auto begin() {
         return config.begin();
     }
+
     auto end() {
         return config.end();
     }

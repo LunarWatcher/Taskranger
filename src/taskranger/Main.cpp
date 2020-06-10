@@ -10,7 +10,6 @@
 #include "taskranger/util/ColorPrinter.hpp"
 
 int main(int argc, const char* argv[]) {
-
     using taskranger::ANSIFeature;
     using taskranger::Environment;
     using taskranger::InputParser;

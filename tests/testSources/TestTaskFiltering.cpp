@@ -23,6 +23,7 @@ const nlohmann::json baseJson = {
     }, {
         {"description", "Test task 4 for unit tests"},
         {"project", "@bogus"},
+        {"uuid", "abcd1234-a347-45d2-9a9c-93f04a7acd84"},
         {"tags", std::vector<std::string>{"+tag", "+tag2"}}
     }
 };
@@ -112,4 +113,13 @@ TEST_CASE("Invalid and out of range IDs", "[TaskFilterIDs]") {
         // Not throwing is the main test
         REQUIRE(testInvalid.size() == 2);
     }
+}
+
+TEST_CASE("UUID filtering", "[UUIDs]") {
+    auto mutableCopy = baseJson;
+    InputPtr dataPtr = std::make_shared<InputData>();
+    dataPtr->data["ids"] = "abcd";
+    nlohmann::json testPrefixFilter = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
+    REQUIRE(testPrefixFilter.size() == 1);
+    REQUIRE(testPrefixFilter.at(0).at("project") == "@bogus");
 }
