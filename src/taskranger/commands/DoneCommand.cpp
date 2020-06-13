@@ -48,10 +48,10 @@ void DoneCommand::run() {
     for (auto& id : ids)
         mSet.insert(id);
     ids.assign(mSet.begin(), mSet.end());
-    // unsigned types do not play well with reverse for loops
-    for (long long i = ids.size() - 1; i >= 0; i--) {
 
-        auto id = ids.at(i);
+    for (auto revIt = ids.rbegin(); revIt != ids.rend(); revIt++) {
+
+        auto id = *revIt;
 
         if (id == 0)
             continue;

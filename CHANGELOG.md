@@ -29,6 +29,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 ## Changes
 * `Task::loadUserDefinedAttribs()` removed and replaced with dynamic loading. Not that it was used anyway, but the API has changed
+* (Internal) change the reverse iteration in DoneCommand to use a `reverse_iterator` instead of a for loop with a long long to avoid unsigned number horrors
 
 # [v0.0.3] - 07.06.2020
 
