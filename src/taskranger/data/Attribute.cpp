@@ -7,8 +7,8 @@
 // explicitly needed as an override. Unfortunately, this still requires manually
 // settings vars, and because there's no decent hacks to make it look pretty,
 // it just looks a lot ugler than subclassing
-#include "taskranger/data/attributes//DescriptionAttribute.hpp"
 #include "taskranger/data/attributes/AttribTypes.hpp"
+#include "taskranger/data/attributes/DescriptionAttribute.hpp"
 #include "taskranger/data/attributes/ProjectAttribute.hpp"
 #include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/data/attributes/UDAAttribute.hpp"
