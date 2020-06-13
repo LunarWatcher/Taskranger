@@ -10,8 +10,6 @@
 namespace taskranger {
 namespace Task {
 
-void loadUserDefinedAttribs();
-
 /**
  * Default removeIf predicate for tasks.
  *

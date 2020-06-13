@@ -3,8 +3,11 @@
 #include "taskranger/data/Attribute.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
+#include "taskranger/data/attributes/AttribTypes.hpp"
+#include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/UIDUtils.hpp"
+#include <memory>
 
 namespace taskranger {
 
@@ -24,8 +27,8 @@ void AddCommand::run() {
     }
 
     JSONDatabase database("active.json");
-    nlohmann::json mod = data;
-    mod.erase("subcommand");
+    nlohmann::json mod;
+    data.erase("subcommand");
 
     // deal with IDs
     // The "reference" ID is the one that will be used in most common tasks. This ID
@@ -47,19 +50,20 @@ void AddCommand::run() {
     // low, but better safe than sorry on this one.
     std::string uuid = uuid::generateUuidV4();
 
-    mod["uuid"] = uuid;
-    // Inject the project
-    if (input->data.find("project") != input->data.end())
-        mod["project"] = input->data.at("project");
-    if (input->tags.size() > 0)
-        mod["tags"] = input->tags;
+    data["uuid"] = uuid;
 
-    for (auto& [key, value] : mod.items()) {
-        auto attrib = Environment::getInstance()->getAttribute(key);
+    Environment& env = *Environment::getInstance();
+    if (input->tags.size() != 0) {
+        std::dynamic_pointer_cast<TagsAttribute>(env.getAttribute("tags"))->modify(mod, input->tags);
+    }
+
+    for (auto& [key, value] : data) {
+        auto attrib = env.getAttribute(key);
         if (!attrib) {
             throw "Attribute doesn't exist: " + key;
         }
-        attrib->validate(value);
+        attrib->modify(mod, value);
+        attrib->validate(mod[key]);
     }
     // TODO at a later point: add the time of the task's creation
     (*database.getDatabase()).push_back(mod);

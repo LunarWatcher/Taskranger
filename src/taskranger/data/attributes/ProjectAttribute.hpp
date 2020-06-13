@@ -6,6 +6,7 @@ namespace taskranger {
 class ProjectAttribute : public StringAttribute {
 public:
     ProjectAttribute() {
+        this->name = "project";
         this->label = "Project";
     }
 };

@@ -6,6 +6,9 @@ env = EnvMod.getEnvironment()
 env.withConan()
 # Minor patch for asan
 env.environment['ENV']['ASAN_OPTIONS'] = 'halt_on_error=0;detect_leaks=0'
+# TODO: uncomment when the next version of SCons comes out
+# See LunarWatcher/SConsStandard#4
+# env.withCompilationDB()
 
 if platform == "win32":
     env.includeSysVars("USERPROFILE", "HOMEDRIVE", "HOMEPATH")

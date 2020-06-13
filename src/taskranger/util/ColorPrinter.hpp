@@ -9,7 +9,7 @@
 namespace taskranger {
 
 // Enable forwarding of std::endl
-typedef std::basic_ostream<wchar_t, std::char_traits<wchar_t>> CoutType;
+typedef std::basic_ostream<char, std::char_traits<char>> CoutType;
 typedef CoutType& (*StandardEndLine)(CoutType&);
 
 /**
@@ -29,17 +29,16 @@ enum class ANSIFeature {
 class ColorPrinter {
 private:
     bool processing256 = false;
-    std::wostream& outputStream;
+    std::ostream& outputStream;
 
 public:
-    ColorPrinter() : outputStream(std::wcout) {}
-    ColorPrinter(std::wostream& outputStream) : outputStream(outputStream) {}
+    ColorPrinter() : outputStream(std::cout) {}
+    ColorPrinter(std::ostream& outputStream) : outputStream(outputStream) {}
 
     template <typename T>
     friend ColorPrinter& operator<<(ColorPrinter&, T);
     friend ColorPrinter& operator<<(ColorPrinter&, ANSIFeature);
     friend ColorPrinter& operator<<(ColorPrinter&, const std::string&);
-    friend ColorPrinter& operator<<(ColorPrinter&, const std::wstring&);
     friend ColorPrinter& operator<<(ColorPrinter&, int);
     friend ColorPrinter& operator<<(ColorPrinter&, StandardEndLine manip);
 };
@@ -52,7 +51,6 @@ ColorPrinter& operator<<(ColorPrinter& printer, T type) {
 
 ColorPrinter& operator<<(ColorPrinter& printer, ANSIFeature feature);
 ColorPrinter& operator<<(ColorPrinter& printer, const std::string& str);
-ColorPrinter& operator<<(ColorPrinter& printer, const std::wstring& str);
 ColorPrinter& operator<<(ColorPrinter& printer, int code);
 ColorPrinter& operator<<(ColorPrinter& printer, StandardEndLine manip);
 

@@ -10,33 +10,62 @@
 
 namespace taskranger {
 
-// clang-format off
-enum class FieldType {
-    STRING,
-    /**
-     * Unsigned long long
-     */
-    ULLONG,
-    DATE,
-    /**
-     * List of strings
-     */
-    STRLIST
-};
-// clang-format on
+class Attribute;
 
-inline FieldType strToFT(const std::string& fieldType) {
-    if (StrUtil::istrEquals(fieldType, "string")) {
-        return FieldType::STRING;
-    } else if (StrUtil::istrEquals(fieldType, "ullong")) {
-        return FieldType::ULLONG;
-    } else if (StrUtil::istrEquals(fieldType, "strlist")) {
-        return FieldType::STRLIST;
-    } else if (StrUtil::istrEquals(fieldType, "date")) {
-        return FieldType::DATE;
-    }
-    throw "Unknown field type: " + fieldType;
+namespace UDAAttribute {
+std::shared_ptr<Attribute> makeAttribute(const std::string&);
 }
+
+class FieldType {
+public:
+    // clang-format off
+    enum FieldTypeVals {
+        STRING,
+        /**
+         * Unsigned long long
+         */
+        ULLONG,
+        DATE,
+        /**
+         * List of strings
+         */
+        STRLIST
+    };
+    // clang-format on
+private:
+    FieldTypeVals value;
+
+public:
+    FieldType() = default;
+    constexpr FieldType(FieldTypeVals val) : value(val) {}
+    FieldType(const std::string& value) {
+
+        if (StrUtil::istrEquals(value, "string")) {
+            this->value = FieldType::STRING;
+        } else if (StrUtil::istrEquals(value, "ullong")) {
+            this->value = FieldType::ULLONG;
+        } else if (StrUtil::istrEquals(value, "strlist")) {
+            this->value = FieldType::STRLIST;
+        } else if (StrUtil::istrEquals(value, "date")) {
+            this->value = FieldType::DATE;
+        } else {
+            throw "Critical error: the attribute \"" + value + "\" doesn't have a valid field type";
+        }
+    }
+
+    constexpr bool operator==(FieldType& b) {
+        return this->value == b.value;
+    }
+    constexpr bool operator!=(FieldType& b) {
+        return this->value != b.value;
+    }
+
+    operator FieldTypeVals() const {
+        return value;
+    }
+
+    explicit operator bool() = delete;
+};
 
 class Attribute {
 protected:
@@ -65,6 +94,11 @@ protected:
     bool builtin = true;
 
     /**
+     * Whether or not this field can be modified.
+     */
+    bool modifiable = true;
+
+    /**
      * Contains allowed values, if there are any.
      * This is mainly for user defined attribs.
      *
@@ -74,13 +108,42 @@ protected:
      * by not having to use std::any, and/or std::variant, and get
      * stuck with a type conversion clusterfuck.
      */
-    std::optional<std::vector<std::string>> allowedValues;
+    std::optional<nlohmann::json> allowedValues;
 
 public:
     Attribute() {}
     virtual ~Attribute() = default;
 
-    virtual void modify(nlohmann::json& /* task */, const std::string& /* input */){};
+    /**
+     * This method is used to modify or insert a specific field into the given task.
+     *
+     * This method has to be called in order to properly modify the field type.
+     *
+     * The default implementation can also be used by overriding classes. The method
+     * itself does NOT change any data, but runs basic data validation that spreads
+     * across all the different attributes.
+     *
+     * At the time of writing, this means a check to see if the change is an
+     * attempted modification if we're not allowing modifications.
+     * If there's an attempted modification on a non-modifiable field, the
+     * method throws.
+     */
+    virtual void modify(nlohmann::json& task, const std::string& input) {
+        if (!this->modifiable && task.find(this->name) != task.end()) {
+            throw "The field " + this->name + " cannot be modified";
+        }
+
+        if (this->type != FieldType::STRLIST) {
+            if (!isValueAllowed(input)) {
+                throw "The value " + input + " is not allowed for " + this->name;
+            }
+        }
+    }
+
+    /**
+     * Runs the relevant checks against the field
+     */
+    void checkField(nlohmann::json& attribValue);
 
     /**
      * This function is meant to validate the value of the field.
@@ -104,11 +167,16 @@ public:
      * Always returns true if there's no value limitation.
      * Otherwise, returns whether the value is contained in the set
      * of @{allowedValues}
+     *
+     * Note that the input is a JSON object to enable type compat.
      */
-    bool isValueAllowed(const std::string& input);
+    bool isValueAllowed(const nlohmann::json& input);
 
     bool isBuiltin() {
         return builtin;
+    }
+    void setUda() {
+        builtin = false;
     }
 
     bool hasLimitedValues() {
@@ -116,6 +184,8 @@ public:
     }
 
     static std::shared_ptr<Attribute> createAttrib(const std::string& fieldName);
+
+    friend std::shared_ptr<Attribute> UDAAttribute::makeAttribute(const std::string& attributeName);
 };
 
 } // namespace taskranger

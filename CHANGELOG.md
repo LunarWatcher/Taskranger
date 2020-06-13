@@ -1,4 +1,4 @@
-This project mostly follows <https://keepachangelog.com/en/1.0.0/>, and uses [semantic versioning](https://semver.org/). (All dates are dd.mm.yyyy)
+This project mostly follows <https://keepachangelog.com/en/1.0.0/>, and uses [semantic versioning](https://semver.org/). (All dates are dd.mm.yyyy. Developer details in comments in this file)
 
 <!--
 This file syntax bases itself on https://keepachangelog.com/en/1.0.0/
@@ -14,6 +14,21 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 -->
 
 # [Unreleased] (TBD)
+
+## Added
+* UUID filtering
+* User defined attributes
+* Type restriction
+* Value restriction (optional; mainly intended for UDAs)
+
+## Fixes
+* Attributes now store as the proper type
+* Fix UTF-8 (theoretically; multi-byte chars are likely still broken. This is a future TODO)
+* Add names to attributes (some of them were missing)
+    * Add DescriptionAttribute as a separate class; lack of subclass caused missing attributes
+
+## Changes
+* `Task::loadUserDefinedAttribs()` removed and replaced with dynamic loading. Not that it was used anyway, but the API has changed
 
 # [v0.0.3] - 07.06.2020
 

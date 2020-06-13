@@ -9,11 +9,6 @@
 
 namespace taskranger {
 
-void Task::loadUserDefinedAttribs() {
-    // Look at me, I'm an empty function!
-    // TODO: implement
-}
-
 void Task::convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, const std::string& rawInput,
         nlohmann::json& reworked) {
     using namespace std::literals;
