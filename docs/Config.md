@@ -44,9 +44,9 @@ The config file, regardless of location, is always called `.trconf`. By default,
 
 The config file is in the JSON format, or:
 
-```
+```json
 {
-    "config": "value", 
+    "config": "value",
     "scopes": {
         "are": {
             "maps": "because it's pretty and works with formatting",
@@ -76,7 +76,7 @@ Type: path
 This is a variable that you hopefully won't need. This specifies the directory of `.trconf`.
 
 Examples (note: no specific operating system is used in these examples. Use common sense when setting the variable):
-```
+```sh
 TASKRANGER_CONFIG_LOCATION=C:/Users/Username/
 TASKRANGER_CONFIG_LOCATION=/media/username/backup/.taskranger
 ```
@@ -92,7 +92,7 @@ Type: path
 
 This determines where the databases are stored. Examples:
 
-```
+```json
 "dataDir": "~/.taskranger"
 "dataDir": "/mnt/ExternalDrive/taskranger"
 "dataDir": "D:/tasks/"
@@ -108,7 +108,7 @@ This map contains user defined attributes. [Development status: currently not en
 Every single user defined attribute _has_ to have a type. Without it, it's considered invalid. TODO: explain what types are available. And maybe get around to making a slightly better system?
 
 Being a map, several attributes can be declared in the UDA. Here's a sample:
-```
+```json
 {
     "uda": {
         "myAttribute": {
@@ -116,7 +116,7 @@ Being a map, several attributes can be declared in the UDA. Here's a sample:
             "label": "MA"
         },
         "mySecondAttribute": {
-            "type": "strlist",
+            "type": "strlist"
         }
     }
 }
@@ -133,3 +133,27 @@ This is self-explanatory. What you insert here defines what type the attribute i
 Type: string
 
 The label defines what shows up in tables and other places where the label itself is used. It can be long, it can be short, it's really up to you.
+
+#### `values`
+type: array
+
+Defines the allowed values for the attribute. For an instance:
+
+```json
+{
+    "uda": {
+        "difficulty": {
+            "type": "string",
+            "values": ["easy", "medium", "hard", "insane"]
+        }
+    }
+}
+```
+
+... will only allow those four values in the attribute. That means:
+
+```
+taskranger add Some task difficulty:"invalid attribute value"
+```
+
+is not allowed.
