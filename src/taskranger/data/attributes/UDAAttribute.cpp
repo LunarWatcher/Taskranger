@@ -39,7 +39,10 @@ std::shared_ptr<Attribute> UDAAttribute::makeAttribute(const std::string& attrib
         udaAttribPtr = std::make_shared<StringAttribute>();
         break;
     case FieldType::ULLONG:
-        udaAttribPtr = std::make_shared<ULLongAttribute>();
+        throw "UDAs may not use the ullong type";
+        break;
+    case FieldType::NUMBER:
+        udaAttribPtr = std::make_shared<NumberAttribute>();
         break;
     case FieldType::STRLIST:
         udaAttribPtr = std::make_shared<StrListAttribute>();

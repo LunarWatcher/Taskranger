@@ -4,6 +4,21 @@
 
 namespace taskranger {
 
+class NumberAttribute : public Attribute {
+public:
+    NumberAttribute() {
+        this->type = FieldType::NUMBER;
+    }
+
+    virtual void validate(nlohmann::json& attribValue) override {
+        if (!attribValue.is_number()) {
+            throw this->name + " only accepts numbers.";
+        }
+    }
+
+    virtual void modify(nlohmann::json& task, const std::string& input) override;
+};
+
 class ULLongAttribute : public Attribute {
 public:
     ULLongAttribute() {

@@ -3,6 +3,22 @@
 
 namespace taskranger {
 
+void NumberAttribute::modify(nlohmann::json& task, const std::string& input) {
+    Attribute::modify(task, input);
+
+    size_t convEndPos = 0;
+    double value = 0;
+    try {
+        value = std::stod(input, &convEndPos);
+    } catch (std::invalid_argument&) { convEndPos = 0; }
+
+    if (convEndPos != input.length()) {
+        throw "Invalid number: " + input;
+    }
+
+    task[this->name] = value;
+}
+
 void ULLongAttribute::modify(nlohmann::json& task, const std::string& input) {
     if (this->name == "id") {
         /**

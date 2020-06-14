@@ -21,8 +21,10 @@ public:
     // clang-format off
     enum FieldTypeVals {
         STRING,
+        NUMBER,
         /**
-         * Unsigned long long
+         * Unsigned long long.
+         * User-defined attributes may not use this field type
          */
         ULLONG,
         DATE,
@@ -42,8 +44,8 @@ public:
 
         if (StrUtil::istrEquals(value, "string")) {
             this->value = FieldType::STRING;
-        } else if (StrUtil::istrEquals(value, "ullong")) {
-            this->value = FieldType::ULLONG;
+        } else if (StrUtil::istrEquals(value, "number")) {
+            this->value = FieldType::NUMBER;
         } else if (StrUtil::istrEquals(value, "strlist")) {
             this->value = FieldType::STRLIST;
         } else if (StrUtil::istrEquals(value, "date")) {

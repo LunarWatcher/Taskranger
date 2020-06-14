@@ -20,6 +20,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * User defined attributes
 * Type restriction
 * Value restriction (optional; mainly intended for UDAs)
+* Add `number` as a UDA type (double under the hood; disallow ULLong)
 
 ## Fixes
 * Attributes now store as the proper type
