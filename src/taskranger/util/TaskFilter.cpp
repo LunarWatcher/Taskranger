@@ -5,6 +5,7 @@
 #include "taskranger/util/StrUtil.hpp"
 #include <algorithm>
 #include <cstring>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 
@@ -67,6 +68,8 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             }
             reworked.push_back(task);
         }
+    } else {
+        reworked = rawInput;
     }
     nlohmann::json output;
     // Filter the tasks
@@ -87,6 +90,7 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             continue;
         }
         if (key == "id" && !includeIds) {
+            std::cout << "Skip" << std::endl;
             // If we're querying IDs, but don't want to include IDs, this should
             // return an empty value
             return {};
