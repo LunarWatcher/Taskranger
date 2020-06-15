@@ -13,10 +13,12 @@ namespace InputParserOperators {
 
 // clang-format off
 enum class Operator {
-    IS,
-    NOT,
-    GREATER_THAN,
-    LESS_THAN,
+    IS, // ==
+    NOT, // !=
+    GREATER_THAN, // >
+    GREATER_EQ, // >=
+    LESS_THAN, // <
+    LESS_EQ, // <=
     CONTAINS
 };
 // clang-format on
@@ -64,8 +66,12 @@ bool evalOperator(Operator op, const T& input, const T& relativeTo) {
         return input != relativeTo;
     case Operator::GREATER_THAN:
         return relativeTo > input;
+    case Operator::GREATER_EQ:
+        return relativeTo >= input;
     case Operator::LESS_THAN:
         return relativeTo < input;
+    case Operator::LESS_EQ:
+        return relativeTo <= input;
     default:
         return false;
     }

@@ -21,13 +21,15 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Type restriction
 * Value restriction (optional; mainly intended for UDAs)
 * Add `number` as a UDA type (double under the hood)
+* Operators `>=` (greatereq) and `<=` (lesseq) - names may be changed in the future (feels clunky)
 
 ## Fixes
 * Attributes now store as the proper type
 * Fix UTF-8 (theoretically; multi-byte chars are likely still broken. This is a future TODO)
 * Add names to attributes (some of them were missing)
     * Add DescriptionAttribute as a separate class; lack of subclass caused missing attributes
-* Fix bad logic in the `>=` and `<=` operators (the operators technically did the opposite of their names earlier)
+* Fix bad logic in the `>` and `<` operators (the operators technically did the opposite of their names earlier)
+* Enable `ids.operator` and `id.operator`
 
 ## Changes
 * `Task::loadUserDefinedAttribs()` removed and replaced with dynamic loading. Not that it was used anyway, but the API has changed

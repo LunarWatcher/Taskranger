@@ -42,7 +42,7 @@ void Attribute::checkField(nlohmann::json& attributeValue) {
 std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName) {
     using namespace std::literals;
 
-    if (fieldName == "id") {
+    if (fieldName == "id" || fieldName == "ids") {
         return std::make_shared<IDAttribute>();
     } else if (fieldName == "description") {
         return std::make_shared<DescriptionAttribute>();
@@ -57,17 +57,17 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
         auto udaIt = config.findKey("uda");
 
         if (udaIt == config.end()) {
-            throw "Unknown attribute: "s + fieldName;
+            throw "Unknown attribute: " + fieldName;
         }
 
         nlohmann::json& udas = *udaIt;
         auto attribIt = udas.find(fieldName);
         if (attribIt == udas.end()) {
-            throw "Unknown attribute: "s + fieldName;
+            throw "Unknown attribute: " + fieldName;
         }
 
         if (attribIt->find("type") == attribIt->end()) {
-            throw "Misconfigured attribute: no type for UDA "s + fieldName;
+            throw "Misconfigured attribute: no type for UDA " + fieldName;
         }
 
         return UDAAttribute::makeAttribute(fieldName);

@@ -124,7 +124,7 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
     // Filter the tasks
     for (auto& filter : filters) {
         auto baseKey = filter.first;
-        if (baseKey == "ids" || baseKey == "subcommand")
+        if (baseKey == "subcommand")
             continue;
         auto calcPair = InputParserOperators::determineOperator(baseKey);
         InputParserOperators::Operator op = calcPair.first;
