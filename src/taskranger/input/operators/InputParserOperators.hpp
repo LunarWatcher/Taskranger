@@ -1,5 +1,6 @@
 #pragma once
 
+#include "taskranger/data/Attribute.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -33,7 +34,7 @@ enum class Operator {
  * This should in theory deal with multi-key inputs (i.e. some.input.not),
  * but this isn't implemented and possibly unsupported.
  */
-std::pair<Operator, std::string> determineOperator(const std::string& attribKey);
+std::pair<Operator, std::string> determineOperator(const std::string& attribKey, std::shared_ptr<Attribute>& attribPtr);
 
 /**
  * Evaluates an `input` by comparing it to a `relativeTo` using

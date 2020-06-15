@@ -26,7 +26,13 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
                     << ". Are the permissions incorrect?" << ANSIFeature::CLEAR << "\n";
             throw PermissionError("#0: failed to open existing database");
         }
-        stream >> *ptr;
+        try {
+            stream >> *ptr;
+        } catch (nlohmann::json::parse_error& err) {
+            std::cout << err.what() << std::endl;
+            throw "Failed to load database " + databaseName +
+                    " - be careful when modifying it manually. If you didn't, open an issue on GitHub";
+        }
     }
 
     this->database = ptr;

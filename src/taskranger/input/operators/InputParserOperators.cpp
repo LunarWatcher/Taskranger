@@ -4,17 +4,18 @@
 
 namespace taskranger {
 
-auto InputParserOperators::determineOperator(const std::string& attribKey) -> std::pair<Operator, std::string> {
+auto InputParserOperators::determineOperator(const std::string& attribKey, std::shared_ptr<Attribute>& attribPtr)
+        -> std::pair<Operator, std::string> {
 
     auto split = StrUtil::reverseSplitString(attribKey, ".", 1);
     // To handle aliases, this needs to be the rawKey.
     // The rawKey can then be used to retrieve the actual key
     std::string& rawKey = split.back();
-    std::shared_ptr<Attribute> attrib = Environment::getInstance()->getAttribute(rawKey);
-    if (!attrib) {
+    attribPtr = Environment::getInstance()->getAttribute(rawKey);
+    if (!attribPtr) {
         throw "Unknown attribute: " + rawKey + " (debug: .1)";
     }
-    const std::string& key = attrib->getName();
+    const std::string& key = attribPtr->getName();
 
     // The operator
     std::string& op = split.front();

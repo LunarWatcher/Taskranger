@@ -79,7 +79,9 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             continue;
         }
 
-        auto calcPair = InputParserOperators::determineOperator(baseKey);
+        std::shared_ptr<Attribute> attribPtr;
+        auto calcPair = InputParserOperators::determineOperator(baseKey, attribPtr);
+
         InputParserOperators::Operator op = calcPair.first;
         const std::string& key = calcPair.second;
         std::string filterValue = filter.second;
@@ -99,9 +101,12 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
         if (key == "project" && filterValue.at(0) != '@') {
             filterValue = "@" + filterValue;
         }
-
-        for (auto& value : StrUtil::splitString(filterValue, ',')) {
-            Task::convertAndEval(op, key, value, output, reworked);
+        if (attribPtr->getType() != FieldType::STRLIST) {
+            for (auto& value : StrUtil::splitString(filterValue, ',')) {
+                Task::convertAndEval(op, key, value, output, reworked);
+            }
+        } else {
+            Task::convertAndEval(op, key, filterValue, output, reworked);
         }
         reworked = output;
         output.clear();
