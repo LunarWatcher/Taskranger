@@ -5,22 +5,23 @@
 namespace taskranger {
 
 auto InputParserOperators::determineOperator(const std::string& attribKey) -> std::pair<Operator, std::string> {
-    if (attribKey.find('.') == std::string::npos)
-        return {Operator::IS, attribKey};
+
     auto split = StrUtil::reverseSplitString(attribKey, ".", 1);
     // To handle aliases, this needs to be the rawKey.
     // The rawKey can then be used to retrieve the actual key
     std::string& rawKey = split.back();
     std::shared_ptr<Attribute> attrib = Environment::getInstance()->getAttribute(rawKey);
     if (!attrib) {
-        throw "Unknown attribute: " + rawKey + " (.1)";
+        throw "Unknown attribute: " + rawKey + " (debug: .1)";
     }
     const std::string& key = attrib->getName();
 
     // The operator
     std::string& op = split.front();
 
-    if (op == "not") {
+    if (op == "is" || attribKey.find('.') == std::string::npos) {
+        return {Operator::IS, key};
+    } else if (op == "not") {
         return {Operator::NOT, key};
     } else if (op == "greater") {
         return {Operator::GREATER_THAN, key};

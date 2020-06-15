@@ -30,6 +30,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
     * Add DescriptionAttribute as a separate class; lack of subclass caused missing attributes
 * Fix bad logic in the `>` and `<` operators (the operators technically did the opposite of their names earlier)
 * Enable `ids.operator` and `id.operator`
+* Minor rewrite to the filtering system to enable multi-value filters (i.e. `ids:3,4,8,42` or `uda:3,4,621`) for built-in filters and user-defined attributes.
 
 ## Changes
 * `Task::loadUserDefinedAttribs()` removed and replaced with dynamic loading. Not that it was used anyway, but the API has changed

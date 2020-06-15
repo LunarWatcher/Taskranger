@@ -29,6 +29,7 @@ AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 AlignConsecutiveMacros: false
 AlignEscapedNewlines: DontAlign
+AlignTrailingComments: false
 
 DerivePointerAlignment: false
 PointerAlignment: Left

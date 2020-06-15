@@ -48,7 +48,9 @@ std::pair<Operator, std::string> determineOperator(const std::string& attribKey)
  *  - IS
  *  - NOT
  *  - GREATER
+ *  - GREATEREQ
  *  - LESS
+ *  - LESSEQ
  * Strings:
  *  - IS (case-insensitive)
  *  - NOT (case-insensitive)

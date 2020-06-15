@@ -54,96 +54,60 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             filters["tags.not"] = subBuilder;
         }
     }
+
     nlohmann::json reworked;
-
-    if (filters.find("ids") != filters.end()) {
-        if (!includeIds)
-            return {};
-        std::vector<unsigned long long> vec;
-
-        for (auto& id : StrUtil::splitString(filters["ids"], ",")) {
-
-            try {
-                size_t endPos = 0;
-                unsigned long long idx = std::stoull(id, &endPos);
-
-                if (endPos == id.length() && idx - 1 < rawInput.size()) {
-                    // Silently skip out of range IDs and incomplete conversions.
-                    // The if statement is inversed to enable failed cases to skip on to UUID checks
-
-                    // the idx is in a standard human counting system (the first
-                    // item is 1). the array access index still starts at 0, so 1
-                    // needs to be subtracted from the ID
-                    bool skip = false;
-                    for (auto& task : reworked) {
-                        if (task.at("id") == idx) {
-                            skip = true;
-                        }
-                    }
-                    if (skip) {
-                        continue;
-                    }
-                    auto cache = rawInput.at(idx - 1);
-                    cache["id"] = idx;
-                    reworked.push_back(cache);
-                    continue;
-                }
-            } catch (std::invalid_argument&) {
-                // Silently ignore failed IDs. Also required for UUID checking
-            }
-            if (id.size() > 36) {
-                // Invalid IDs can be skipped. (The UUID length is 36)
-                continue;
-            }
-            // Inefficient?
-            for (size_t i = 0; i < rawInput.size(); i++) {
-                auto& task = rawInput.at(i);
-                auto uuid = task.at("uuid").get<std::string>();
-                if (uuid == id || StrUtil::startsWith(uuid, id)) {
-                    auto cache = task;
-                    cache["id"] = i + 1;
-                    reworked.push_back(cache);
-                    break;
-                }
-            }
-            continue;
-        }
-    } else {
-        // If no IDs are specified, the tasks still need some preprocessing.
-        // Specifically, they need to have their IDs inserted.
+    if (includeIds) {
+        // If the task needs to include IDs, insert them now.
         for (size_t i = 0; i < rawInput.size(); i++) {
             nlohmann::json task = rawInput.at(i);
-            if (includeIds)
+            if (includeIds) {
                 task["id"] = i + 1;
-            else
+            } else {
                 task["id"] = "-";
+            }
             reworked.push_back(task);
         }
     }
-
+    nlohmann::json output;
     // Filter the tasks
     for (auto& filter : filters) {
         auto baseKey = filter.first;
-        if (baseKey == "subcommand")
+        if (baseKey == "subcommand") {
             continue;
+        }
+
         auto calcPair = InputParserOperators::determineOperator(baseKey);
         InputParserOperators::Operator op = calcPair.first;
         const std::string& key = calcPair.second;
         std::string filterValue = filter.second;
+
         // For now: skip empty filters.
         // Will have to revisit this in the future
-        if (filterValue.size() == 0)
+        if (filterValue.size() == 0) {
             continue;
+        }
+        if (key == "id" && !includeIds) {
+            // If we're querying IDs, but don't want to include IDs, this should
+            // return an empty value
+            return {};
+        }
 
-        if (key == "project" && filterValue.at(0) != '@')
+        if (key == "project" && filterValue.at(0) != '@') {
             filterValue = "@" + filterValue;
-        Task::convertAndEval(op, key, filterValue, reworked);
+        }
+
+        for (auto& value : StrUtil::splitString(filterValue, ',')) {
+            Task::convertAndEval(op, key, value, output, reworked);
+        }
+        reworked = output;
+        output.clear();
     }
 
     if (reworked.size() != 0) {
         for (auto& json : reworked) {
             for (auto& key : dropKeys) {
-                json.erase(key);
+                if (json.find(key) != json.end())
+                    json.erase(key);
             }
         }
     }
