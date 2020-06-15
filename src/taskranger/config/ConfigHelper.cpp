@@ -44,7 +44,13 @@ void Config::ensureLoaded() {
     loadStandards();
 
     if (input) {
-        input >> config;
+        try {
+            input >> config;
+        } catch (nlohmann::json::parse_error& err) {
+            std::cout << err.what() << std::endl;
+            throw "The JSON parser ran into an error when parsing the config JSON. Please make sure your JSON file is "
+                  "valid";
+        }
     }
 }
 
