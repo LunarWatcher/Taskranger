@@ -20,7 +20,11 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
     // clang-format off
 #define NUMCATCH(func) \
     try { \
-        auto num = func(rawInput); \
+        size_t idx = 0; \
+        auto num = func(rawInput, &idx); \
+        if (idx != rawInput.length()) { \
+            throw "Invalid number: " + rawInput; \
+        } \
         Task::eraseItems(reworked, fieldName, op, num); \
     } catch (std::invalid_argument) { \
         return; \
@@ -43,6 +47,9 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
     } break;
     case FieldType::ULLONG:
         NUMCATCH(std::stoull)
+        break;
+    case FieldType::NUMBER:
+        NUMCATCH(std::stod)
         break;
     default:
         throw "This type hasn't been implemented yet."s;

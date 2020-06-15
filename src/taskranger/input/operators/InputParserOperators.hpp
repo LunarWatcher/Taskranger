@@ -63,9 +63,9 @@ bool evalOperator(Operator op, const T& input, const T& relativeTo) {
     case Operator::NOT:
         return input != relativeTo;
     case Operator::GREATER_THAN:
-        return input > relativeTo;
+        return relativeTo > input;
     case Operator::LESS_THAN:
-        return input < relativeTo;
+        return relativeTo < input;
     default:
         return false;
     }

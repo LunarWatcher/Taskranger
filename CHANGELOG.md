@@ -20,17 +20,22 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * User defined attributes
 * Type restriction
 * Value restriction (optional; mainly intended for UDAs)
-* Add `number` as a UDA type (double under the hood; disallow ULLong)
+* Add `number` as a UDA type (double under the hood)
 
 ## Fixes
 * Attributes now store as the proper type
 * Fix UTF-8 (theoretically; multi-byte chars are likely still broken. This is a future TODO)
 * Add names to attributes (some of them were missing)
     * Add DescriptionAttribute as a separate class; lack of subclass caused missing attributes
+* Fix bad logic in the `>=` and `<=` operators (the operators technically did the opposite of their names earlier)
 
 ## Changes
 * `Task::loadUserDefinedAttribs()` removed and replaced with dynamic loading. Not that it was used anyway, but the API has changed
 * (Internal) change the reverse iteration in DoneCommand to use a `reverse_iterator` instead of a for loop with a long long to avoid unsigned number horrors
+
+## Meta
+* License section to the version command, as well as a THIRD_PARTY_LICENSES.md file containing all licenses.
+
 
 # [v0.0.3] - 07.06.2020
 
