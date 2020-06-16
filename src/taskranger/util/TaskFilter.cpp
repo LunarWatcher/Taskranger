@@ -92,7 +92,6 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             continue;
         }
         if (key == "id" && !includeIds) {
-            std::cout << "Skip" << std::endl;
             // If we're querying IDs, but don't want to include IDs, this should
             // return an empty value
             return {};

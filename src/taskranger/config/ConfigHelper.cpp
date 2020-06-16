@@ -28,7 +28,12 @@ void Config::ensureLoaded() {
 
     auto reassigned = Env::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
     if (reassigned != configBasePath && reassigned != "") {
-        configBasePath = FilesystemUtil::joinPath(reassigned, ".trconf");
+        // Make it possible to assign custom files, as long it contains trconf
+        if (StrUtil::reverseSplitString(reassigned, ".", 1).front() != "trconf") {
+            configBasePath = FilesystemUtil::joinPath(reassigned, ".trconf");
+        } else {
+            configBasePath = reassigned;
+        }
     }
 
     auto expandedPath = FilesystemUtil::expandUserPath(configBasePath);
