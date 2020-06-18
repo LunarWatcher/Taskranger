@@ -100,7 +100,10 @@ jobs:
         echo "::set-env name=CXX::${{ matrix.compiler }}"
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
         ${{ matrix.compiler }} --version
-
+    - name: Destroy MSVC JIT (Fuck you Microsoft)
+      if: matrix.os == 'windows-latest'
+      run: |
+        del C:/Windows/System32/vsjitdebugger.exe
     # Install conan
     - uses: LunarWatcher/install-conan@master
     # Install SCons
