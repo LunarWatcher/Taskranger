@@ -5,6 +5,16 @@
 #define THIS_IS_WINDOZE
 #include <rtcapi.h>
 #include <windows.h>
+
+int exceptionHandler(LPEXCEPTION_POINTERS p) {
+    printf("Fail\n");
+    exit(1);
+}
+int runtimeCheckHandler(
+        int errorType, const char* filename, int linenumber, const char* moduleName, const char* format, ...) {
+    printf("Error: type %d at %s line %d in %s", errorType, filename, linenumber, moduleName);
+    exit(1);
+}
 #endif
 // This is the primary testing file. Specifically, this defines the entry point.
 // It's also empty because Catch2 is super nice. All tests are defined in .cpp
@@ -14,6 +24,9 @@ int main(int argc, const char* argv[]) {
 #ifdef THIS_IS_WINDOZE
     DWORD dwMode = SetErrorMode(SEM_NOGPFAULTERRORBOX);
     SetErrorMode(dwMode | SEM_NOGPFAULTERRORBOX);
+    SetUnhandledExceptionFilter((LPTOP_LEVEL_EXCEPTION_FILTER)&exceptionHandler);
+    _RTC_SetErrorFunc(&runtimeCheckHandler);
+
 #endif
 
     const static auto directory = "./tests/raw/data";
