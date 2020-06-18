@@ -48,9 +48,11 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
 }
 
 void JSONDatabase::commit() {
+#ifdef UNITTEST
     if (demoMode) {
         return;
     }
+#endif
 
     if (!std::filesystem::exists(this->dbFolder))
         std::filesystem::create_directories(this->dbFolder);

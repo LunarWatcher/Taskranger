@@ -16,7 +16,9 @@ private:
     std::shared_ptr<nlohmann::json> database;
 
 public:
+#ifdef UNITTEST
     bool demoMode = false;
+#endif
 
     JSONDatabase() = delete;
     JSONDatabase(const std::string& databaseName);
