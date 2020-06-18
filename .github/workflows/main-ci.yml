@@ -103,11 +103,6 @@ jobs:
     - name: Destroy MSVC JIT (Fuck you Microsoft)
       if: matrix.os == 'windows-latest'
       run: |
-        reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AeDebug\Debugger /f
-        reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\DbgManagedDebugger /f
-        reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows NT\CurrentVersion\AeDebug\Debugger
-        reg delete HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\DbgManagedDebugger
-        red add HKCU\Software\Microsoft\Windows\Windows Error Reporting\DontShowUI "1"
         del C:/Windows/System32/vsjitdebugger.exe
     # Install conan
     - uses: LunarWatcher/install-conan@master
