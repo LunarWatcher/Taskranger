@@ -42,7 +42,7 @@ void AddCommand::run() {
     // This also means IDs aren't zero-indexed
     // As a bonus, IDs aren't explicitly declared. This variable exists for documentation,
     // and for the "created task" comment. The ID is actually computed from the task's position in the vector.
-    int id = database.getDatabase()->size() + 1;
+    size_t id = database.getDatabase()->size() + 1;
     // But this is pretty useless after, and for various post-completion purposes, the tasks
     // also get a unique identifier.
     // TODO: sanity-check the UUID to prevent a UUID collision check.

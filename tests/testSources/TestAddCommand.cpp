@@ -25,6 +25,7 @@ TEST_CASE("Verify AddCommand output", "[AddCommandOutput]") {
 
     REQUIRE(std::filesystem::exists("./tests/raw/data"));
     REQUIRE(std::filesystem::exists("./tests/raw/data/AddTest"));
+    REQUIRE(std::filesystem::exists("./tests/raw/data/AddTest/active.json"));
 
     auto database = environment->getDatabase("active.json");
     auto& raw = *database->getDatabase();

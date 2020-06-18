@@ -1,5 +1,5 @@
 [requires]
-nlohmann_json/3.7.3
+nlohmann_json/3.8.0
 
 [generators]
 ycm

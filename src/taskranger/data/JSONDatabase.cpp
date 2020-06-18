@@ -47,4 +47,22 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
     this->dbFolder = databaseFolder;
 }
 
+void JSONDatabase::commit() {
+    if (demoMode) {
+        return;
+    }
+
+    if (!std::filesystem::exists(this->dbFolder))
+        std::filesystem::create_directories(this->dbFolder);
+    std::ofstream stream(this->dbFolder + this->dbName);
+
+    if (!stream) {
+        ColorPrinter printer;
+        printer << ANSIFeature::FOREGROUND << 9 << "Failed to open the file. Are the permissions correct?"
+                << ANSIFeature::CLEAR << "\n";
+        return;
+    }
+    stream << *database;
+}
+
 } // namespace taskranger
