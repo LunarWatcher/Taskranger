@@ -8,18 +8,14 @@
 
 int main(int argc, const char* argv[]) {
     const static auto directory = "./tests/raw/data";
-    try {
-        // Start test; make sure the data directory isn't polluted
-        if (std::filesystem::exists(directory)) {
-            if (!std::filesystem::remove_all(directory)) {
-                throw "ABORT! cannot delete ./tests/raw/data";
-            }
+    std::cout << "here" << std::endl;
+    // Start test; make sure the data directory isn't polluted
+    if (std::filesystem::exists(directory)) {
+        if (!std::filesystem::remove_all(directory)) {
+            throw "ABORT! cannot delete ./tests/raw/data";
         }
-
-        // Run the tests
-        return Catch::Session().run(argc, argv);
-    } catch (...) {
-        std::cerr << "Yeah, there is actually an exception";
-        return -3;
     }
+    std::cout << "here" << std::endl;
+    // Run the tests
+    return Catch::Session().run(argc, argv);
 }
