@@ -8,7 +8,9 @@
 
 int main(int argc, const char* argv[]) {
 #if defined(_WIN32) || defined(_WIN64)
-    throw "Hello, I'm a cross-platform throw probe because Windows fucking sucks";
+    try {
+        throw "Final attempt";
+    } catch (...) { return 0; }
 #endif
     const static auto directory = "./tests/raw/data";
 
