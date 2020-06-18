@@ -7,9 +7,9 @@
 // files, and it handles the rest of the clusterfuck setup. Really nice :D
 
 int main(int argc, const char* argv[]) {
-
+#if defined(_WIN32) || defined(_WIN64)
     throw "Hello, I'm a cross-platform throw probe because Windows fucking sucks";
-
+#endif
     const static auto directory = "./tests/raw/data";
 
     // Start test; make sure the data directory isn't polluted
