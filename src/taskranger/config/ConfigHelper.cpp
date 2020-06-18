@@ -56,6 +56,8 @@ void Config::ensureLoaded() {
             throw "The JSON parser ran into an error when parsing the config JSON. Please make sure your JSON file is "
                   "valid";
         }
+    } else {
+        config["loaded"] = false;
     }
 }
 
@@ -65,6 +67,10 @@ std::string Config::getString(const std::string& key) {
 
 unsigned long long Config::getULLong(const std::string& key) {
     return this->config.value(key, 0);
+}
+
+bool Config::getBool(const std::string& key) {
+    return this->config.value(key, false);
 }
 
 } // namespace taskranger

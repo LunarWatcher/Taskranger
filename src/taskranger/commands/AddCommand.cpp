@@ -26,9 +26,11 @@ void AddCommand::run() {
         throw "You need to add a message to the task."s;
     }
 
-    JSONDatabase database("active.json");
+    auto& database = *Environment::getInstance()->getDatabase("active.json");
     nlohmann::json mod;
-    data.erase("subcommand");
+    if (data.find("subcommand") != data.end()) {
+        data.erase("subcommand");
+    }
 
     // deal with IDs
     // The "reference" ID is the one that will be used in most common tasks. This ID

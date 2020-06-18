@@ -19,6 +19,7 @@ public:
 
     std::string getString(const std::string& key);
     unsigned long long getULLong(const std::string& key);
+    bool getBool(const std::string& key);
 
     auto findKey(const std::string& key) {
         return config.find(key);
@@ -30,6 +31,10 @@ public:
 
     auto end() {
         return config.end();
+    }
+
+    size_t size() {
+        return config.size();
     }
 };
 

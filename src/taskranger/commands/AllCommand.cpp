@@ -18,8 +18,8 @@ AllCommand::AllCommand() {
 
 void AllCommand::run() {
     auto input = Environment::getInstance()->getInputData();
-    JSONDatabase active("active.json");
-    JSONDatabase historical("completed.json");
+    auto& active = *Environment::getInstance()->getDatabase("active.json");
+    auto& historical = *Environment::getInstance()->getDatabase("completed.json");
 
     auto filtered = TaskFilter::filterTasks(*active.getDatabase(), input, true);
     auto hFiltered = TaskFilter::filterTasks(*historical.getDatabase(), input, false);

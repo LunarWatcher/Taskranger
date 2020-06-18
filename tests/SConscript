@@ -7,6 +7,7 @@ env.appendLibPath("#" + lpath)
 env.appendSourcePath("#Catch2/single_include")
 env.appendSourcePath("#tests/testSources")
 
+env.define("UNITTEST")
 tests = env.Program("tests", env.Glob("testSources/*.cpp"))
 
 testAlias = env.environment.Alias("test", [ tests ], tests[0].abspath)

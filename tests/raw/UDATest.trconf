@@ -1,4 +1,5 @@
 {
+    "dataDir": "./tests/raw/data/UDATest/",
     "uda": {
         "string": {
             "type": "string"

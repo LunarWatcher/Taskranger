@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#define TASKRANGER_NON_UNIT_TEST
+
 #include "input/InputParser.hpp"
 #include "taskranger/commands/Commands.hpp"
 #include "taskranger/data/Environment.hpp"

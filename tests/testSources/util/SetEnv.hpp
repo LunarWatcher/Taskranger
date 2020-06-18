@@ -6,10 +6,11 @@
 
 #endif
 #include <stdlib.h>
+#include <string>
 
 namespace TestUtil {
 
-void localSetenv(const std::string& key, const std::string& value) {
+inline void localSetenv(const std::string& key, const std::string& value) {
 #ifdef THIS_IS_WINDOZE
     errno_t err = _putenv_s(key.c_str(), value.c_str());
     if (err != 0) {

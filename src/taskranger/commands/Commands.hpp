@@ -21,6 +21,15 @@ public:
     std::map<std::string, std::shared_ptr<Command>> getCommands() {
         return commands;
     }
+#ifdef UNITTEST
+    /**
+     * This is mainly intended for unit tests. It's protected by the UNITTEST
+     * macro because it shouldn't take up space in the release binary.
+     */
+    std::shared_ptr<Command> getCommand(const std::string& command) {
+        return commands.at(command);
+    }
+#endif
 };
 
 } // namespace taskranger
