@@ -117,4 +117,4 @@ jobs:
       # The test doesn't strictly have to be run separately, but as the test base grows,
       # I'd like to be able to separate test failure from build failure
       run: |
-        scons test -j 2
+        scons test -j 2 debug=False
