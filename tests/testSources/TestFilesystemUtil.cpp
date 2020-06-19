@@ -12,8 +12,6 @@ TEST_CASE("Testing path expansion", "[FilesystemUtilPath]") {
     std::string matchRegex;
 
 #if defined(_WIN32) || defined(_WIN64)
-    int* ptr = nullptr;
-    int val = *ptr;
     matchRegex = "(\\w:)?/users/[\\w \\.-]+/.taskranger/";
 #else
     matchRegex = "/(home|users)/\\w+/.taskranger/";
