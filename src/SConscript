@@ -29,29 +29,25 @@ with env.configure() as config:
         if config.test("CheckSecureGetEnv", callback=checkSecure):
             env.define("HAS_SECURE_GETENV")
 
-# Glob in sources
-# okay, fine, it's not exactly the prettiest approach, but the other alternatives require implementing
-# a recursive glob function, and I have no idea how. Definitely high on the list, in my defense.
 
 sources = env.Glob("taskranger/input/*.cpp")
 sources += env.Glob("taskranger/input/operators/*.cpp")
 sources += env.Glob("taskranger/commands/*.cpp")
 sources += env.Glob("taskranger/util/*.cpp")
 sources += env.Glob("taskranger/data/*.cpp")
+sources += env.Glob("taskranger/data/attributes/*.cpp")
 sources += env.Glob("taskranger/config/*.cpp")
 
-# Link src
 env.appendSourcePath("#src/")
 env.appendSourcePath("#tabulate/include")
 
-
-# The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
-# Shell aliases can be manually added if necessary.
-lib = env.Library("taskranger", sources)
-
-exeEnv = env.Clone()
-exeEnv.appendLibPath("#" + env.getBinPath())
-exeEnv.withLibraries("taskranger", append=False)
-
-exe = exeEnv.Program("taskranger", env.Glob("taskranger/*.cpp"))
-Default(exe, lib)
+if "test" in BUILD_TARGETS:
+    lib = env.Library("taskranger", sources)
+else:
+    sources += env.Glob("taskranger/*.cpp")
+    # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
+    # Shell aliases can be manually added if necessary.
+    # python/SourceList.py contains the list of sources.
+    # It's kept externally because it's also used in tests/SConscript
+    exe = env.Program("taskranger", sources)
+    Default(exe)

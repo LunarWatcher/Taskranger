@@ -1,6 +1,7 @@
 #ifndef TASKRANGER_INPUT_INPUTDATA_HPP
 #define TASKRANGER_INPUT_INPUTDATA_HPP
 
+#include "taskranger/util/StrUtil.hpp"
 #include <map>
 #include <memory>
 #include <string>

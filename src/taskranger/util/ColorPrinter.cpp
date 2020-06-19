@@ -19,12 +19,7 @@ ColorPrinter& operator<<(ColorPrinter& printer, ANSIFeature feature) {
     return printer;
 }
 
-ColorPrinter& operator<<(ColorPrinter& p, const std::string& str) {
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    return (p << converter.from_bytes(str));
-}
-
-ColorPrinter& operator<<(ColorPrinter& printer, const std::wstring& str) {
+ColorPrinter& operator<<(ColorPrinter& printer, const std::string& str) {
     printer.outputStream << str;
     if (printer.processing256) {
         printer.processing256 = false;

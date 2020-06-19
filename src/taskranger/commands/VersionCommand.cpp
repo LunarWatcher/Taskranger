@@ -16,6 +16,7 @@ void VersionCommand::run() {
     printer << ANSIFeature::BOLD << "Taskranger " << TASKRANGER_VERSION << ANSIFeature::CLEAR << "\n"
             << "License: " << TASKRANGER_LICENSE << "\n\n"
             << TASKRANGER_CHANGELOG << std::endl;
+    printer << "\nOpen-source libraries used:\n" << TASKRANGER_DEPS_LICENSES << std::endl;
 }
 
 } // namespace taskranger

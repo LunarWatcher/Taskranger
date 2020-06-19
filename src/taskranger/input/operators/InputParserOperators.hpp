@@ -1,5 +1,6 @@
 #pragma once
 
+#include "taskranger/data/Attribute.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <iostream>
 #include <stdexcept>
@@ -13,10 +14,12 @@ namespace InputParserOperators {
 
 // clang-format off
 enum class Operator {
-    IS,
-    NOT,
-    GREATER_THAN,
-    LESS_THAN,
+    IS, // ==
+    NOT, // !=
+    GREATER_THAN, // >
+    GREATER_EQ, // >=
+    LESS_THAN, // <
+    LESS_EQ, // <=
     CONTAINS
 };
 // clang-format on
@@ -31,7 +34,7 @@ enum class Operator {
  * This should in theory deal with multi-key inputs (i.e. some.input.not),
  * but this isn't implemented and possibly unsupported.
  */
-std::pair<Operator, std::string> determineOperator(const std::string& attribKey);
+std::pair<Operator, std::string> determineOperator(const std::string& attribKey, std::shared_ptr<Attribute>& attribPtr);
 
 /**
  * Evaluates an `input` by comparing it to a `relativeTo` using
@@ -46,7 +49,9 @@ std::pair<Operator, std::string> determineOperator(const std::string& attribKey)
  *  - IS
  *  - NOT
  *  - GREATER
+ *  - GREATEREQ
  *  - LESS
+ *  - LESSEQ
  * Strings:
  *  - IS (case-insensitive)
  *  - NOT (case-insensitive)
@@ -63,9 +68,13 @@ bool evalOperator(Operator op, const T& input, const T& relativeTo) {
     case Operator::NOT:
         return input != relativeTo;
     case Operator::GREATER_THAN:
-        return input > relativeTo;
+        return relativeTo > input;
+    case Operator::GREATER_EQ:
+        return relativeTo >= input;
     case Operator::LESS_THAN:
-        return input < relativeTo;
+        return relativeTo < input;
+    case Operator::LESS_EQ:
+        return relativeTo <= input;
     default:
         return false;
     }

@@ -1,24 +1,40 @@
 #include "InputParserOperators.hpp"
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/util/StrUtil.hpp"
 
 namespace taskranger {
 
-auto InputParserOperators::determineOperator(const std::string& attribKey) -> std::pair<Operator, std::string> {
-    if (attribKey.find('.') == std::string::npos)
-        return {Operator::IS, attribKey};
+auto InputParserOperators::determineOperator(const std::string& attribKey, std::shared_ptr<Attribute>& attribPtr)
+        -> std::pair<Operator, std::string> {
+
     auto split = StrUtil::reverseSplitString(attribKey, ".", 1);
-    std::string& key = split.back();
+    // To handle aliases, this needs to be the rawKey.
+    // The rawKey can then be used to retrieve the actual key
+    std::string& rawKey = split.back();
+    attribPtr = Environment::getInstance()->getAttribute(rawKey);
+    if (!attribPtr) {
+        throw "Unknown attribute: " + rawKey + " (debug: .1)";
+    }
+    const std::string& key = attribPtr->getName();
+
     // The operator
     std::string& op = split.front();
 
-    if (op == "not")
+    if (op == "is" || attribKey.find('.') == std::string::npos) {
+        return {Operator::IS, key};
+    } else if (op == "not") {
         return {Operator::NOT, key};
-    else if (op == "greater")
+    } else if (op == "greater") {
         return {Operator::GREATER_THAN, key};
-    else if (op == "less")
+    } else if (op == "less") {
         return {Operator::LESS_THAN, key};
-    else if (op == "contains")
+    } else if (op == "contains") {
         return {Operator::CONTAINS, key};
+    } else if (op == "greatereq") {
+        return {Operator::GREATER_EQ, key};
+    } else if (op == "lesseq") {
+        return {Operator::LESS_EQ, key};
+    }
     /**
      * If we fail to split, assume the operator is Operator::IS,
      * and that whatever was chucked in has a reason for containing

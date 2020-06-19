@@ -100,7 +100,6 @@ jobs:
         echo "::set-env name=CXX::${{ matrix.compiler }}"
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
         ${{ matrix.compiler }} --version
-
     # Install conan
     - uses: LunarWatcher/install-conan@master
     # Install SCons
@@ -118,4 +117,4 @@ jobs:
       # The test doesn't strictly have to be run separately, but as the test base grows,
       # I'd like to be able to separate test failure from build failure
       run: |
-        scons test -j 2
+        scons test -j 2 debug=False

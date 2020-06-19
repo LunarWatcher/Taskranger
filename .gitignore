@@ -24,5 +24,8 @@ compile_commands.json
 /task
 /test
 
+# Test output
+/tests/raw/data
+
 # Not used anymore
 coverage.info

@@ -1,4 +1,4 @@
-This project mostly follows <https://keepachangelog.com/en/1.0.0/>, and uses [semantic versioning](https://semver.org/). (All dates are dd.mm.yyyy)
+This project mostly follows <https://keepachangelog.com/en/1.0.0/>, and uses [semantic versioning](https://semver.org/). (All dates are dd.mm.yyyy. Developer details in comments in this file)
 
 <!--
 This file syntax bases itself on https://keepachangelog.com/en/1.0.0/
@@ -14,6 +14,38 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 -->
 
 # [Unreleased] (TBD)
+
+# [v0.1.0] (19.06.20)
+
+## Added
+* UUID filtering
+* User defined attributes
+* Type restriction
+* Value restriction (optional; mainly intended for UDAs)
+* Add `number` as a UDA type (double under the hood)
+* Operators `>=` (greatereq) and `<=` (lesseq) - names may be changed in the future (feels clunky)
+* Additional testing capacity (Config, AddCommand, and UDAs are now tested)
+
+## Fixes
+* Attributes now store as the proper type
+* Fix UTF-8 (theoretically; multi-byte chars are likely still broken. This is a future TODO)
+* Add names to attributes (some of them were missing)
+    * Add DescriptionAttribute as a separate class; lack of subclass caused missing attributes
+* Fix bad logic in the `>` and `<` operators (the operators technically did the opposite of their names earlier)
+* Enable `ids.operator` and `id.operator`
+* Minor rewrite to the filtering system to enable multi-value filters (i.e. `ids:3,4,8,42` or `uda:3,4,621`) for built-in filters and user-defined attributes.
+
+## Removed
+* Support for wchars (redundant feature; caused more problems than good); required for the UTF-8 fix
+
+## Changes
+* `Task::loadUserDefinedAttribs()` removed and replaced with dynamic loading. Not that it was used anyway, but the API has changed
+* (Internal) change the reverse iteration in DoneCommand to use a `reverse_iterator` instead of a for loop with a long long to avoid unsigned number horrors
+* `TASKRANGER_CONFIG_LOCATION` can now be any path or file, as long as it ends with `.trconf`. `/home/user/MyTaskrangerConfig.trconf` is now a valid file. Mainly intended for tests
+
+## Meta
+* License section to the version command, as well as a THIRD_PARTY_LICENSES.md file containing all licenses.
+* Unbreak the CI on Windows (again)
 
 # [v0.0.3] - 07.06.2020
 
@@ -55,6 +87,7 @@ Base release. Unknown release date, because the Git tag was lost to unexpected a
 
 
 <!-- Links -->
-[Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...HEAD
+[Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...HEAD
+[v0.1.0]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...v0.0.1
 [v0.0.3]: //github.com/LunarWatcher/Taskranger/compare/v0.0.2...v0.0.3
 [v0.0.2]: //github.com/LunarWatcher/Taskranger/releases/tag/v0.0.2

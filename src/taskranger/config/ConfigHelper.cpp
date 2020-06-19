@@ -28,7 +28,12 @@ void Config::ensureLoaded() {
 
     auto reassigned = Env::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
     if (reassigned != configBasePath && reassigned != "") {
-        configBasePath = FilesystemUtil::joinPath(reassigned, ".trconf");
+        // Make it possible to assign custom files, as long it contains trconf
+        if (StrUtil::reverseSplitString(reassigned, ".", 1).front() != "trconf") {
+            configBasePath = FilesystemUtil::joinPath(reassigned, ".trconf");
+        } else {
+            configBasePath = reassigned;
+        }
     }
 
     auto expandedPath = FilesystemUtil::expandUserPath(configBasePath);
@@ -44,7 +49,15 @@ void Config::ensureLoaded() {
     loadStandards();
 
     if (input) {
-        input >> config;
+        try {
+            input >> config;
+        } catch (nlohmann::json::parse_error& err) {
+            std::cout << err.what() << std::endl;
+            throw "The JSON parser ran into an error when parsing the config JSON. Please make sure your JSON file is "
+                  "valid";
+        }
+    } else {
+        config["loaded"] = false;
     }
 }
 
@@ -54,6 +67,10 @@ std::string Config::getString(const std::string& key) {
 
 unsigned long long Config::getULLong(const std::string& key) {
     return this->config.value(key, 0);
+}
+
+bool Config::getBool(const std::string& key) {
+    return this->config.value(key, false);
 }
 
 } // namespace taskranger

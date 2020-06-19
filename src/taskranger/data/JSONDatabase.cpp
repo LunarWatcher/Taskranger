@@ -3,6 +3,7 @@
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
+#include "taskranger/util/StrUtil.hpp"
 #include <filesystem>
 #include <fstream>
 
@@ -11,6 +12,10 @@ namespace taskranger {
 JSONDatabase::JSONDatabase(const std::string& databaseName) {
     auto config = Environment::getInstance()->getConfig();
     std::string databaseFolder = config->getString("dataDir");
+
+    if (databaseFolder == "") {
+        throw "The database folder cannot be an empty string. If you want it to be relative, use \"dataDir\": \"./\".";
+    }
     if (databaseFolder.back() != '/')
         databaseFolder += "/";
     databaseFolder = FilesystemUtil::expandUserPath(databaseFolder);
@@ -26,7 +31,15 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
                     << ". Are the permissions incorrect?" << ANSIFeature::CLEAR << "\n";
             throw PermissionError("#0: failed to open existing database");
         }
-        stream >> *ptr;
+        try {
+            stream >> *ptr;
+        } catch (nlohmann::json::parse_error& err) {
+            std::cout << err.what() << std::endl;
+            throw "Failed to load database " + databaseName +
+                    " - be careful when modifying it manually. If you didn't, open an issue on GitHub";
+        }
+    } else if (!std::filesystem::exists(databaseFolder)) {
+        std::filesystem::create_directories(databaseFolder);
     }
 
     this->database = ptr;
@@ -35,6 +48,12 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
 }
 
 void JSONDatabase::commit() {
+#ifdef UNITTEST
+    if (demoMode) {
+        return;
+    }
+#endif
+
     if (!std::filesystem::exists(this->dbFolder))
         std::filesystem::create_directories(this->dbFolder);
     std::ofstream stream(this->dbFolder + this->dbName);

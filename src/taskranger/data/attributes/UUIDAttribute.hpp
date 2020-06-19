@@ -5,9 +5,10 @@
 
 namespace taskranger {
 
-class UUIDAttribute : public Attribute {
+class UUIDAttribute : public StringAttribute {
 public:
     UUIDAttribute() {
+        this->name = "uuid";
         this->label = "UUID";
     }
 };
@@ -15,6 +16,7 @@ public:
 class IDAttribute : public ULLongAttribute {
 public:
     IDAttribute() {
+        this->name = "id";
         this->label = "ID";
     }
 };

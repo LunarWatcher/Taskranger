@@ -1,0 +1,15 @@
+{
+    "dataDir": "./tests/raw/data/UDATest/",
+    "uda": {
+        "string": {
+            "type": "string"
+        },
+        "stringRestrict": {
+            "type": "string",
+            "values": ["yes", "no", "FUUUCK YEAH!"]
+        },
+        "number": {
+            "type": "number"
+        }
+    }
+}

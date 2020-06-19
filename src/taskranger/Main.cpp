@@ -2,6 +2,8 @@
 #include <string>
 #include <vector>
 
+#define TASKRANGER_NON_UNIT_TEST
+
 #include "input/InputParser.hpp"
 #include "taskranger/commands/Commands.hpp"
 #include "taskranger/data/Environment.hpp"
@@ -22,7 +24,8 @@ int main(int argc, const char* argv[]) {
     } catch (std::string& err) {
         // It makes most sense to throw string errors. These can universally be caught here.
         // This mostly makes sense anyway, at least for errors that can't really be recovered from..
-        taskranger::ColorPrinter printer(std::wcerr);
+        taskranger::ColorPrinter printer(std::cerr);
+
         printer << ANSIFeature::FOREGROUND << 9 << err << ANSIFeature::CLEAR << std::endl;
         return -1;
     } catch (taskranger::PermissionError& permErr) {

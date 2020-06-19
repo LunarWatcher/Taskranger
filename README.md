@@ -42,3 +42,5 @@ While I currently only compile and build on Linux with Clang, it should be able 
 VirtualEnv is highly recommended for installing SCons and Conan on Linux, and especially if your distro pushes two versions of Python on you. Run `. ./init.sh` ([the leading dot is important](https://stackoverflow.com/a/16011496/6296561)) to set it up automatically, or do it yourself. The point being, you need both SCons and Conan in a working state to build the project.
 
 Conan grabs the other dependencies.
+
+<i>Made with &lt;3 and Vim</i>

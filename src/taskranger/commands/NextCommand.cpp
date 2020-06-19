@@ -19,7 +19,7 @@ NextCommand::NextCommand() {
 
 void NextCommand::run() {
     auto input = Environment::getInstance()->getInputData();
-    JSONDatabase database("active.json");
+    auto& database = *Environment::getInstance()->getDatabase("active.json");
 
     if (database.getDatabase()->size() == 0) {
         ColorPrinter printer;

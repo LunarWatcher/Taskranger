@@ -95,7 +95,7 @@ TEST_CASE("Invalid and out of range IDs", "[TaskFilterIDs]") {
     auto mutableCopy = baseJson;
     InputPtr dataPtr = std::make_shared<InputData>();
     // Subtest 1: check out of range
-    {
+    SECTION("Test out of range") {
         dataPtr->data["ids"] = "1,2,3,67483,42,31415";
         nlohmann::json testOutOfRange = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
         // There's 4 tasks in the test data, and only 3 valid IDs passed.
@@ -105,7 +105,7 @@ TEST_CASE("Invalid and out of range IDs", "[TaskFilterIDs]") {
     }
 
     // Subtest 2: check invalid numbers
-    {
+    SECTION("Test invalid numbers") {
         // Additionally, entirely invalid IDs should fail silently
         dataPtr->data["ids"] = "1,2,sqrt(3),3^4,LOOKATMEI'MSHOUTYTEXT:DDDD";
         nlohmann::json testInvalid = taskranger::TaskFilter::filterTasks(mutableCopy, dataPtr, 1, {});
