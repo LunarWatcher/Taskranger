@@ -88,6 +88,6 @@ Base release. Unknown release date, because the Git tag was lost to unexpected a
 
 <!-- Links -->
 [Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...HEAD
-[v0.1.0]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...v0.0.1
+[v0.1.0]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...v0.1.0
 [v0.0.3]: //github.com/LunarWatcher/Taskranger/compare/v0.0.2...v0.0.3
 [v0.0.2]: //github.com/LunarWatcher/Taskranger/releases/tag/v0.0.2
