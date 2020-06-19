@@ -38,9 +38,9 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
                 break;
             }
 
-        } catch (std::invalid_argument) { //
+        } catch (std::invalid_argument&) { //
             // If this exception is thrown, continue to the UUID check
-        } catch (std::out_of_range) { //
+        } catch (std::out_of_range&) { //
             return; //
         }
         if (rawInput.length() > 36) {
@@ -64,9 +64,9 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
             if (idx == rawInput.length()) {
                 Task::insItems(output, input, fieldName, op, num);
             }
-        } catch (std::invalid_argument) { //
+        } catch (std::invalid_argument&) { //
             return; //
-        } catch (std::out_of_range) { //
+        } catch (std::out_of_range&) { //
             return; //
         }
         break;
