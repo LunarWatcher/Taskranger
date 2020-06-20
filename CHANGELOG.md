@@ -1,4 +1,4 @@
-This project mostly follows <https://keepachangelog.com/en/1.0.0/>, and uses [semantic versioning](https://semver.org/). (All dates are dd.mm.yyyy. Developer details in comments in this file)
+This project mostly follows <https://keepachangelog.com/en/1.0.0/>. (All dates are dd.mm.yyyy. Developer details in comments in this file)
 
 <!--
 This file syntax bases itself on https://keepachangelog.com/en/1.0.0/
