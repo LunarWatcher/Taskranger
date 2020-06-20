@@ -1,5 +1,6 @@
 #pragma once
 
+#include "taskranger/data/Task.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include <functional>
 #include <map>
@@ -8,36 +9,28 @@
 #include <variant>
 
 namespace taskranger {
-namespace Task {
+namespace TaskInfo {
 
-/**
- * Default removeIf predicate for tasks.
- *
- * Returns true if the task should be removed, and false otherwise.
- */
 template <typename T>
-void insItems(nlohmann::json& output, const nlohmann::json& inVec, const std::string& fieldName,
-        InputParserOperators::Operator op, T& input) {
+void insItems(std::vector<std::shared_ptr<Task>>& output, const std::vector<std::shared_ptr<Task>>& inVec,
+        const std::string& fieldName, InputParserOperators::Operator op, T& input) {
 
-    for (auto& task : inVec) {
-
-        auto missesField = task.find(fieldName) == task.end();
+    for (auto& taskObj : inVec) {
+        auto& task = taskObj->getTaskJson();
+        auto missesField = fieldName != "id" && task.find(fieldName) == task.end();
         // Tasks missing a field technically count towards the not operator.
         // If we're looking for tasks that have a field `fieldName` that doesn't match
         // a given `input`, tasks without the field of course match.
-        // in the event the evalOperator output determines whether the task is removed or not,
-        // this function has to return the _opposite_ of what the evalOperator function returns.
-        // `false` from evalOperator means the predicate doesn't match, and it should be removed.
-        // `true` from evalOperator means the predicate does match, and it shouldn't be removed.
+
         if ((op == InputParserOperators::Operator::NOT && missesField) ||
                 (!missesField && InputParserOperators::evalOperator(op, input, task.at(fieldName).get<T>()))) {
-            output.push_back(task);
+            output.push_back(taskObj);
         }
     }
 }
 
 void convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, const std::string& rawInput,
-        nlohmann::json& reworked, const nlohmann::json& orig);
+        std::vector<std::shared_ptr<Task>>& reworked, std::vector<std::shared_ptr<Task>>& orig);
 
-} // namespace Task
+} // namespace TaskInfo
 } // namespace taskranger

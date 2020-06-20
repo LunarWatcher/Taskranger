@@ -1,0 +1,20 @@
+[
+    {
+        "description": "Test task for unit tests",
+        "uuid": "3c05e648-64a9-4772-9ee3-36939e46d377"
+    }, {
+        "description": "Test task 2 for unit tests",
+        "project": "@test",
+        "uuid": "20a6af71-8627-4f79-a7b3-935b36c8ce23"
+    }, {
+        "description": "Test task 3 for unit tests",
+        "project": "@test",
+        "tags": ["+tag"],
+        "uuid": "477be9dc-a347-45d2-9a9c-93f04a7acd84"
+    }, {
+        "description": "Test task 4 for unit tests",
+        "project": "@bogus",
+        "uuid": "abcd1234-a347-45d2-9a9c-93f04a7acd84",
+        "tags": ["+tag", "+tag2"]
+    }
+]

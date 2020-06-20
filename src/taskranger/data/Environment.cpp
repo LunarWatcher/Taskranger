@@ -44,11 +44,11 @@ std::shared_ptr<Environment> Environment::getInstance() {
     return INSTANCE;
 }
 
-std::shared_ptr<JSONDatabase> Environment::getDatabase(const std::string& dbName) {
+std::shared_ptr<JSONDatabase> Environment::getDatabase(const std::string& dbName, bool hasPublicIds) {
     auto it = this->databases.find(dbName);
     if (it == this->databases.end()) {
 
-        auto db = std::make_shared<JSONDatabase>(dbName);
+        auto db = std::make_shared<JSONDatabase>(dbName, hasPublicIds);
         this->databases[dbName] = db;
         return db;
     }

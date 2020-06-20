@@ -19,9 +19,9 @@ NextCommand::NextCommand() {
 
 void NextCommand::run() {
     auto input = Environment::getInstance()->getInputData();
-    auto& database = *Environment::getInstance()->getDatabase("active.json");
+    auto& database = *Environment::getInstance()->getDatabase("active.json", true);
 
-    if (database.getDatabase()->size() == 0) {
+    if (database.size() == 0) {
         ColorPrinter printer;
         // clang-format off
         printer
@@ -34,8 +34,8 @@ void NextCommand::run() {
     }
 
     tabulate::Table table;
-    auto& taskVec = *database.getDatabase();
-    auto filteredJson = TaskFilter::filterTasks(taskVec, input, true, {"uuid"});
+    auto& taskVec = database.getDatabase();
+    auto filteredJson = TaskFilter::filterTasks(taskVec, input);
     if (filteredJson.size())
         std::cout << TableUtil::renderTasks(filteredJson, {{"id", 1}, {"description", 2}}) << "\n\n";
     // clang-format off

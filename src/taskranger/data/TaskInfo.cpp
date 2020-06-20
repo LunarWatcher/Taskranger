@@ -9,8 +9,9 @@
 
 namespace taskranger {
 
-void Task::convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, const std::string& rawInput,
-        nlohmann::json& output, const nlohmann::json& input) {
+void TaskInfo::convertAndEval(InputParserOperators::Operator op, const std::string& fieldName,
+        const std::string& rawInput, std::vector<std::shared_ptr<Task>>& output,
+        std::vector<std::shared_ptr<Task>>& input) {
     using namespace std::literals;
     auto attribute = Environment::getInstance()->getAttribute(fieldName);
     if (attribute == nullptr) {
@@ -23,18 +24,18 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
     auto type = attribute->getType();
     switch (type) {
     case FieldType::STRING:
-        Task::insItems(output, input, fieldName, op, rawInput);
+        TaskInfo::insItems(output, input, fieldName, op, rawInput);
         break;
     case FieldType::STRLIST: {
         auto strVec = StrUtil::splitString(rawInput, ",");
-        Task::insItems(output, input, fieldName, op, strVec);
+        TaskInfo::insItems(output, input, fieldName, op, strVec);
     } break;
     case FieldType::ULLONG:
         try {
             size_t idx = 0;
             auto num = std::stod(rawInput, &idx);
             if (idx == rawInput.length()) {
-                Task::insItems(output, input, fieldName, op, num);
+                TaskInfo::insItems(output, input, fieldName, op, num);
                 break;
             }
 
@@ -49,7 +50,7 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
 
         for (size_t i = 0; i < input.size(); i++) {
             auto& task = input.at(i);
-            auto uuid = task.at("uuid").get<std::string>();
+            auto uuid = task->getUUID();
             if (uuid == rawInput || StrUtil::startsWith(uuid, rawInput)) {
                 output.push_back(task);
                 break;
@@ -62,7 +63,7 @@ void Task::convertAndEval(InputParserOperators::Operator op, const std::string& 
             size_t idx = 0;
             auto num = std::stod(rawInput, &idx);
             if (idx == rawInput.length()) {
-                Task::insItems(output, input, fieldName, op, num);
+                TaskInfo::insItems(output, input, fieldName, op, num);
             }
         } catch (std::invalid_argument&) { //
             return; //

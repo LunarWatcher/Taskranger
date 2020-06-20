@@ -2,6 +2,8 @@
 #define TASKRANGER_UTIL_TABLEUTIL_HPP
 
 #include "tabulate/table.hpp"
+#include "taskranger/data/Task.hpp"
+#include <memory>
 #include <nlohmann/json.hpp>
 #include <variant>
 #include <vector>
@@ -17,7 +19,8 @@ typedef std::variant<std::string, tabulate::Table> TableRow;
  *
  * @param renderTarget      A JSON array containing JSON objects to render to a table
  */
-tabulate::Table renderTasks(nlohmann::json& renderTarget, std::map<std::string, int> keyPriority = {});
+tabulate::Table renderTasks(
+        std::vector<std::shared_ptr<Task>>& renderTarget, std::map<std::string, int> keyPriority = {});
 
 } // namespace TableUtil
 

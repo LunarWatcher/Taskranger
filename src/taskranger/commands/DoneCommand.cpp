@@ -38,11 +38,11 @@ void DoneCommand::run() {
         printer << ANSIFeature::FOREGROUND << 9 << "Specify some task IDs to complete." << ANSIFeature::CLEAR << "\n";
         return;
     }
-    JSONDatabase active("active.json");
-    JSONDatabase completed("completed.json");
+    auto active = *Environment::getInstance()->getDatabase("active.json", true);
+    auto completed = *Environment::getInstance()->getDatabase("completed.json", false);
 
-    auto currentSetPtr = active.getDatabase();
-    auto completedSetPtr = completed.getDatabase();
+    auto currentSetPtr = active.getRawDatabase();
+    auto completedSetPtr = completed.getRawDatabase();
     unsigned int complete = 0;
     std::set<unsigned long long> mSet;
     for (auto& id : ids)

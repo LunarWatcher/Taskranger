@@ -5,7 +5,8 @@
 
 namespace taskranger {
 
-tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<std::string, int> keyPriority) {
+tabulate::Table TableUtil::renderTasks(
+        std::vector<std::shared_ptr<Task>>& renderTarget, std::map<std::string, int> keyPriority) {
     // TODO: Stress-test this in actual cases and cap the size
     tabulate::Table table;
     // clang-format off
@@ -22,7 +23,7 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
     std::vector<TableRow> keys;
 
     for (auto& task : renderTarget) {
-        for (auto& [k, v] : task.items()) {
+        for (auto& [k, v] : task->getTaskJson().items()) {
             // Because std::variant doesn't define an operator==, this is a hack to work around
             // that.
             if (std::find_if(keys.begin(), keys.end(), [&key = k](const auto& arg) {
@@ -30,8 +31,9 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
                     if (!std::holds_alternative<std::string>(arg))
                         throw std::runtime_error("This is why we can't have nice things");
                     return std::get<std::string>(arg) == key;
-                }) == keys.end())
+                }) == keys.end()) {
                 keys.push_back(k);
+            }
         }
     }
 
@@ -71,7 +73,8 @@ tabulate::Table TableUtil::renderTasks(nlohmann::json& renderTarget, std::map<st
 
     table[0].format().font_style({tabulate::FontStyle::underline});
 
-    for (auto& task : renderTarget) {
+    for (auto& taskObj : renderTarget) {
+        auto& task = taskObj->getTaskJson();
         std::vector<TableRow> row;
         for (auto& key : keys) {
             auto value = task.find(std::get<std::string>(key));

@@ -1,0 +1,49 @@
+#pragma once
+
+#include <nlohmann/json.hpp>
+#include <vector>
+
+namespace taskranger {
+
+class JSONDatabase;
+class Task {
+private:
+    /**
+     * Rationale and optimization; each task holds a pointer to the über-tasklist
+     * as well as its own ID in the array.
+     *
+     * Each of the different databases are used in a different location, which means
+     * the output commands will be smart enough to figure out which have IDs,
+     * and which don't.
+     *
+     * Moreover, this means no iteration has to be done when the database saves.
+     * Writing straight to the über-database means that everything in the database
+     * can be considered ready to write when it's time for that.
+     *
+     * Finally, the rest of this class means it's possible to store internal fields
+     * without iterating to add them, and then remove them afterwards. This saves some
+     * minor amount of clutter in the code
+     */
+    JSONDatabase* database;
+
+    // fields computed internally that aren't written to disk
+    // Keep in mind that some fields are computed on-demand to
+    // to prevent wasting cycles, and therefore have a getter
+    // instead of a field
+    unsigned long long idx;
+
+public:
+    Task(JSONDatabase* taskList, unsigned long long idx);
+
+    /**
+     * Returns the ID, or 0 if no ID is found
+     */
+    unsigned long long getId();
+    unsigned long long getId() const;
+
+    const nlohmann::json getTaskJson() const;
+    bool hasPublicIds();
+    std::string getUUID();
+};
+
+} // namespace taskranger

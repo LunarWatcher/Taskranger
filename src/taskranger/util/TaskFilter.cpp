@@ -33,8 +33,8 @@ void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, 
             inOut.end());
 }
 
-nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shared_ptr<InputData> input,
-        bool includeIds, std::vector<std::string> dropKeys) {
+std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
+        const std::vector<std::shared_ptr<Task>>& rawInput, std::shared_ptr<InputData> input) {
     using namespace std::literals;
     auto filters = input->data;
     if (input->tags.size() != 0) {
@@ -55,23 +55,15 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
             filters["tags.not"] = subBuilder;
         }
     }
+    std::vector<std::shared_ptr<Task>> reworked = rawInput;
+    if (reworked.size() == 0) {
 
-    nlohmann::json reworked;
-    if (includeIds) {
-        // If the task needs to include IDs, insert them now.
-        for (size_t i = 0; i < rawInput.size(); i++) {
-            nlohmann::json task = rawInput.at(i);
-            if (includeIds) {
-                task["id"] = i + 1;
-            } else {
-                task["id"] = "-";
-            }
-            reworked.push_back(task);
-        }
-    } else {
-        reworked = rawInput;
+        return {};
     }
-    nlohmann::json output;
+
+    std::vector<std::shared_ptr<Task>> output;
+    auto includeIds = rawInput.at(0)->hasPublicIds();
+
     // Filter the tasks
     for (auto& filter : filters) {
         auto baseKey = filter.first;
@@ -102,22 +94,13 @@ nlohmann::json TaskFilter::filterTasks(const nlohmann::json& rawInput, std::shar
         }
         if (attribPtr->getType() != FieldType::STRLIST) {
             for (auto& value : StrUtil::splitString(filterValue, ',')) {
-                Task::convertAndEval(op, key, value, output, reworked);
+                TaskInfo::convertAndEval(op, key, value, output, reworked);
             }
         } else {
-            Task::convertAndEval(op, key, filterValue, output, reworked);
+            TaskInfo::convertAndEval(op, key, filterValue, output, reworked);
         }
         reworked = output;
         output.clear();
-    }
-
-    if (reworked.size() != 0) {
-        for (auto& json : reworked) {
-            for (auto& key : dropKeys) {
-                if (json.find(key) != json.end())
-                    json.erase(key);
-            }
-        }
     }
 
     return reworked;

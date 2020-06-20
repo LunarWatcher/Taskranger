@@ -45,7 +45,7 @@ public:
      * return nullptr.
      */
     std::shared_ptr<Attribute> getAttribute(const std::string& attribName);
-    std::shared_ptr<JSONDatabase> getDatabase(const std::string& dbName);
+    std::shared_ptr<JSONDatabase> getDatabase(const std::string& dbName, bool hasPublicIds);
 
     static std::shared_ptr<Environment> getInstance();
 

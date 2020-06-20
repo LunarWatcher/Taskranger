@@ -18,11 +18,11 @@ AllCommand::AllCommand() {
 
 void AllCommand::run() {
     auto input = Environment::getInstance()->getInputData();
-    auto& active = *Environment::getInstance()->getDatabase("active.json");
-    auto& historical = *Environment::getInstance()->getDatabase("completed.json");
+    auto& active = *Environment::getInstance()->getDatabase("active.json", true);
+    auto& historical = *Environment::getInstance()->getDatabase("completed.json", false);
 
-    auto filtered = TaskFilter::filterTasks(*active.getDatabase(), input, true);
-    auto hFiltered = TaskFilter::filterTasks(*historical.getDatabase(), input, false);
+    auto filtered = TaskFilter::filterTasks(active.getDatabase(), input);
+    auto hFiltered = TaskFilter::filterTasks(historical.getDatabase(), input);
     if (hFiltered.size() != 0) {
         if (filtered.size() != 0)
             filtered.insert(filtered.end(), hFiltered.begin(), hFiltered.end());
