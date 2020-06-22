@@ -1,4 +1,6 @@
 #include "AttribTypes.hpp"
+#include "date/date.h"
+#include "taskranger/data/Environment.hpp"
 #include <stdexcept>
 
 namespace taskranger {
@@ -79,9 +81,10 @@ void StrListAttribute::modify(nlohmann::json& task, const std::vector<std::strin
     task[this->name] = vec;
 }
 
-void DateAttribute::modify(nlohmann::json&, const std::string&) {
-    using namespace std::literals;
-    throw "Not implemented yet. Blame the dev 🗞️"s;
+void DateAttribute::modify(nlohmann::json& task, const std::string& input) {
+    Attribute::modify(task, input);
+
+    auto config = Environment::getInstance()->getConfig();
 }
 
 } // namespace taskranger

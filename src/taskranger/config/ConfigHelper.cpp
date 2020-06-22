@@ -13,7 +13,14 @@ Config::Config() {}
 void Config::loadStandards() {
     // clang-format off
     config = {
-        { "dataDir", "~/.taskranger" }
+        { "dataDir", "~/.taskranger" },
+        { "dates",  {
+                        {"default", "%d.%m.%Y %H:%M:%S"},
+                        {"tod", "%H:%M:%S"},
+                        {"day", "%d.%m"},
+                        {"date", "%d.%m &H:%M"}
+                    }
+        }
     };
     // clang-format on
 }

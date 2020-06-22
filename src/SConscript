@@ -21,13 +21,28 @@ def checkSecure(context):
     context.Result("yes" if compiled else "no")
     return compiled
 
+def checkUncaughtExceptionS(context):
+    context.Message("Checking for std::uncaught_exceptions... ")
+
+    exceptProbe = """
+    #include <exception>
+    int main() {
+        std::uncaught_exception();
+    }
+    """
+    compiled = context.TryCompile(exceptProbe, ".cpp")
+    context.Result("yes" if compiled else "no")
+    return compiled
+
 with env.configure() as config:
     config.test("CheckCXX")
     config.configureFilesystem()
 
     if platform != "win32":
-        if config.test("CheckSecureGetEnv", callback=checkSecure):
+        if config.test("CheckSecureGetEnv", callback = checkSecure):
             env.define("HAS_SECURE_GETENV")
+    if config.test("CheckUncaughtExceptionS", callback = checkUncaughtExceptionS):
+        env.define("HAS_UNCAUGHT_EXCEPTIONS")
 
 
 sources = env.Glob("taskranger/input/*.cpp")

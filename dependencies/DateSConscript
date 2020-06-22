@@ -1,0 +1,11 @@
+Import("env")
+
+# Define stuff for taskranger itself
+# The source path append is actually
+# required for the dateEnv as well, because
+# it needs to know where to locate the headers.
+# The second define is for future compatibility.
+env.appendSourcePath("#dependencies/date/include/")
+env.define("HAS_EXTERNAL_DATE")
+
+# vim:ft=python
