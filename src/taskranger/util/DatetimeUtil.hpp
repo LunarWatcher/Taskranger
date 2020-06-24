@@ -3,8 +3,8 @@
 #include "date/date.h"
 #include "date/tz.h"
 #include "taskranger/data/Environment.hpp"
-#include <bits/stdint-intn.h>
 #include <chrono>
+#include <cstdint>
 #include <string>
 
 namespace taskranger {
