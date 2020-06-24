@@ -129,8 +129,14 @@ public:
      * attempted modification if we're not allowing modifications.
      * If there's an attempted modification on a non-modifiable field, the
      * method throws.
+     *
+     * @param task      The JSON object to modify
+     * @param key       The key used to access the given attribute.
+     *                  Some attributes may use this for extended syntax. This notably
+     *                  applies to dates.
+     * @param input     The raw user input for the command
      */
-    virtual void modify(nlohmann::json& task, const std::string& input) {
+    virtual void modify(nlohmann::json& task, const std::string& /* key */, const std::string& input) {
         if (!this->modifiable && task.find(this->name) != task.end()) {
             throw "The field " + this->name + " cannot be modified";
         }

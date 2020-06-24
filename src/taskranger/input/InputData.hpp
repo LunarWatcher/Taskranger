@@ -16,6 +16,7 @@ public:
      * key-value pair. Other types of data are stored in other ways.
      *
      * Depending on the command context, this may also contain filters.
+     * // <key, <attributes<rest of the command, input>>
      */
     std::map<std::string, std::string> data;
     std::vector<std::string> tags;

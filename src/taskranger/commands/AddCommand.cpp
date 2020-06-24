@@ -64,7 +64,7 @@ void AddCommand::run() {
         if (!attrib) {
             throw "Attribute doesn't exist: " + key;
         }
-        attrib->modify(mod, value);
+        attrib->modify(mod, key, value);
         attrib->validate(mod[key]);
     }
     // TODO at a later point: add the time of the task's creation

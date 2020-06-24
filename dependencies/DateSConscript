@@ -1,4 +1,5 @@
 Import("env")
+import platform
 
 # Define stuff for taskranger itself
 # The source path append is actually
@@ -7,5 +8,21 @@ Import("env")
 # The second define is for future compatibility.
 env.appendSourcePath("#dependencies/date/include/")
 env.define("HAS_EXTERNAL_DATE")
+# Required to use the OS timezone database instead of
+# a downloaded one.
+# Taskranger is not server-sided software where
+# storing custom timezone definitions makes sense,
+# so it's a lot better to use the OS database.
+# ... but it doesn't work on Windows
+if "windows" not in platform.platform():
+    env.define("USE_OS_TZDB=1")
+
+# Force disable the remote API
+env.define("HAS_REMOTE_API=0")
+
+dateEnv = env.Clone()
+timezoneLib = dateEnv.Library("dateLib", "date/src/tz.cpp")
+
+env.withLibraries(timezoneLib)
 
 # vim:ft=python

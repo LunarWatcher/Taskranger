@@ -9,10 +9,12 @@
 // it just looks a lot ugler than subclassing
 #include "taskranger/data/attributes/AttribTypes.hpp"
 #include "taskranger/data/attributes/DescriptionAttribute.hpp"
+#include "taskranger/data/attributes/DueAttribute.hpp"
 #include "taskranger/data/attributes/ProjectAttribute.hpp"
 #include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/data/attributes/UDAAttribute.hpp"
 #include "taskranger/data/attributes/UUIDAttribute.hpp"
+#include "taskranger/util/StrUtil.hpp"
 
 #include <algorithm>
 #include <memory>
@@ -52,6 +54,8 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
         return std::make_shared<ProjectAttribute>();
     } else if (fieldName == "uuid") {
         return std::make_shared<UUIDAttribute>();
+    } else if (fieldName == "due") {
+        return std::make_shared<DueAttribute>();
     } else {
         auto& config = *Environment::getInstance()->getConfig();
         auto udaIt = config.findKey("uda");

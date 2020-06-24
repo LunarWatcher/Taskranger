@@ -1,12 +1,17 @@
 #include "AttribTypes.hpp"
 #include "date/date.h"
+#include "date/tz.h"
 #include "taskranger/data/Environment.hpp"
+#include "taskranger/util/DatetimeUtil.hpp"
+#include "taskranger/util/StrUtil.hpp"
+#include <chrono>
+#include <sstream>
 #include <stdexcept>
 
 namespace taskranger {
 
-void NumberAttribute::modify(nlohmann::json& task, const std::string& input) {
-    Attribute::modify(task, input);
+void NumberAttribute::modify(nlohmann::json& task, const std::string& key, const std::string& input) {
+    Attribute::modify(task, key, input);
 
     size_t convEndPos = 0;
     double value = 0;
@@ -21,7 +26,7 @@ void NumberAttribute::modify(nlohmann::json& task, const std::string& input) {
     task[this->name] = value;
 }
 
-void ULLongAttribute::modify(nlohmann::json& task, const std::string& input) {
+void ULLongAttribute::modify(nlohmann::json& task, const std::string& key, const std::string& input) {
     if (this->name == "id") {
         /**
          * Unmodifiable fields are better documented later, but the ID is an exception.
@@ -42,7 +47,7 @@ void ULLongAttribute::modify(nlohmann::json& task, const std::string& input) {
         throw "You cannot modify the ID";
     }
 
-    Attribute::modify(task, input);
+    Attribute::modify(task, key, input);
 
     size_t convEndPos = 0;
     unsigned long long value = 0;
@@ -58,14 +63,13 @@ void ULLongAttribute::modify(nlohmann::json& task, const std::string& input) {
     task[this->name] = value;
 }
 
-void StringAttribute::modify(nlohmann::json& task, const std::string& input) {
-    Attribute::modify(task, input);
+void StringAttribute::modify(nlohmann::json& task, const std::string& key, const std::string& input) {
+    Attribute::modify(task, key, input);
 
     task[this->name] = input;
 }
 
-void StrListAttribute::modify(nlohmann::json& task, const std::string& input) {
-
+void StrListAttribute::modify(nlohmann::json& task, const std::string&, const std::string& input) {
     auto vec = StrUtil::splitString(input, ',');
 
     this->modify(task, vec);
@@ -81,10 +85,10 @@ void StrListAttribute::modify(nlohmann::json& task, const std::vector<std::strin
     task[this->name] = vec;
 }
 
-void DateAttribute::modify(nlohmann::json& task, const std::string& input) {
-    Attribute::modify(task, input);
+void DateAttribute::modify(nlohmann::json& task, const std::string& key, const std::string& input) {
+    Attribute::modify(task, key, input);
 
-    auto config = Environment::getInstance()->getConfig();
+    task[this->name] = DatetimeUtil::parseTime(key, input);
 }
 
 } // namespace taskranger

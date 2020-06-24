@@ -16,6 +16,7 @@ void Config::loadStandards() {
         { "dataDir", "~/.taskranger" },
         { "dates",  {
                         {"default", "%d.%m.%Y %H:%M:%S"},
+                        {"zoned", "%d.%m.%Y %H:%M:%ST%z"},
                         {"tod", "%H:%M:%S"},
                         {"day", "%d.%m"},
                         {"date", "%d.%m &H:%M"}
@@ -57,7 +58,9 @@ void Config::ensureLoaded() {
 
     if (input) {
         try {
-            input >> config;
+            nlohmann::json inputConfig;
+            input >> inputConfig;
+            this->config.merge_patch(inputConfig);
         } catch (nlohmann::json::parse_error& err) {
             std::cout << err.what() << std::endl;
             throw "The JSON parser ran into an error when parsing the config JSON. Please make sure your JSON file is "
@@ -68,8 +71,8 @@ void Config::ensureLoaded() {
     }
 }
 
-std::string Config::getString(const std::string& key) {
-    return this->config.value(key, "");
+std::string Config::getString(const std::string& key, const std::string& defaultValue) {
+    return this->config.value(key, defaultValue);
 }
 
 unsigned long long Config::getULLong(const std::string& key) {

@@ -17,7 +17,7 @@ public:
     void ensureLoaded();
     void loadStandards();
 
-    std::string getString(const std::string& key);
+    std::string getString(const std::string& key, const std::string& defaultValue = "");
     unsigned long long getULLong(const std::string& key);
     bool getBool(const std::string& key);
 
