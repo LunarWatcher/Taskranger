@@ -14,7 +14,7 @@ env.define("HAS_EXTERNAL_DATE")
 # storing custom timezone definitions makes sense,
 # so it's a lot better to use the OS database.
 # ... but it doesn't work on Windows
-if "windows" not in platform.platform():
+if "windows" not in platform.platform().lower():
     env.define("USE_OS_TZDB=1")
 
 # Force disable the remote API
