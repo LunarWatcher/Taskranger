@@ -17,7 +17,8 @@ env.define("HAS_EXTERNAL_DATE")
 if "windows" not in platform.platform().lower():
     env.define("USE_OS_TZDB=1")
 else:
-    env.withLibraries("Shell32.lib")
+    env.withLibraries(["Shell32.dll", "Ole32.dll"])
+
 # Force disable the remote API
 env.define("HAS_REMOTE_API=0")
 
