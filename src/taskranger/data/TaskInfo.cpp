@@ -4,7 +4,9 @@
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <memory>
+#include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <variant>
 
 namespace taskranger {
@@ -66,14 +68,39 @@ void TaskInfo::convertAndEval(InputParserOperators::Operator op, const std::stri
                 TaskInfo::insItems(output, input, fieldName, op, num);
             }
         } catch (std::invalid_argument&) { //
-            return; //
         } catch (std::out_of_range&) { //
-            return; //
+        }
+        break;
+    case FieldType::DATE:
+        try {
+            std::cout << fieldName;
+            return;
+
+        } catch (std::invalid_argument&) { //
+        } catch (std::out_of_range&) { //
         }
         break;
     default:
         throw "This type hasn't been implemented yet."s;
     }
+}
+
+void TaskInfo::convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, int64_t tp,
+        std::vector<std::shared_ptr<Task>>& output, std::vector<std::shared_ptr<Task>>& input) {
+
+    using namespace std::literals;
+    auto key = StrUtil::splitString(fieldName, ".", 1).front();
+    auto attribute = Environment::getInstance()->getAttribute(key);
+
+    if (attribute == nullptr) {
+        throw "Invalid attribute: " + fieldName + " (debug: .3)";
+    }
+
+    if (attribute->getType() != FieldType::DATE) {
+        throw "Can't pass a timestamp to a non-date";
+    }
+
+    TaskInfo::insItems(output, input, key, op, tp);
 }
 
 } // namespace taskranger

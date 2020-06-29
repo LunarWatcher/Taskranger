@@ -2,6 +2,7 @@
 #include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
+#include "taskranger/util/DatetimeUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <algorithm>
 #include <cstring>
@@ -92,11 +93,16 @@ std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
         if (key == "project" && filterValue.at(0) != '@') {
             filterValue = "@" + filterValue;
         }
-        if (attribPtr->getType() != FieldType::STRLIST) {
+        if (attribPtr->getType() == FieldType::DATE) {
+            auto timestamp = DatetimeUtil::parseTime(key, filterValue);
+
+            TaskInfo::convertAndEval(op, key, timestamp, output, reworked);
+        } else if (attribPtr->getType() != FieldType::STRLIST) {
             for (auto& value : StrUtil::splitString(filterValue, ',')) {
                 TaskInfo::convertAndEval(op, key, value, output, reworked);
             }
         } else {
+            // Vectors handle their raw input differently.
             TaskInfo::convertAndEval(op, key, filterValue, output, reworked);
         }
         reworked = output;

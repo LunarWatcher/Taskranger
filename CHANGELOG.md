@@ -18,6 +18,8 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 ## Changes
 * A Task is now represented by its own object rather than a `nlohmann::json` object
 * JSONDatabases now store whether the database entries contains IDs or not
+* Pretty-print date fields
+* [Internal] Minor overhaul to the table printing system
 
 # [v0.1.0] (19.06.20)
 

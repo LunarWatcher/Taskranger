@@ -1,5 +1,7 @@
 #pragma once
 
+#include "tabulate/table.hpp"
+#include "taskranger/data/Task.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <any>
 #include <memory>
@@ -148,6 +150,15 @@ public:
         }
     }
 
+    virtual std::variant<std::string, tabulate::Table> print(const Task& task) {
+        auto& json = task.getTaskJson();
+        auto it = json.find(this->name);
+        if (it == json.end()) {
+            return " ";
+        }
+        return StrUtil::toString(task.getTaskJson().at(this->name), " ", "-");
+    }
+
     /**
      * Runs the relevant checks against the field
      */
@@ -163,6 +174,9 @@ public:
 
     const std::string& getName() {
         return name;
+    }
+    const std::string& getLabel() {
+        return label;
     }
 
     FieldType getType() {

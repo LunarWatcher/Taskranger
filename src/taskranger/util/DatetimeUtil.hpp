@@ -20,6 +20,7 @@ inline int64_t parseRelative(int count, const std::string& substr) {
         now += std::chrono::hours(count);
         break;
     case 'd':
+        // Begin date extensions (these need to be flipped to std::chrono::<name> for C++20)
         now += days(count);
         break;
     case 'w':
@@ -40,7 +41,7 @@ inline int64_t parseRelative(int count, const std::string& substr) {
     return int64_t(std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count());
 }
 
-int64_t parseTime(const std::string attribKey, const std::string& input) {
+inline int64_t parseTime(const std::string attribKey, const std::string& input) {
 
     auto config = Environment::getInstance()->getConfig();
 
@@ -86,10 +87,13 @@ int64_t parseTime(const std::string attribKey, const std::string& input) {
         format = config->findKey("dates")->at("default").get<std::string>();
     }
 
+    using namespace date;
+
     /**
      * Here we go... Welcome to the problem section
      */
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> timepoint;
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> timepoint =
+            std::chrono::time_point_cast<days>(std::chrono::system_clock::now());
 
     /**
      * The parse function takes an istringstream input

@@ -17,9 +17,9 @@ void Config::loadStandards() {
         { "dates",  {
                         {"default", "%d.%m.%Y %H:%M:%S"},
                         {"zoned", "%d.%m.%Y %H:%M:%ST%z"},
-                        {"tod", "%H:%M:%S"},
+                        {"tod", "%T"},
                         {"day", "%d.%m"},
-                        {"date", "%d.%m &H:%M"}
+                        {"date", "%d.%m %H:%M"}
                     }
         }
     };

@@ -65,7 +65,9 @@ void AddCommand::run() {
             throw "Attribute doesn't exist: " + key;
         }
         attrib->modify(mod, key, value);
-        attrib->validate(mod[key]);
+        // Has to be attrib->name to prevent issues with scoped
+        // attributes (like dates)
+        attrib->validate(mod.at(attrib->getName()));
     }
     // TODO at a later point: add the time of the task's creation
     (*database.getRawDatabase()).push_back(mod);

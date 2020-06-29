@@ -91,4 +91,18 @@ void DateAttribute::modify(nlohmann::json& task, const std::string& key, const s
     task[this->name] = DatetimeUtil::parseTime(key, input);
 }
 
+std::variant<std::string, tabulate::Table> DateAttribute::print(const Task& task) {
+    auto& json = task.getTaskJson();
+    auto it = json.find(this->name);
+    if (it == json.end()) {
+        return " ";
+    }
+
+    std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> tp(
+            std::chrono::milliseconds(it->get<int64_t>()));
+    std::string defaultDateFormat =
+            Environment::getInstance()->getConfig()->findKey("dates")->at("default").get<std::string>();
+    return date::format(defaultDateFormat, date::make_zoned(date::current_zone(), tp));
+}
+
 } // namespace taskranger

@@ -2,6 +2,7 @@
 
 #include "taskranger/data/Task.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
+#include <chrono>
 #include <functional>
 #include <map>
 #include <memory>
@@ -30,7 +31,17 @@ void insItems(std::vector<std::shared_ptr<Task>>& output, const std::vector<std:
 }
 
 void convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, const std::string& rawInput,
-        std::vector<std::shared_ptr<Task>>& reworked, std::vector<std::shared_ptr<Task>>& orig);
+        std::vector<std::shared_ptr<Task>>& output, std::vector<std::shared_ptr<Task>>& input);
+
+/**
+ * Overload for timestamps
+ *
+ * @param operator      The operator to use
+ * @param fieldName     The attribute name
+ * @param tp            The timepoint supplied as milliseconds for operator reasons
+ */
+void convertAndEval(InputParserOperators::Operator op, const std::string& fieldName, int64_t tp,
+        std::vector<std::shared_ptr<Task>>& output, std::vector<std::shared_ptr<Task>>& input);
 
 } // namespace TaskInfo
 } // namespace taskranger

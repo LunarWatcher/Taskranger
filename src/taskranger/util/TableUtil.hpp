@@ -14,13 +14,24 @@ namespace TableUtil {
 
 typedef std::variant<std::string, tabulate::Table> TableRow;
 
-/**
- * Converts the default JSON data to
- *
- * @param renderTarget      A JSON array containing JSON objects to render to a table
- */
-tabulate::Table renderTasks(
-        std::vector<std::shared_ptr<Task>>& renderTarget, std::map<std::string, int> keyPriority = {});
+class TableBuilder {
+private:
+    std::map<std::string, std::vector<TableRow>> columns;
+    std::vector<std::string> keys;
+
+public:
+    TableBuilder();
+
+    /**
+     * Determines which keys to display, as well as the order.
+     */
+    TableBuilder& withKeys(const std::vector<std::string>& keys);
+
+    /**
+     * Builds the table
+     */
+    tabulate::Table build(std::vector<std::shared_ptr<Task>>& tasks);
+};
 
 } // namespace TableUtil
 
