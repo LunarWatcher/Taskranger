@@ -1,143 +1,176 @@
 #pragma once
 
-#include "date/date.h"
-#include "date/tz.h"
 #include "taskranger/data/Environment.hpp"
+#include "taskranger/util/StrUtil.hpp"
+
+#include "unicode/bytestream.h"
+#include "unicode/datefmt.h"
+#include "unicode/gregocal.h"
+#include "unicode/reldatefmt.h"
+#include "unicode/smpdtfmt.h"
+#include "unicode/unistr.h"
+
 #include <chrono>
-#include <cstdint>
+#include <regex>
+#include <stdexcept>
 #include <string>
 
 namespace taskranger {
+namespace DateTimeUtil {
 
-namespace DatetimeUtil {
+using std::chrono::duration;
+using millis = duration<double, std::milli>;
+using seconds = duration<double>;
+using minutes = duration<double, std::ratio<60>>;
+using hours = duration<double, std::ratio<3600>>;
+using days = duration<double, std::ratio<86400>>;
+using weeks = duration<double, std::ratio<604800>>;
+using months = duration<double, std::ratio<2629746>>;
+using years = duration<double, std::ratio<31556952>>;
 
-inline int64_t parseRelative(int count, const std::string& substr) {
-    auto now = std::chrono::system_clock::now();
-    using namespace date;
+inline double parseRelative(const std::string& inputDate) {
 
-    switch (substr[0]) {
-    case 'h':
-        now += std::chrono::hours(count);
-        break;
-    case 'd':
-        // Begin date extensions (these need to be flipped to std::chrono::<name> for C++20)
-        now += days(count);
-        break;
-    case 'w':
-        now += weeks(count);
-        break;
-    case 'm':
-        now += months(count);
-        break;
-    case 'y':
-        now += years(count);
-        break;
-    default:
-        // Realistically, there's no reason what so ever for this to return 0
-        // ... unless the date causes overflow or the user for whatever reason
-        // wants to set up a meeting on January 1st 1970
-        return 0;
-    }
-    return int64_t(std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count());
+    try {
+        size_t parseEndPos;
+        int numUnits = std::stoi(inputDate, &parseEndPos);
+        if (parseEndPos == inputDate.size()) {
+            return -1;
+        }
+        auto now = std::chrono::system_clock::now();
+        switch (inputDate[parseEndPos]) {
+        case 'd':
+            return std::chrono::duration_cast<millis>((now + days(numUnits)).time_since_epoch()).count();
+        case 'm':
+            return std::chrono::duration_cast<millis>((now + months(numUnits)).time_since_epoch()).count();
+        case 'y':
+            return std::chrono::duration_cast<millis>((now + years(numUnits)).time_since_epoch()).count();
+        case 'w':
+            return std::chrono::duration_cast<millis>((now + weeks(numUnits)).time_since_epoch()).count();
+        case 'h':
+            return std::chrono::duration_cast<millis>((now + hours(numUnits)).time_since_epoch()).count();
+        default:
+            return -1;
+        }
+
+    } catch (std::invalid_argument&) { return -1; }
 }
 
-inline int64_t parseTime(const std::string attribKey, const std::string& input) {
+inline double parseTime(const std::string& format, const std::string& inputDate) {
+    auto relative = parseRelative(inputDate);
+    if (relative != -1) {
+        return relative;
+    }
 
-    auto config = Environment::getInstance()->getConfig();
+    using namespace std::literals;
+    using namespace icu_67;
+    using CF = UCalendarDateFields;
+    // TODO: try to do something slightly more with this
+    // than pretending it's useless
+    UErrorCode status = U_ZERO_ERROR;
 
-    std::string format = "";
+    SimpleDateFormat sdf(UnicodeString(format.c_str()), status);
+    // Get the calendar early; before anything is parsed, it is set to the current
+    // day and time, which we can use later C:
+    Calendar* cal = const_cast<Calendar*>(sdf.getCalendar());
+    auto day = cal->get(CF::UCAL_DAY_OF_MONTH, status);
+    auto month = cal->get(CF::UCAL_MONTH, status);
+    auto year = cal->get(CF::UCAL_YEAR, status);
 
-    if (attribKey.find(".") != std::string::npos) {
-        auto split = StrUtil::splitString(attribKey, '.');
-        auto secElem = split.at(1);
-        if (secElem.size() != 0) {
-            auto& dates = *config->findKey("dates");
-            auto date = dates.find(secElem);
-            if (date != dates.end()) {
-                format = date.value().get<std::string>();
-            } else {
-                throw "Unknown date format: " + secElem + " -- does it exist?";
-            }
+    ParsePosition pp;
+    UDate time = sdf.parse(inputDate.c_str(), pp);
+    if (pp.getErrorIndex() != -1) {
+        throw "Failed to parse:\n" + inputDate + "\n" + StrUtil::padString("^", pp.getErrorIndex() + 1) + "\nWith\n" +
+                format;
+    }
+
+    cal->setTime(time, status);
+
+    // hack for making sure the day, month, and year are all set
+    // Base check; search for letters implying all of the three
+    std::smatch unused;
+    if (!std::regex_search(format, unused, std::regex("[D]"))) {
+        // D: day of year (implies month and year)
+
+        if (!std::regex_search(format, unused, std::regex("[dFg]"))) {
+            cal->set(CF::UCAL_DAY_OF_MONTH, day);
+        }
+
+        if (!std::regex_search(format, unused, std::regex("[ML]"))) {
+            // No month specified
+            cal->set(CF::UCAL_MONTH, month);
+        }
+
+        if (!std::regex_search(format, unused, std::regex("[YyuU]"))) {
+            cal->set(CF::UCAL_YEAR, year);
         }
     }
 
-    if (format.size() == 0) {
-        // Try relative dates first
-        // Relative dates always start with a number
-        try {
-            size_t pos;
-            auto count = std::stoi(input, &pos);
+    time = cal->getTime(status);
 
-            if (pos != input.size()) {
-                auto attemptedTime = parseRelative(count, input.substr(pos));
-                if (attemptedTime != 0) {
-                    // if it isn't equal to 0, we've got a valid time, and
-                    // we can finish up here.
-                    // (See parseRelative for the rationale on 0)
-                    return attemptedTime;
-                }
-            }
-        } catch (std::invalid_argument&) {
-            // If this is thrown, no conversion could be done, and the relative
-            // date is invalid. Try to parse it normally instead
-        }
-
-        // if  the scheme is defaullt, and the format size is 0,
-        // that means the default is implicit.
-        format = config->findKey("dates")->at("default").get<std::string>();
-    }
-
-    using namespace date;
-
-    /**
-     * Here we go... Welcome to the problem section
-     */
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> timepoint =
-            std::chrono::time_point_cast<days>(std::chrono::system_clock::now());
-
-    /**
-     * The parse function takes an istringstream input
-     */
-    std::istringstream stream(input);
-
-    /**
-     * And because the library is fuckign drunk, it parses the date relative to UTC instead of GMT.
-     * There's only one undocumented workaround, and this is it:
-     *
-     * The offset, provided none is specified, has a side-effect on parsing.
-     * If `offset = 1min`, it'll be shifted by one minute PROVIDED the date format
-     * doesn't define a timezone.
-     *
-     * If the date format specifies a timezone, it takes priority over the manually supplied offset.
-     * But since the API is drunk, the only way to get an offset is this overcomplicated piece of shit
-     * that returns the offset **IN SECONDS**. (I mean, I can understand minutes and hours,
-     * considering 04:30 is a valid offset, but fucking seconds??)
-     *
-     * Anyway, just using current_zone().get_info() doesn't work either. It appears to disregard DST,
-     * and while DST is fucking garbage, it still exists
-     *
-     * So...
-     */
-    auto offset = // to get a valid offset
-            std::chrono::duration_cast<std::chrono::minutes>( // we have to cast
-                    date::make_zoned( // a zoned time
-                            date::current_zone(), // using our current timezone
-                            std::chrono::system_clock::now()) // with, for whatever fucking reason, the current time
-
-                            .get_info() // from which we get the info, whatever that means
-                            .offset); // which finally returns the offset
-    // And then finally we can parse the date, which now parses with the current timezone if none
-    // is supplied
-    stream >> date::parse(format, timepoint, offset);
-
-    // (meta) check whether it succeeded
-    if (!stream) {
-        throw "Failed to parse date (" + input + ") using \"" + format + "\"";
-    }
-
-    return int64_t(timepoint.time_since_epoch().count());
+    std::cout << std::fixed << time << std::endl;
+    UnicodeString s;
+    sdf.format(time, s, status);
+    std::string fmt;
+    s.toUTF8String(fmt);
+    std::cout << fmt << std::endl << std::endl;
+    return time;
 }
 
-} // namespace DatetimeUtil
+inline std::string formatDate(const double& timestamp) {
+    using namespace icu;
+    auto format = Environment::getInstance()->getConfig()->findKey("dates")->at("default");
 
+    UErrorCode status = U_ZERO_ERROR;
+    SimpleDateFormat sdf(UnicodeString(format.get<std::string>().c_str()), status);
+
+    UnicodeString buff;
+    std::string output;
+    sdf.format(timestamp, buff, status);
+    buff.toUTF8String(output);
+
+    return output;
+}
+
+inline std::string formatRelative(const double& timestamp) {
+    using namespace icu;
+
+    auto now = std::chrono::duration_cast<millis>(std::chrono::system_clock::now().time_since_epoch());
+    auto relativeUnix = now - millis(timestamp);
+
+    auto direction =
+            relativeUnix.count() < 0 ? UDateDirection::UDAT_DIRECTION_NEXT : UDateDirection::UDAT_DIRECTION_LAST;
+    UDateRelativeUnit unit = UDateRelativeUnit::UDAT_RELATIVE_YEARS;
+    auto absDate = direction == UDateDirection::UDAT_DIRECTION_NEXT ? -relativeUnix : relativeUnix;
+
+    double count;
+
+    if (absDate < minutes(1)) {
+        unit = UDateRelativeUnit::UDAT_RELATIVE_SECONDS;
+        count = seconds(absDate).count();
+    } else if (absDate < hours(1)) {
+        unit = UDateRelativeUnit::UDAT_RELATIVE_MINUTES;
+        count = minutes(absDate).count();
+    } else if (absDate < days(1)) {
+        unit = UDateRelativeUnit::UDAT_RELATIVE_HOURS;
+        count = hours(absDate).count();
+    } else if (absDate < months(1)) {
+        unit = UDateRelativeUnit::UDAT_RELATIVE_WEEKS;
+        count = days(absDate).count();
+    } else if (absDate < years(1)) {
+        unit = UDateRelativeUnit::UDAT_RELATIVE_MONTHS;
+        count = months(absDate).count();
+    } else {
+        count = years(absDate).count();
+    }
+    UnicodeString buff;
+    std::string output;
+    UErrorCode status = U_ZERO_ERROR;
+    RelativeDateTimeFormatter formatter(status);
+
+    formatter.format(count, direction, unit, buff, status);
+    buff.toUTF8String(output);
+    return output;
+}
+
+} // namespace DateTimeUtil
 } // namespace taskranger

@@ -15,11 +15,11 @@ void Config::loadStandards() {
     config = {
         { "dataDir", "~/.taskranger" },
         { "dates",  {
-                        {"default", "%d.%m.%Y %H:%M:%S"},
-                        {"zoned", "%d.%m.%Y %H:%M:%ST%z"},
-                        {"tod", "%T"},
-                        {"day", "%d.%m"},
-                        {"date", "%d.%m %H:%M"}
+                        {"default", "dd.MM.y HH:mm:ss"},
+                        {"zoned", "dd.MM.y HH:mm:ss'T'z"},
+                        {"tod", "HH:mm:ss"},
+                        {"day", "dd.MM"},
+                        {"date", "dd.MM HH:mm"}
                     }
         }
     };

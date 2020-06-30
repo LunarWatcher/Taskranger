@@ -1,6 +1,4 @@
 #include "AttribTypes.hpp"
-#include "date/date.h"
-#include "date/tz.h"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/util/DatetimeUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
@@ -88,7 +86,7 @@ void StrListAttribute::modify(nlohmann::json& task, const std::vector<std::strin
 void DateAttribute::modify(nlohmann::json& task, const std::string& key, const std::string& input) {
     Attribute::modify(task, key, input);
 
-    task[this->name] = DatetimeUtil::parseTime(key, input);
+    // task[this->name] = DatetimeUtil::parseTime(key, input);
 }
 
 std::variant<std::string, tabulate::Table> DateAttribute::print(const Task& task) {
@@ -98,11 +96,12 @@ std::variant<std::string, tabulate::Table> DateAttribute::print(const Task& task
         return " ";
     }
 
-    std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> tp(
-            std::chrono::milliseconds(it->get<int64_t>()));
-    std::string defaultDateFormat =
-            Environment::getInstance()->getConfig()->findKey("dates")->at("default").get<std::string>();
-    return date::format(defaultDateFormat, date::make_zoned(date::current_zone(), tp));
+    // std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> tp(
+    // std::chrono::milliseconds(it->get<int64_t>()));
+    // std::string defaultDateFormat =
+    // Environment::getInstance()->getConfig()->findKey("dates")->at("default").get<std::string>();
+    // return date::format(defaultDateFormat, date::make_zoned(date::current_zone(), tp));
+    return "not handled";
 }
 
 } // namespace taskranger

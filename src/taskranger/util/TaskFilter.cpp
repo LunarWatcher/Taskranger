@@ -94,8 +94,7 @@ std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
             filterValue = "@" + filterValue;
         }
         if (attribPtr->getType() == FieldType::DATE) {
-            auto timestamp = DatetimeUtil::parseTime(key, filterValue);
-
+            auto timestamp = 0;
             TaskInfo::convertAndEval(op, key, timestamp, output, reworked);
         } else if (attribPtr->getType() != FieldType::STRLIST) {
             for (auto& value : StrUtil::splitString(filterValue, ',')) {

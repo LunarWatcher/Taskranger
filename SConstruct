@@ -59,14 +59,8 @@ env.environment['ENV']['ASAN_OPTIONS'] = 'halt_on_error=0;detect_leaks=0'
 # env.withCompilationDB()
 
 if platform == "win32":
+    # Required for proper unit testing
     env.includeSysVars("USERPROFILE", "HOMEDRIVE", "HOMEPATH")
-
-# TODO(C++20): add a switch between using dependencies/date and
-# C++20's stdlib.
-# Using exports to SConscript would be cleanest; it also lets the dependencies folder
-# actually deal with dependencies.
-# This is TBD.
-env.SConscript("dependencies/DateSConscript", variant_dir="date", duplicate=0)
 
 # Run the executable submodule
 env.SConscript("src/SConscript",

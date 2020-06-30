@@ -10,8 +10,10 @@
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/input/InputData.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
+#include "taskranger/util/DatetimeUtil.hpp"
 
 int main(int argc, const char* argv[]) {
+
     using taskranger::ANSIFeature;
     using taskranger::Environment;
     using taskranger::InputParser;
