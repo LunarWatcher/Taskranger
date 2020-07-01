@@ -16,4 +16,4 @@ class Taskranger(ConanFile):
         self.requires("icu/67.1")
 
         if self.settings.os == "Windows" and "FORCE_MSYS" in os.environ:
-            self.build_requires("msys2/20190524")
+            self.requires("msys2/20190524")
