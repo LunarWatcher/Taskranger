@@ -31,7 +31,9 @@ The only requirements for this project are:
 Additionally, the use of `<filesystem>` adds additional requirements to the stdlib
 * Linux (GCC, Clang): libstdc++-8-dev or newer
 * Linux, Mac (Clang): libc++-7-dev or newer
-* Windows (MSVC): MSVC STL 15.7 or newer
+* Windows (MSVC): MSVC STL 15.7 or newer.
+    **Note**: PATH cannot contain Git Bash unless msys2 or presumably Cygwin Bash takes precedence over Git Bash - this causes ICU's conan package (ICU is one of Taskranger's dependencies) to detect msys2 incorrectly. Unfortunately, at least in the failing CI tests, this seems to cause the package to not download msys or use a functioning msys, but rather use Git Bash. That triggers build failures which presumably won't happen with proper msys, or if there's no msys-like bash to interfere with ICU. TL;DR: if Git Bash is in your path, the build will likely fail
+
 
 The stdlib makes or breaks the code. Also note that even if your compiler is C++17 compliant, the stdlib might not be up to date and cause compilation to fail anyway.
 
