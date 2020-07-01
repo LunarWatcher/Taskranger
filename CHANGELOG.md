@@ -20,6 +20,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * JSONDatabases now store whether the database entries contains IDs or not
 * Pretty-print date fields
 * [Internal] Minor overhaul to the table printing system
+* Add ICU for dates
 
 # [v0.1.0] (19.06.20)
 
