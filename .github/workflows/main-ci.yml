@@ -91,8 +91,8 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-    - uses: seanmiddleditch/gha-setup-vsdevenv@maser
-      if: matrix.os != 'windows-latest'
+    - if: matrix.os != 'windows-latest'
+      uses: seanmiddleditch/gha-setup-vsdevenv@master
     # Set up python; requires for SCons and Conan
     - uses: actions/setup-python@v2
     - name: Set env
