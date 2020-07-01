@@ -112,7 +112,9 @@ jobs:
 
       run: |
         python -m pip install pywin32
-        Get-ChildItem Env:Path | Format-Table -Wrap -AutoSize
+        $path = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
+        $path = ($path.Split(';') | Where-Object { $_ -ne 'bash' }) -join ';'
+        echo "::set-env name=PATH::$path"
     - name: Build
       run: |
         scons -j 2
