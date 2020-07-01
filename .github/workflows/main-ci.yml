@@ -101,9 +101,9 @@ jobs:
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
         ${{ matrix.compiler }} --version
     # Install conan
-    - name: Install conan
+
+    - uses: LunarWatcher/install-conan@master
       shell: bash
-      uses: LunarWatcher/install-conan@master
     # Install SCons
     - name: Install dependencies
       shell: bash
