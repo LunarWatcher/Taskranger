@@ -14,6 +14,3 @@ class Taskranger(ConanFile):
     def requirements(self):
         self.requires("nlohmann_json/3.8.0")
         self.requires("icu/67.1")
-
-        if self.settings.os == "Windows" and "FORCE_MSYS" in os.environ:
-            self.requires("msys2/20190524")
