@@ -103,7 +103,6 @@ jobs:
     # Install conan
 
     - uses: LunarWatcher/install-conan@master
-      shell: bash
     # Install SCons
     - name: Install dependencies
       shell: bash
