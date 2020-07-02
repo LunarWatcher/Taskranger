@@ -107,21 +107,38 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
 
     time = cal->getTime(status);
 
-    std::cout << std::fixed << time << std::endl;
     UnicodeString s;
     sdf.format(time, s, status);
     std::string fmt;
     s.toUTF8String(fmt);
-    std::cout << fmt << std::endl << std::endl;
+
     return time;
 }
 
-inline std::string formatDate(const double& timestamp) {
+inline double parseTimeKey(const std::string& key, const std::string& inputDate) {
+    auto split = StrUtil::splitString(key, '.');
+    std::string format;
+    auto dateJson = *Environment::getInstance()->getConfig()->findKey("dates");
+    if (split.size() == 1) {
+        format = dateJson.at("default").get<std::string>();
+    } else {
+        auto it = dateJson.find(split.back());
+        if (it == dateJson.end()) {
+            throw "Format " + split.back() + " not found.";
+        }
+        format = it->get<std::string>();
+    }
+    return parseTime(format, inputDate);
+}
+
+inline std::string formatDate(const double& timestamp, const std::string& iFormat = "") {
     using namespace icu;
-    auto format = Environment::getInstance()->getConfig()->findKey("dates")->at("default");
+    auto format = iFormat.size() == 0
+                          ? Environment::getInstance()->getConfig()->findKey("dates")->at("default").get<std::string>()
+                          : iFormat;
 
     UErrorCode status = U_ZERO_ERROR;
-    SimpleDateFormat sdf(UnicodeString(format.get<std::string>().c_str()), status);
+    SimpleDateFormat sdf(UnicodeString(format.c_str()), status);
 
     UnicodeString buff;
     std::string output;
