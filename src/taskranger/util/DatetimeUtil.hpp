@@ -62,7 +62,7 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
     }
 
     using namespace std::literals;
-    using namespace icu_67;
+    using namespace icu;
     using CF = UCalendarDateFields;
     // TODO: try to do something slightly more with this
     // than pretending it's useless

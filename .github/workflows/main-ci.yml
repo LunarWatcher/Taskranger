@@ -48,8 +48,13 @@ jobs:
           sudo ln -sf /usr/bin/clang-format-10 /usr/bin/clang-format
           python3 -m pip install -r requirements.txt
           pre-commit run --all-files
+  tmpbuild:
+    steps:
+      - name: Reminder
+        run: |
+          echo "See issue #17 - until conan 1.28.0 is released, the build section of the CI is disabled."
   build:
-    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
+    if: "!contains(github.event.head_commit.message, '[skip-ci]') && 0 == 1"
     # Contains the build matrix, and yes, it's a bit of a clusterfuck
     strategy:
       matrix:

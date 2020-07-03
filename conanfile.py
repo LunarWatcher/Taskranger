@@ -8,7 +8,8 @@ class Taskranger(ConanFile):
 
     default_options = {
         "icu:data_packaging": "static",
-        "icu:shared": False
+        "icu:shared": False,
+        "icu:with_dyload": False
     }
 
     def requirements(self):
