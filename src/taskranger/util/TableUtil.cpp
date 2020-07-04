@@ -132,9 +132,9 @@ void TableBuilder::build(std::vector<std::shared_ptr<Task>>& tasks) {
             auto json = task->getTaskJson();
             for (auto& [k, v] : json.items()) {
                 try {
-                    auto attribute = *env.getAttribute(k);
-                    auto key = attribute.getLabel();
-                    taskTable.add_row({key, attribute.getMaxRepresentationForTable(*task)});
+                    auto attribute = env.getAttribute(k);
+                    auto key = attribute->getLabel();
+                    taskTable.add_row({key, attribute->getMaxRepresentationForTable(*task)});
                 } catch (std::string&) { taskTable.add_row({k, StrUtil::toString(v)}); }
             }
 

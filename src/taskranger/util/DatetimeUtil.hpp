@@ -179,7 +179,7 @@ inline std::string formatRelative(const double& timestamp) {
         unit = UDateRelativeUnit::UDAT_RELATIVE_HOURS;
         count = hours(absDate).count();
     } else if (absDate < months(1)) {
-        unit = UDateRelativeUnit::UDAT_RELATIVE_WEEKS;
+        unit = UDateRelativeUnit::UDAT_RELATIVE_DAYS;
         count = days(absDate).count();
     } else if (absDate < years(1)) {
         unit = UDateRelativeUnit::UDAT_RELATIVE_MONTHS;

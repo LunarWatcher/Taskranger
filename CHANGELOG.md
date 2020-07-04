@@ -20,6 +20,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * JSONDatabases now store whether the database entries contains IDs or not
 * Pretty-print date fields
 * Add ICU for dates
+* Add AgeAttribute
 * Add InfoCommand for displaying all task metadata
 * [Internal] Minor overhaul to the table printing system
 * [Chore] Update Catch2 to 2.12.3
