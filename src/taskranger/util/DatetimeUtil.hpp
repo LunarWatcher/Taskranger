@@ -114,12 +114,6 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
     }
 
     time = cal->getTime(status);
-
-    UnicodeString s;
-    sdf.format(time, s, status);
-    std::string fmt;
-    s.toUTF8String(fmt);
-    std::cout << fmt << std::endl;
     return time;
 }
 
