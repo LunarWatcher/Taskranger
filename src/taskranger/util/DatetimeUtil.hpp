@@ -119,11 +119,11 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
     sdf.format(time, s, status);
     std::string fmt;
     s.toUTF8String(fmt);
-
+    std::cout << fmt << std::endl;
     return time;
 }
 
-inline double parseTimeKey(const std::string& key, const std::string& inputDate) {
+inline double parseTimeKey(const std::string& key, const std::string& inputDate, bool silentDefault = false) {
     auto split = StrUtil::splitString(key, '.');
     std::string format;
     auto dateJson = *Environment::getInstance()->getConfig()->findKey("dates");
@@ -132,9 +132,14 @@ inline double parseTimeKey(const std::string& key, const std::string& inputDate)
     } else {
         auto it = dateJson.find(split.back());
         if (it == dateJson.end()) {
-            throw "Format " + split.back() + " not found.";
+            if (silentDefault) {
+                format = dateJson.at("default").get<std::string>();
+            } else {
+                throw "Format " + split.back() + " not found.";
+            }
+        } else {
+            format = it->get<std::string>();
         }
-        format = it->get<std::string>();
     }
     return parseTime(format, inputDate);
 }

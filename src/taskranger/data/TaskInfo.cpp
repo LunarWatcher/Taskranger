@@ -71,15 +71,6 @@ void TaskInfo::convertAndEval(InputParserOperators::Operator op, const std::stri
         } catch (std::out_of_range&) { //
         }
         break;
-    case FieldType::DATE:
-        try {
-            std::cout << fieldName;
-            return;
-
-        } catch (std::invalid_argument&) { //
-        } catch (std::out_of_range&) { //
-        }
-        break;
     default:
         throw "This type hasn't been implemented yet."s;
     }

@@ -22,6 +22,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Add ICU for dates
 * Add AgeAttribute
 * Add InfoCommand for displaying all task metadata
+* Date filtering
 * [Internal] Minor overhaul to the table printing system
 * [Chore] Update Catch2 to 2.12.3
 * [Chore] Update Tabulate to whatever version of Tabulate is the latest xd
