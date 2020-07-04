@@ -1,8 +1,8 @@
+#define TASKRANGER_NON_UNIT_TEST
+
 #include <iostream>
 #include <string>
 #include <vector>
-
-#define TASKRANGER_NON_UNIT_TEST
 
 #include "input/InputParser.hpp"
 #include "taskranger/commands/Commands.hpp"
@@ -10,7 +10,6 @@
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/input/InputData.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
-#include "taskranger/util/DatetimeUtil.hpp"
 
 int main(int argc, const char* argv[]) {
 
@@ -30,6 +29,12 @@ int main(int argc, const char* argv[]) {
 
         printer << ANSIFeature::FOREGROUND << 9 << err << ANSIFeature::CLEAR << std::endl;
         return -1;
+    } catch (const char* err) {
+
+        taskranger::ColorPrinter printer(std::cerr);
+
+        printer << ANSIFeature::FOREGROUND << 9 << err << ANSIFeature::CLEAR << std::endl;
+        return -1;
     } catch (taskranger::PermissionError& permErr) {
         std::cerr << "Critical error: permission error:\n"
                   << permErr.what() << "\n"
@@ -37,4 +42,7 @@ int main(int argc, const char* argv[]) {
                   << "and open an issue on GitHub if this goes further than permissions." << std::endl;
         throw;
     }
+
+    // Unnecessary, but let's just be explicit about it
+    return 0;
 }

@@ -11,6 +11,8 @@
 #include "unicode/unistr.h"
 
 #include <chrono>
+#include <cmath>
+#include <limits>
 #include <regex>
 #include <stdexcept>
 #include <string>
@@ -27,6 +29,12 @@ using days = duration<double, std::ratio<86400>>;
 using weeks = duration<double, std::ratio<604800>>;
 using months = duration<double, std::ratio<2629746>>;
 using years = duration<double, std::ratio<31556952>>;
+
+inline double currTime() {
+    return std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::system_clock::now())
+            .time_since_epoch()
+            .count();
+}
 
 inline double parseRelative(const std::string& inputDate) {
 
@@ -179,6 +187,7 @@ inline std::string formatRelative(const double& timestamp) {
     } else {
         count = years(absDate).count();
     }
+    count = std::round(count);
     UnicodeString buff;
     std::string output;
     UErrorCode status = U_ZERO_ERROR;

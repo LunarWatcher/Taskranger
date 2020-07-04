@@ -42,10 +42,7 @@ void AllCommand::run() {
         return;
     }
 
-    std::cout << TableUtil::TableBuilder()
-                         .withKeys({"id", "uuid", "description", "tags", "project", "due"})
-                         .build(filtered)
-              << std::endl;
+    TableUtil::TableBuilder().withKeys({"id", "uuid", "description", "tags", "project", "due"}).build(filtered);
 
     std::cout << filtered.size() << " tasks found.\n";
 }

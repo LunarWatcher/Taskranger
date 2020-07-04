@@ -37,12 +37,11 @@ void NextCommand::run() {
     auto& taskVec = database.getDatabase();
     auto filteredJson = TaskFilter::filterTasks(taskVec, input);
     if (filteredJson.size())
-        std::cout << TableUtil::TableBuilder()
-                             .withKeys({"id", "description", "tags", "project", "due"})
-                             .build(filteredJson)
-                  << "\n\n";
+        TableUtil::TableBuilder().withKeys({"id", "description", "tags", "project", "due", "age"}).build(filteredJson);
+
     // clang-format off
     std::cout
+        << "\n"
         << filteredJson.size() << " tasks found."
         << "\n";
     // clang-format on

@@ -1,5 +1,4 @@
 #include "Attribute.hpp"
-#include "taskranger/data/Environment.hpp"
 
 // I personally don't like this type of unnecessary subclass use, but there's
 // not a lot of other alternatives.
@@ -7,6 +6,7 @@
 // explicitly needed as an override. Unfortunately, this still requires manually
 // settings vars, and because there's no decent hacks to make it look pretty,
 // it just looks a lot ugler than subclassing
+#include "taskranger/data/attributes/AgeAttribute.hpp"
 #include "taskranger/data/attributes/AttribTypes.hpp"
 #include "taskranger/data/attributes/DescriptionAttribute.hpp"
 #include "taskranger/data/attributes/DueAttribute.hpp"
@@ -14,6 +14,8 @@
 #include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/data/attributes/UDAAttribute.hpp"
 #include "taskranger/data/attributes/UUIDAttribute.hpp"
+
+#include "taskranger/data/Environment.hpp"
 #include "taskranger/util/StrUtil.hpp"
 
 #include <algorithm>
@@ -56,6 +58,8 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
         return std::make_shared<UUIDAttribute>();
     } else if (fieldName == "due") {
         return std::make_shared<DueAttribute>();
+    } else if (fieldName == "age") {
+        return std::make_shared<AgeAttribute>();
     } else {
         auto& config = *Environment::getInstance()->getConfig();
         auto udaIt = config.findKey("uda");
@@ -76,7 +80,6 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
 
         return UDAAttribute::makeAttribute(fieldName);
     }
-    return nullptr;
 }
 
 } // namespace taskranger

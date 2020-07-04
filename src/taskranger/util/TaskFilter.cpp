@@ -37,6 +37,7 @@ void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, 
 std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
         const std::vector<std::shared_ptr<Task>>& rawInput, std::shared_ptr<InputData> input) {
     using namespace std::literals;
+
     auto filters = input->data;
     if (input->tags.size() != 0) {
         std::string builder;

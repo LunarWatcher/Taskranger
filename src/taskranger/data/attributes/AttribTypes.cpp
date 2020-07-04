@@ -85,22 +85,39 @@ void StrListAttribute::modify(nlohmann::json& task, const std::vector<std::strin
 
 void DateAttribute::modify(nlohmann::json& task, const std::string& key, const std::string& input) {
     Attribute::modify(task, key, input);
-
-    task[this->name] = DateTimeUtil::parseTimeKey(key, input);
+    if (StrUtil::startsWith(input, "RAW")) {
+        size_t pos;
+        double value = std::stod(input.substr(3), &pos);
+        if (pos != input.size() - 3) {
+            throw "Invalid number: " + input.substr(3);
+        }
+        task[this->name] = value;
+    } else {
+        task[this->name] = DateTimeUtil::parseTimeKey(key, input);
+    }
 }
 
-std::variant<std::string, tabulate::Table> DateAttribute::print(const Task& task) {
+Types::TableRow DateAttribute::getMinimalRepresentationForTable(const Task& task) {
     auto& json = task.getTaskJson();
     auto it = json.find(this->name);
     if (it == json.end()) {
         return " ";
     }
 
-    // std::chrono::time_point<std::chrono::system_clock, std::chrono::milliseconds> tp(
-    // std::chrono::milliseconds(it->get<int64_t>()));
-    std::string defaultDateFormat =
-            Environment::getInstance()->getConfig()->findKey("dates")->at("default").get<std::string>();
     return DateTimeUtil::formatDate(it->get<double>());
+}
+
+Types::TableRow DateAttribute::getMaxRepresentationForTable(const Task& task) {
+    auto& json = task.getTaskJson();
+    auto it = json.find(this->name);
+    if (it == json.end()) {
+        return " ";
+    }
+
+    double timestamp = it->get<double>();
+    auto fullDate = DateTimeUtil::formatDate(timestamp);
+    auto relDate = DateTimeUtil::formatRelative(timestamp);
+    return fullDate + " (" + relDate + ")";
 }
 
 } // namespace taskranger

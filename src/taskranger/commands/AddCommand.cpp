@@ -6,6 +6,7 @@
 #include "taskranger/data/attributes/AttribTypes.hpp"
 #include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
+#include "taskranger/util/DatetimeUtil.hpp"
 #include "taskranger/util/UIDUtils.hpp"
 #include <memory>
 
@@ -53,7 +54,7 @@ void AddCommand::run() {
     std::string uuid = uuid::generateUuidV4();
 
     data["uuid"] = uuid;
-
+    data["age"] = "RAW" + std::to_string(DateTimeUtil::currTime());
     Environment& env = *Environment::getInstance();
     if (input->tags.size() != 0) {
         std::dynamic_pointer_cast<TagsAttribute>(env.getAttribute("tags"))->modify(mod, input->tags);

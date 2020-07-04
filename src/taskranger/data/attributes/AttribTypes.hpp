@@ -68,9 +68,6 @@ public:
 };
 
 class DateAttribute : public Attribute {
-private:
-    bool includeRelative = true;
-
 public:
     DateAttribute() {
         this->type = FieldType::DATE;
@@ -79,7 +76,8 @@ public:
     virtual void validate(nlohmann::json& /* attribValue */) override {}
 
     virtual void modify(nlohmann::json& task, const std::string& key, const std::string& input) override;
-    virtual std::variant<std::string, tabulate::Table> print(const Task& task) override;
+    virtual Types::TableRow getMinimalRepresentationForTable(const Task& task) override;
+    virtual Types::TableRow getMaxRepresentationForTable(const Task& task) override;
 };
 
 } // namespace taskranger
