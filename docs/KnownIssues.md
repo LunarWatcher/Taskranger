@@ -6,6 +6,14 @@
 
 **ETA**: None
 
+## The table looks weird if the terminal isn't wide enough
+
+This happens because no checks are done to make sure the table is narrow enough to fit inside the terminal.
+
+This is tracked, and a fix will be implemented whenever I figure out some issues related to column size.
+
+**ETA**: Soon
+
 ## The table overflows if there's too much content
 
 Happens because tabulate has no built-in size checks.

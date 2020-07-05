@@ -19,10 +19,9 @@ The various entries on both environment variables and types will usually contain
     Examples:
     * `/home/user/file.txt`
     * `C:/data/file.txt`
-* Numeric types<sup>1</sup>:
-    * **Int(eger)**: whole numbers. Examples: 123, 42, 741
-    * **Float**: decimal numbers. Examples: 3.14159, 21.42
-    * **Unsigned**: Unsigned is a modifier combined with one of the two above. For an instance, a type can be an `unsigned int`. `Unsigned` means the number cannot be negative.
+* Numeric types:
+    * `number`: stored as a double; supports integers and decimal numbers.
+    * `ullong`: unsigned long long. Mainly used for IDs. Only supports positive numbers.
 * **String**: Plain text. Nothing fancy, just text.
 * **Map**: This isn't a type used for the field itself, but it's used to store subtypes. For an instance, in this:
     ```
@@ -35,8 +34,9 @@ The various entries on both environment variables and types will usually contain
     ```
     "thisIsAStringList": ["one value", "two values", "three values", "and so on"]
     ```
+* **Date format**: Not to be confused with a date. Date format is a format used to parse dates. For the syntax, [see this page](https://en.cppreference.com/w/cpp/chrono/parse). Also see [`dates`](#dates) for configuration and the Dates file for usage.
 
-1: Unless otherwise noted, numbers are signed. This means they can be positive or negative. Unsigned numbers can only be positive. Integer types are usually stored as 64 bit longs, while floats are stored as doubles.
+
 
 ### The config file
 
@@ -129,6 +129,14 @@ Type: string
 
 This is self-explanatory. What you insert here defines what type the attribute is, and defines some internal sematics. That being said, you can leave a number as a string, but you'll lose two operators in the process.
 
+Supported types:
+
+* `string` - stores the value as text
+* `number` - stores the value as a number (supports decimals and negative numbers)
+* `ullong` - stores the value as an unsigned whole number
+* `strlist` - stores multiple strings in a list
+* `date` - stores the value as a timestamp
+
 #### `label`
 Type: string
 
@@ -157,3 +165,30 @@ taskranger add Some task difficulty:"invalid attribute value"
 ```
 
 is not allowed.
+
+### `dates`
+Type: map
+
+This map contains date formats, both custom ones and the one required for the program to function. All its key-value pairs are date formats, and yes, mostly anything goes:
+
+```json
+{
+    "dates": {
+        "default": "%d.%m.%Y %D.%M.%S",
+        "klingon": "%d.%m",
+        "asidethedefaultkeyalmostanythinggoes": "%Y",
+        "idontusearchbtw": "%D %c"
+    }
+}
+```
+
+```
+taskranger add "What year is it?" due.asidethedefaultalmostanythinggoes:2020
+```
+
+The syntax used in the last command is covered in docs/Dates.md.
+
+#### `default`
+Type: Date format
+
+This is used as the output format, as well as the format to use for parsing when none is specified. It's highly recommended that this date format contains the day, month, year, and time of day.
