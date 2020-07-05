@@ -34,7 +34,7 @@ The various entries on both environment variables and types will usually contain
     ```
     "thisIsAStringList": ["one value", "two values", "three values", "and so on"]
     ```
-* **Date format**: Not to be confused with a date. Date format is a format used to parse dates. For the syntax, [see this page](https://en.cppreference.com/w/cpp/chrono/parse). Also see [`dates`](#dates) for configuration and the Dates file for usage.
+* **Date format**: Not to be confused with a date. Date format is a format used to parse dates. For the syntax, [see this page](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1SimpleDateFormat.html#details). Also see [`dates`](#dates) for configuration and the Dates file for usage.
 
 
 
@@ -169,15 +169,15 @@ is not allowed.
 ### `dates`
 Type: map
 
-This map contains date formats, both custom ones and the one required for the program to function. All its key-value pairs are date formats, and yes, mostly anything goes:
+This map contains date formats, both custom ones and the one required for the program to function. All of its key-value pairs are date formats, and yes, mostly anything goes for the names:
 
 ```json
 {
     "dates": {
-        "default": "%d.%m.%Y %D.%M.%S",
-        "klingon": "%d.%m",
-        "asidethedefaultkeyalmostanythinggoes": "%Y",
-        "idontusearchbtw": "%D %c"
+        "default": "dd.MM.y HH:mm:ss",
+        "klingon": "dd.MM",
+        "asidethedefaultkeyalmostanythinggoes": "y",
+        "idontusearchbtw": "L HH:mm:ss"
     }
 }
 ```
@@ -191,4 +191,4 @@ The syntax used in the last command is covered in docs/Dates.md.
 #### `default`
 Type: Date format
 
-This is used as the output format, as well as the format to use for parsing when none is specified. It's highly recommended that this date format contains the day, month, year, and time of day.
+This is used as the output format, as well as the format to use for parsing when none is specified. It's highly recommended that this date format contains the day, month, year, and time of day, as it'll also be used as the output format.

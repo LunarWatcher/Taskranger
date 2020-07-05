@@ -10,11 +10,11 @@ If minutes, or seconds are missing, it'll be set to 0. If the hours are missing,
 
 ## Custom date formats
 
-Under the hood, Taskranger runs a library, [initially written by Howard Hinnant](https://github.com/HowardHinnant/date/tree/v3.0.0), to deal with dates. This library has since made it into the C++ standard (starting with C++20), but Taskranger will continue to use the standalone library until using C++20 is a viable option.
+Under the hood, Taskranger uses [ICU](https://github.com/unicode-org/icu) to deal with dates.
 
-Boring tech details aside, the point is that all the formatting specifiers can be found [here](https://en.cppreference.com/w/cpp/chrono/parse). If you're planning on using custom date formats, that list is going to be useful.
+Boring tech details aside, the point is that all the formatting specifiers can be found [here](https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1SimpleDateFormat.html#details). If you're planning on using custom date formats, that list is going to be useful.
 
-This is where Taskranger itself comes in; writing out date formats isn't a good option, it's not always a good idea using relative dates, and making assumptions will backfire. Taskranger instead lets you specify date constants in your config, and use those with the date attribute.
+This is where Taskranger itself comes in; writing out date formats isn't a good option, it's not always a good idea using relative dates, and making assumptions will backfire. Let's assume we brute-force date formats, and accidentally parse `03.05.07` as a date instead of a time stamp. Different users prefer different time formats, and this may lead to ambiguity that pretty much makes brute-forcing it undesirable. Taskranger instead lets you specify date constants in your config, and use those with the date attribute.
 
 The usage is simple:
 
@@ -43,17 +43,22 @@ will look for a date format named `default`. If you don't specify a default date
 ```json
 {
     "dates",  {
-        "default": "%d.%m.%Y %H:%M:%S",
-        "tod": "%H:%M:%S",
-        "day": "%d.%m",
-        "date": "%d.%m &H:%M"
+        "default": "dd.MM.y HH:mm:ss",
+        "zoned": "dd.MM.y HH:mm:ss'T'z",
+        "tod": "HH:mm:ss",
+        "day": "dd.MM",
+        "date": "dd.MM HH:mm"
     }
 }
 ```
 
+Quick list in case you  didn't read the documentation:
+
+`dd` is the day. `MM` is the month. `y`, is the year. `HH` is the hours, `mm` is the minutes (NOTE: do not confuse `mm` for `MM`. They represent two very different values. Yes, it is confusing). `'T'` means the letter `T`, literally. `z` means the timezone (i.e. `+0200`).
+
 ### Output format
 
-There can only be one output format defined. This is mainly because there's not a need for anything else.
+There can only be one output format defined. This is mainly because there's not a need for anything else. Note that the output format only affects the absolute time; the relative time in commands like `info` are not affected by the default output format.
 
 While date formats can be configured in any way you want, there's one key that's the exception; `default`.
 
