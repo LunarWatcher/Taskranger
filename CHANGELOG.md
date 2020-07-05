@@ -15,17 +15,23 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 # [Unreleased] (TBD)
 
-## Changes
-* A Task is now represented by its own object rather than a `nlohmann::json` object
-* JSONDatabases now store whether the database entries contains IDs or not
+## Added
 * Pretty-print date fields
 * Add ICU for dates
 * Add AgeAttribute
 * Add InfoCommand for displaying all task metadata
 * Date filtering
+
+## Changes
+* A Task is now represented by its own object rather than a `nlohmann::json` object
+* JSONDatabases now store whether the database entries contains IDs or not
+* Optimize and improve task filtering
 * [Internal] Minor overhaul to the table printing system
 * [Chore] Update Catch2 to 2.12.3
 * [Chore] Update Tabulate to whatever version of Tabulate is the latest xd
+
+## Fixes
+* Fix ID ordering form task filtering
 
 # [v0.1.0] (19.06.20)
 

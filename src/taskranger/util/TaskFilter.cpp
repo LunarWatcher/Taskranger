@@ -1,5 +1,5 @@
 #include "TaskFilter.hpp"
-#include "taskranger/data/TaskInfo.hpp"
+#include "taskranger/data/Attribute.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/DatetimeUtil.hpp"
@@ -34,8 +34,103 @@ void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, 
             inOut.end());
 }
 
-std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
-        const std::vector<std::shared_ptr<Task>>& rawInput, std::shared_ptr<InputData> input) {
+namespace TaskFilter {
+
+std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::shared_ptr<Task>>& tasks) {
+    std::vector<std::shared_ptr<Task>> output;
+    for (auto& task : tasks) {
+        auto taskJson = task->getTaskJson();
+        for (auto& filter : filters) {
+            bool hasMatch = false;
+
+            switch (filter->fieldType) {
+            case FieldType::ULLONG:
+                for (auto& value : filter->inputs) {
+                    if (value.type() == typeid(std::string)) {
+                        if (filter->fieldName != "id") {
+                            throw "Accidentally ended up with a string passed as an ullong on a field that isn't the "
+                                  "ID";
+                        }
+                        std::string sValue = std::any_cast<std::string>(value);
+                        auto uuid = taskJson.at("uuid");
+                        auto& op = filter->op;
+                        auto startsWith = StrUtil::startsWith(uuid, sValue);
+                        if ((op == InputParserOperators::Operator::IS && startsWith) ||
+                                (op == InputParserOperators::Operator::NOT && !startsWith) ||
+                                TaskFilter::checkTask(filter->op, "uuid", taskJson, sValue)) {
+
+                            hasMatch = true;
+                            break;
+                        }
+                    } else {
+
+                        if (value.type() != typeid(unsigned long long)) {
+                            throw "Somehow ended up with a non-ullong to an ullong field";
+                        }
+                        unsigned long long ullValue = std::any_cast<unsigned long long>(value);
+                        if (TaskFilter::checkTask(filter->op, filter->fieldName, taskJson, ullValue)) {
+                            hasMatch = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasMatch) {
+                    task->noMatch();
+                }
+                break;
+            case FieldType::NUMBER:
+            case FieldType::DATE:
+                for (auto& value : filter->inputs) {
+                    if (value.type() != typeid(double)) {
+                        throw "Somehow ended up with a non-double passed to a number field";
+                    }
+                    double dValue = std::any_cast<double>(value);
+                    if (checkTask(filter->op, filter->fieldName, taskJson, dValue)) {
+                        hasMatch = true;
+                        break;
+                    }
+                }
+                if (!hasMatch) {
+                    task->noMatch();
+                }
+                break;
+            case FieldType::STRING: {
+                auto sValue = std::any_cast<std::string>(filter->inputs.at(0));
+                if (!TaskFilter::checkTask(filter->op, filter->fieldName, taskJson, sValue)) {
+                    task->noMatch();
+                }
+            } break;
+            case FieldType::STRLIST: {
+                std::vector<std::string> vec;
+                for (auto& value : filter->inputs) {
+                    if (value.type() != typeid(std::string)) {
+                        throw "Somehow ended up with a non-string to a strlist field";
+                    }
+
+                    vec.push_back(std::any_cast<std::string>(value));
+                }
+                if (!TaskFilter::checkTask(filter->op, filter->fieldName, taskJson, vec)) {
+                    task->noMatch();
+                }
+            } break;
+            }
+            // Early finish; if the filter didn't match the task, break out
+            if (!task->isIncludedInFilter()) {
+                break;
+            }
+        }
+
+        // If, however, we break out and the task is still in the game, let's include
+        // it in the output.
+        if (task->isIncludedInFilter()) {
+            output.push_back(task);
+        }
+    }
+
+    return output;
+}
+
+Filter Filter::createFilter(std::shared_ptr<InputData> input) {
     using namespace std::literals;
 
     auto filters = input->data;
@@ -57,22 +152,14 @@ std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
             filters["tags.not"] = subBuilder;
         }
     }
-    std::vector<std::shared_ptr<Task>> reworked = rawInput;
-    if (reworked.size() == 0) {
 
-        return {};
-    }
-
-    std::vector<std::shared_ptr<Task>> output;
-    auto includeIds = rawInput.at(0)->hasPublicIds();
-
+    Filter filterObj;
     // Filter the tasks
     for (auto& filter : filters) {
         auto baseKey = filter.first;
         if (baseKey == "subcommand") {
             continue;
         }
-
         std::shared_ptr<Attribute> attribPtr;
         auto calcPair = InputParserOperators::determineOperator(baseKey, attribPtr);
 
@@ -85,31 +172,89 @@ std::vector<std::shared_ptr<Task>> TaskFilter::filterTasks(
         if (filterValue.size() == 0) {
             continue;
         }
-        if (key == "id" && !includeIds) {
-            // If we're querying IDs, but don't want to include IDs, this should
-            // return an empty value
-            return {};
-        }
 
         if (key == "project" && filterValue.at(0) != '@') {
             filterValue = "@" + filterValue;
         }
+
+        auto filterInfo = std::make_shared<FilterInfo>();
+        filterInfo->fieldName = key;
+        filterInfo->op = op;
+        filterInfo->fieldType = attribPtr->getType();
+
         if (attribPtr->getType() == FieldType::DATE) {
-            double timestamp = DateTimeUtil::parseTimeKey(baseKey, filterValue, true);
-            TaskInfo::convertAndEval(op, key, timestamp, output, reworked);
-        } else if (attribPtr->getType() != FieldType::STRLIST) {
-            for (auto& value : StrUtil::splitString(filterValue, ',')) {
-                TaskInfo::convertAndEval(op, key, value, output, reworked);
-            }
+
+            auto split = StrUtil::splitString(key, ".");
+            filterInfo->fieldName = split.front();
+
+            double timestamp = DateTimeUtil::parseTimeWith(split.size() == 2 ? split.back() : "default", filterValue);
+            filterInfo->inputs.push_back(timestamp);
         } else {
-            // Vectors handle their raw input differently.
-            TaskInfo::convertAndEval(op, key, filterValue, output, reworked);
+
+            switch (attribPtr->getType()) {
+            case FieldType::STRING:
+                filterInfo->inputs.push_back(filterValue);
+                break;
+            case FieldType::STRLIST: {
+                auto commaSplit = StrUtil::splitString(filterValue, ",");
+
+                for (auto& str : commaSplit) {
+                    filterInfo->inputs.push_back(str);
+                }
+            } break;
+            case FieldType::ULLONG: {
+                auto commaSplit = StrUtil::splitString(filterValue, ",");
+                for (auto& str : commaSplit) {
+
+                    try {
+                        size_t idx = 0;
+                        auto num = std::stoull(str, &idx);
+                        if (idx == str.length()) {
+                            filterInfo->inputs.push_back(num);
+                            continue;
+                        }
+
+                    } catch (std::invalid_argument&) { //
+                        // If this exception is thrown, continue to the UUID check
+                    } catch (std::out_of_range&) {}
+
+                    if (attribPtr->getName() == "id") {
+                        if (str.length() > 36) {
+                            continue;
+                        }
+                        // Assume UUID
+                        filterInfo->inputs.push_back(str);
+                    }
+                }
+            } break;
+            case FieldType::NUMBER: {
+
+                auto commaSplit = StrUtil::splitString(filterValue, ",");
+                for (auto& str : commaSplit) {
+
+                    try {
+                        size_t idx = 0;
+                        auto num = std::stod(str, &idx);
+                        if (idx == filterValue.length()) {
+                            filterInfo->inputs.push_back(num);
+                            continue;
+                        }
+
+                    } catch (std::invalid_argument&) { //
+                        // If this exception is thrown, continue to the UUID check
+                    } catch (std::out_of_range&) {}
+                }
+            } break;
+            default:
+                throw "This type hasn't been implemented yet"s;
+            }
         }
-        reworked = output;
-        output.clear();
+        filterObj.filters.push_back(filterInfo);
     }
 
-    return reworked;
+    return filterObj;
 }
+
+} // namespace TaskFilter
 
 } // namespace taskranger

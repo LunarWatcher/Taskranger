@@ -32,6 +32,8 @@ private:
     // instead of a field
     unsigned long long idx;
 
+    bool includeInFilter{true};
+
 public:
     Task(JSONDatabase* taskList, unsigned long long idx);
 
@@ -52,6 +54,14 @@ public:
             return def;
         }
         return *itr->get<T>();
+    }
+
+    bool isIncludedInFilter() {
+        return includeInFilter;
+    }
+
+    void noMatch() {
+        this->includeInFilter = false;
     }
 };
 

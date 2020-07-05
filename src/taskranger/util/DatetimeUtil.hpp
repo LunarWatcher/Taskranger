@@ -117,25 +117,25 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
     return time;
 }
 
-inline double parseTimeKey(const std::string& key, const std::string& inputDate, bool silentDefault = false) {
+inline double parseTimeWith(const std::string& formatName, const std::string& inputDate) {
+    auto dateJson = *Environment::getInstance()->getConfig()->findKey("dates");
+    auto it = dateJson.find(formatName);
+    if (it == dateJson.end()) {
+        throw "Format " + formatName + " not found.";
+    }
+    return parseTime(it->get<std::string>(), inputDate);
+}
+
+inline double parseTimeKey(const std::string& key, const std::string& inputDate) {
     auto split = StrUtil::splitString(key, '.');
     std::string format;
     auto dateJson = *Environment::getInstance()->getConfig()->findKey("dates");
     if (split.size() == 1) {
-        format = dateJson.at("default").get<std::string>();
+        format = "default";
     } else {
-        auto it = dateJson.find(split.back());
-        if (it == dateJson.end()) {
-            if (silentDefault) {
-                format = dateJson.at("default").get<std::string>();
-            } else {
-                throw "Format " + split.back() + " not found.";
-            }
-        } else {
-            format = it->get<std::string>();
-        }
+        format = split.at(1);
     }
-    return parseTime(format, inputDate);
+    return parseTimeWith(format, inputDate);
 }
 
 inline std::string formatDate(const double& timestamp, const std::string& iFormat = "") {

@@ -1,7 +1,6 @@
 #include "InputParser.hpp"
 #include "InputData.hpp"
 #include "taskranger/data/Environment.hpp"
-#include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <iostream>
 #include <map>

@@ -4,7 +4,6 @@
 #include "taskranger/config/ConfigHelper.hpp"
 #include "taskranger/data/Attribute.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
-#include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/input/InputData.hpp"
 
 #include <memory>
