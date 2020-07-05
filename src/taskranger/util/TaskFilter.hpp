@@ -2,6 +2,7 @@
 #define TASKRANGER_UTIL_TASKFILTER_HPP
 
 #include "nlohmann/json.hpp"
+#include "taskranger/data/Attribute.hpp"
 #include "taskranger/data/Task.hpp"
 #include "taskranger/input/InputData.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
@@ -13,8 +14,23 @@ namespace taskranger {
 
 namespace TaskFilter {
 
-// TOOO include operator modification (i.e. for dates and numbers; AKA
-// extend beyond strings)
+struct FilterInfo {
+    InputParserOperators::Operator op;
+    FieldType fieldType;
+    std::vector<std::any> inputs;
+    std::string fieldName;
+};
+
+class Filter {
+private:
+    std::vector<std::shared_ptr<FilterInfo>> filters;
+
+public:
+    std::vector<std::shared_ptr<Task>> filterTasks(const std::vector<std::shared_ptr<Task>>& rawInput);
+
+    static Filter createFilter(std::shared_ptr<InputData> input);
+};
+
 /**
  * Modifies the JSON for string key string value pairs. Drops task entries
  * that don't have a field containing the given key, or that has a different
@@ -26,12 +42,21 @@ namespace TaskFilter {
  */
 void mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::string value);
 void mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::vector<std::string> values);
+
 /**
- * Filters JSON input by command-supplied filters, and optionally by
- * user-supplied filters
+ * Utility for checking if a field matches the conditions supplied.
  */
-std::vector<std::shared_ptr<Task>> filterTasks(
-        const std::vector<std::shared_ptr<Task>>& rawInput, std::shared_ptr<InputData> input);
+template <typename T>
+bool checkTask(
+        InputParserOperators::Operator op, const std::string& fieldName, const nlohmann::json& taskJson, T& input) {
+    auto missesField = taskJson.find(fieldName) == taskJson.end();
+    // Tasks missing a field technically count towards the not operator.
+    // If we're looking for tasks that have a field `fieldName` that doesn't match
+    // a given `input`, tasks without the field of course match.
+
+    return (op == InputParserOperators::Operator::NOT && missesField) ||
+           (!missesField && InputParserOperators::evalOperator(op, input, taskJson.at(fieldName).get<T>()));
+}
 
 } // namespace TaskFilter
 

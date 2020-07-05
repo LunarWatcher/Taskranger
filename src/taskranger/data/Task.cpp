@@ -19,6 +19,11 @@ const nlohmann::json Task::getTaskJson() const {
     auto id = this->getId();
     if (id != 0) {
         data["id"] = id;
+    } else {
+        auto itr = data.find("id");
+        if (itr != data.end()) {
+            data.erase(itr);
+        }
     }
 
     return data;

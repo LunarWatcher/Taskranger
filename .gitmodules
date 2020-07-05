@@ -7,6 +7,3 @@
 [submodule "Catch2"]
 	path = Catch2
 	url = https://github.com/catchorg/Catch2.git
-[submodule "date"]
-	path = dependencies/date
-	url = https://github.com/HowardHinnant/date.git

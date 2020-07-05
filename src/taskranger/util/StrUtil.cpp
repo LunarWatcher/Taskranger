@@ -1,4 +1,5 @@
 #include "StrUtil.hpp"
+#include <iomanip>
 
 namespace taskranger {
 
@@ -129,6 +130,12 @@ std::string StrUtil::toLower(std::string input) {
 
 bool StrUtil::startsWith(const std::string& in, const std::string& prefix) {
     return in.rfind(prefix, 0) == 0;
+}
+
+std::string StrUtil::padString(const std::string& padTarget, size_t padSize) {
+    std::stringstream stream;
+    stream << std::setw(padSize) << padTarget;
+    return stream.str();
 }
 
 } // namespace taskranger

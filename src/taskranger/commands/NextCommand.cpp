@@ -35,11 +35,13 @@ void NextCommand::run() {
 
     tabulate::Table table;
     auto& taskVec = database.getDatabase();
-    auto filteredJson = TaskFilter::filterTasks(taskVec, input);
+    auto filteredJson = TaskFilter::Filter::createFilter(input).filterTasks(taskVec);
     if (filteredJson.size())
-        std::cout << TableUtil::renderTasks(filteredJson, {{"id", 1}, {"description", 2}}) << "\n\n";
+        TableUtil::TableBuilder().withKeys({"id", "description", "tags", "project", "due", "age"}).build(filteredJson);
+
     // clang-format off
     std::cout
+        << "\n"
         << filteredJson.size() << " tasks found."
         << "\n";
     // clang-format on

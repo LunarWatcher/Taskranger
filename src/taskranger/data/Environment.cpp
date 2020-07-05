@@ -25,7 +25,11 @@ std::shared_ptr<Commands> Environment::getCommands() {
     return commands;
 }
 
-std::shared_ptr<Attribute> Environment::getAttribute(const std::string& attribName) {
+std::shared_ptr<Attribute> Environment::getAttribute(const std::string& rawAttribName) {
+    std::string attribName = rawAttribName;
+    if (attribName.find(".") != std::string::npos) {
+        attribName = StrUtil::splitString(attribName, ".", 1).at(0);
+    }
     if (attributes.find(attribName) == attributes.end()) {
         auto tryGet = Attribute::createAttrib(attribName);
         if (!tryGet) {

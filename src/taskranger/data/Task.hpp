@@ -32,6 +32,8 @@ private:
     // instead of a field
     unsigned long long idx;
 
+    bool includeInFilter{true};
+
 public:
     Task(JSONDatabase* taskList, unsigned long long idx);
 
@@ -44,6 +46,23 @@ public:
     const nlohmann::json getTaskJson() const;
     bool hasPublicIds();
     std::string getUUID();
+    template <typename T>
+    T getOrElse(const std::string& key, const T& def) {
+        auto& json = this->getTaskJson();
+        auto itr = json.find(key);
+        if (itr == json.end()) {
+            return def;
+        }
+        return *itr->get<T>();
+    }
+
+    bool isIncludedInFilter() {
+        return includeInFilter;
+    }
+
+    void noMatch() {
+        this->includeInFilter = false;
+    }
 };
 
 } // namespace taskranger

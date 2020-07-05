@@ -8,6 +8,7 @@
 #include <algorithm>
 
 using taskranger::InputData;
+using taskranger::TaskFilter::Filter;
 typedef std::shared_ptr<InputData> InputPtr;
 
 TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
@@ -20,7 +21,7 @@ TEST_CASE("TestFilterProject", "[TaskFilterProject]") {
         INFO(project);
         dataPtr->data["project"] = project;
 
-        auto testLegacyProject = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+        auto testLegacyProject = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
         REQUIRE(testLegacyProject.size() == 2);
         for (auto& taskObj : testLegacyProject) {
             auto& task = taskObj->getTaskJson();
@@ -35,7 +36,7 @@ TEST_CASE("TestFilterTags", "[TaskFilterTags]") {
     auto json = taskranger::Environment::getInstance()->getDatabase("active.json", true);
     InputPtr dataPtr = std::make_shared<InputData>();
     dataPtr->tags = {"+tag"};
-    auto testTags = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+    auto testTags = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
     REQUIRE(testTags.size() == 2);
     for (auto& taskObj : testTags) {
         auto& task = taskObj->getTaskJson();
@@ -52,7 +53,7 @@ TEST_CASE("Filter operator: not", "[TaskFilterOpNot]") {
 
     // Test if tag exclusion works
     dataPtr->data["tags.not"] = "+tag";
-    auto testNotTags = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+    auto testNotTags = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
     // Note: tag exclusion also includes tagless posts (because technically, they match the criteria).
     REQUIRE(testNotTags.size() == 2);
 
@@ -73,7 +74,8 @@ TEST_CASE("Filter operator: contains", "[TaskFilterOpContains]") {
     InputPtr dataPtr = std::make_shared<InputData>();
 
     dataPtr->data["description.contains"] = "Test task 4";
-    auto testContains = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+    auto testContains = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+
     // Only one of the test tasks match this criteria
     REQUIRE(testContains.size() == 1);
 }
@@ -85,7 +87,8 @@ TEST_CASE("Invalid and out of range IDs", "[TaskFilterIDs]") {
     // Subtest 1: check out of range
     SECTION("Test out of range") {
         dataPtr->data["ids"] = "1,2,3,67483,42,31415";
-        auto testOutOfRange = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+        auto testOutOfRange = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+
         // There's 4 tasks in the test data, and only 3 valid IDs passed.
         // This should return a JSON object containing 3 items, and it
         // should not throw.
@@ -96,7 +99,7 @@ TEST_CASE("Invalid and out of range IDs", "[TaskFilterIDs]") {
     SECTION("Test invalid numbers") {
         // Additionally, entirely invalid IDs should fail silently
         dataPtr->data["ids"] = "1,2,sqrt(3),3^4,LOOKATMEI'MSHOUTYTEXT:DDDD";
-        auto testInvalid = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+        auto testInvalid = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
         // 1 and 2 are the only valid IDs.
         // Not throwing is the main test
         REQUIRE(testInvalid.size() == 2);
@@ -108,7 +111,8 @@ TEST_CASE("UUID filtering", "[UUIDs]") {
     auto json = taskranger::Environment::getInstance()->getDatabase("active.json", true);
     InputPtr dataPtr = std::make_shared<InputData>();
     dataPtr->data["ids"] = "abcd";
-    auto testPrefixFilter = taskranger::TaskFilter::filterTasks(json->getDatabase(), dataPtr);
+    auto testPrefixFilter = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+
     REQUIRE(testPrefixFilter.size() == 1);
     REQUIRE(testPrefixFilter.at(0)->getTaskJson().at("project") == "@bogus");
 }

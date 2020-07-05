@@ -63,6 +63,15 @@ std::string toLower(std::string input);
  */
 bool startsWith(const std::string& in, const std::string& prefix);
 
+std::string padString(const std::string& padTarget, size_t padSize);
+
+inline int64_t stoi64(const std::string& raw, size_t* pos = nullptr) {
+    if constexpr (std::is_same_v<int64_t, signed long long>) {
+        return std::stoll(raw, pos);
+    }
+    return std::stol(raw, pos);
+}
+
 } // namespace StrUtil
 } // namespace taskranger
 

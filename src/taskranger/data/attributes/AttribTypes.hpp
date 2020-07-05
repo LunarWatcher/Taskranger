@@ -16,7 +16,7 @@ public:
         }
     }
 
-    virtual void modify(nlohmann::json& task, const std::string& input) override;
+    virtual void modify(nlohmann::json& task, const std::string&, const std::string& input) override;
 };
 
 class ULLongAttribute : public Attribute {
@@ -31,7 +31,7 @@ public:
         }
     }
 
-    virtual void modify(nlohmann::json& task, const std::string& input) override;
+    virtual void modify(nlohmann::json& task, const std::string&, const std::string& input) override;
 };
 
 class StringAttribute : public Attribute {
@@ -46,7 +46,7 @@ public:
         }
     }
 
-    virtual void modify(nlohmann::json& task, const std::string& input) override;
+    virtual void modify(nlohmann::json& task, const std::string&, const std::string& input) override;
 };
 
 class StrListAttribute : public Attribute {
@@ -64,7 +64,7 @@ public:
     }
 
     virtual void modify(nlohmann::json& task, const std::vector<std::string>& input);
-    virtual void modify(nlohmann::json& task, const std::string& input) override;
+    virtual void modify(nlohmann::json& task, const std::string&, const std::string& input) override;
 };
 
 class DateAttribute : public Attribute {
@@ -73,11 +73,11 @@ public:
         this->type = FieldType::DATE;
     }
 
-    virtual void validate(nlohmann::json& /* attribValue */) override {
-        // TODO + conversion (?)
-    }
+    virtual void validate(nlohmann::json& /* attribValue */) override {}
 
-    virtual void modify(nlohmann::json& task, const std::string& input) override;
+    virtual void modify(nlohmann::json& task, const std::string& key, const std::string& input) override;
+    virtual Types::TableRow getMinimalRepresentationForTable(const Task& task) override;
+    virtual Types::TableRow getMaxRepresentationForTable(const Task& task) override;
 };
 
 } // namespace taskranger

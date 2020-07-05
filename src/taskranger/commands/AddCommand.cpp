@@ -6,6 +6,7 @@
 #include "taskranger/data/attributes/AttribTypes.hpp"
 #include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
+#include "taskranger/util/DatetimeUtil.hpp"
 #include "taskranger/util/UIDUtils.hpp"
 #include <memory>
 
@@ -53,7 +54,7 @@ void AddCommand::run() {
     std::string uuid = uuid::generateUuidV4();
 
     data["uuid"] = uuid;
-
+    data["age"] = "RAW" + std::to_string(DateTimeUtil::currTime());
     Environment& env = *Environment::getInstance();
     if (input->tags.size() != 0) {
         std::dynamic_pointer_cast<TagsAttribute>(env.getAttribute("tags"))->modify(mod, input->tags);
@@ -64,8 +65,10 @@ void AddCommand::run() {
         if (!attrib) {
             throw "Attribute doesn't exist: " + key;
         }
-        attrib->modify(mod, value);
-        attrib->validate(mod[key]);
+        attrib->modify(mod, key, value);
+        // Has to be attrib->name to prevent issues with scoped
+        // attributes (like dates)
+        attrib->validate(mod.at(attrib->getName()));
     }
     // TODO at a later point: add the time of the task's creation
     (*database.getRawDatabase()).push_back(mod);
