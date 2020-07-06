@@ -19,9 +19,7 @@ private:
 
 public:
     const bool hasPublicIds;
-#ifdef UNITTEST
     bool demoMode = false;
-#endif
 
     JSONDatabase() = delete;
     JSONDatabase(const std::string& databaseName, bool hasPublicIds);

@@ -20,15 +20,18 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Add ICU for dates
 * Add AgeAttribute
 * Add InfoCommand for displaying all task metadata
-* Date filtering
+* Date filtering + tests
 
 ## Changes
 * A Task is now represented by its own object rather than a `nlohmann::json` object
 * JSONDatabases now store whether the database entries contains IDs or not
 * Optimize and improve task filtering
+* Taskranger now uses conanfile.py instead of conanfile.txt
 * [Internal] Minor overhaul to the table printing system
 * [Chore] Update Catch2 to 2.12.3
 * [Chore] Update Tabulate to whatever version of Tabulate is the latest xd
+* [Build] Enable CompilationDatabase (SCons 4.0.0 released). Support for 3.1.2 not broken (theoretically:tm:)
+* [Build] Clean up the buildscripts (+ remove UNITTEST macro to save build time)
 
 ## Fixes
 * Fix ID ordering form task filtering

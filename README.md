@@ -33,7 +33,7 @@ That being said, keep in mind that Taskranger is still far from ready for a stab
 The only requirements for this project are:
 
 * A C++17 compiler
-* Python 3
+* Python 3.5+
 * [SCons](https://scons.org/) and [Conan](https://conan.io) (`python3 -m pip install -r requirements.txt` on all platforms, `. ./init.sh` to automate install and virtualenvs on Linux/Mac)
 
 Additionally, the use of `<filesystem>` adds additional requirements to the stdlib

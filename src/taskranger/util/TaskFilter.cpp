@@ -183,11 +183,18 @@ Filter Filter::createFilter(std::shared_ptr<InputData> input) {
         filterInfo->fieldType = attribPtr->getType();
 
         if (attribPtr->getType() == FieldType::DATE) {
+            double timestamp = 0;
+            if (StrUtil::startsWith(filterValue, "RAW")) {
+                size_t pos;
+                try {
+                    timestamp = std::stod(filterValue.substr(3), &pos);
+                } catch (std::invalid_argument&) { throw "Failed to parse " + filterValue.substr(3) + " as a number."; }
+            } else {
+                auto split = StrUtil::splitString(key, ".");
+                filterInfo->fieldName = split.front();
 
-            auto split = StrUtil::splitString(key, ".");
-            filterInfo->fieldName = split.front();
-
-            double timestamp = DateTimeUtil::parseTimeWith(split.size() == 2 ? split.back() : "default", filterValue);
+                timestamp = DateTimeUtil::parseTimeWith(split.size() == 2 ? split.back() : "default", filterValue);
+            }
             filterInfo->inputs.push_back(timestamp);
         } else {
 

@@ -1,4 +1,5 @@
 Import("env")
+Import("database")
 
 sources = env.Glob("taskranger/input/*.cpp")
 sources += env.Glob("taskranger/input/operators/*.cpp")
@@ -11,14 +12,19 @@ sources += env.Glob("taskranger/config/*.cpp")
 env.appendSourcePath("#src/")
 env.appendSourcePath("#tabulate/include")
 
-if "test" in BUILD_TARGETS:
-    lib = env.Library("taskranger", sources)
-    Default(lib)
-else:
-    sources += env.Glob("taskranger/*.cpp")
-    # The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
-    # Shell aliases can be manually added if necessary.
-    # python/SourceList.py contains the list of sources.
-    # It's kept externally because it's also used in tests/SConscript
-    exe = env.Program("taskranger", sources)
-    Default(exe)
+lib = env.Library("taskranger", sources)
+
+exeEnv = env.Clone()
+exeEnv.withLibraries(lib, append = False)
+
+# The executable is named after the program instead of a shorthand function in order to avoid collisions with other todo programs.
+# Shell aliases can be manually added if necessary.
+taskranger = exeEnv.Program("taskranger", "taskranger/Main.cpp")
+
+Default(taskranger)
+
+# Hack to make sure the database is built
+if (database is not None):
+    Depends(taskranger, database)
+
+Return("taskranger")

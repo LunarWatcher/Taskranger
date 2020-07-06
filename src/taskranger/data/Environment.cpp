@@ -41,8 +41,8 @@ std::shared_ptr<Attribute> Environment::getAttribute(const std::string& rawAttri
     return attributes.at(attribName);
 }
 
-std::shared_ptr<Environment> Environment::getInstance() {
-    if (INSTANCE == nullptr) {
+std::shared_ptr<Environment> Environment::getInstance(bool force) {
+    if (INSTANCE == nullptr || force) {
         INSTANCE = std::make_shared<Environment>();
     }
     return INSTANCE;

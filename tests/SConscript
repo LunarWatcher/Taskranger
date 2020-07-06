@@ -1,5 +1,6 @@
 Import("env")
 Import("lpath")
+Import("database")
 
 env.withLibraries("taskranger", append = False)
 env.appendLibPath("#" + lpath)
@@ -7,8 +8,11 @@ env.appendLibPath("#" + lpath)
 env.appendSourcePath("#Catch2/single_include")
 env.appendSourcePath("#tests/testSources")
 
-env.define("UNITTEST")
 tests = env.Program("tests", env.Glob("testSources/*.cpp"))
 
 testAlias = env.environment.Alias("test", [ tests ], tests[0].abspath)
-AlwaysBuild(testAlias)
+if "test" in BUILD_TARGETS:
+    AlwaysBuild(testAlias)
+
+if (database is not None):
+    Depends(tests, database)

@@ -116,3 +116,32 @@ TEST_CASE("UUID filtering", "[UUIDs]") {
     REQUIRE(testPrefixFilter.size() == 1);
     REQUIRE(testPrefixFilter.at(0)->getTaskJson().at("project") == "@bogus");
 }
+
+TEST_CASE("Date filtering", "[DateFiltering]") {
+    const double earliestDate = 1591401600000.0;
+    // const double middleDate = 1593993600000.0;
+    const double latestDate = 1594044564000.0;
+
+    LOAD_CONFIG("TaskFiltering.trconf");
+    auto json = taskranger::Environment::getInstance()->getDatabase("active.json", true);
+    InputPtr dataPtr = std::make_shared<InputData>();
+    dataPtr->data["age.after"] = "RAW" + std::to_string(earliestDate - 40000.0);
+
+    auto testAfterOperator = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+    REQUIRE(testAfterOperator.size() == 3);
+
+    // The task filtering system isn't meant for sequential testing
+    for (auto& task : json->getDatabase()) {
+        task->reset();
+    }
+
+    dataPtr->data["age.before"] = "RAW" + std::to_string(latestDate);
+    auto testComboOperator = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+
+    REQUIRE(testComboOperator.size() == 2);
+
+    // Top it off with an ID check
+    dataPtr->data["ids.greater"] = "1";
+    auto testIdDateCombo = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+    REQUIRE(testIdDateCombo.size() == 1);
+}

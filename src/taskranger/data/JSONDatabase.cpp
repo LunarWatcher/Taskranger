@@ -58,11 +58,10 @@ JSONDatabase::JSONDatabase(const std::string& databaseName, bool hasPublicIds) :
 }
 
 void JSONDatabase::commit() {
-#ifdef UNITTEST
+    // This is used in unit tests to prevent writing
     if (demoMode) {
         return;
     }
-#endif
 
     if (!std::filesystem::exists(this->dbFolder))
         std::filesystem::create_directories(this->dbFolder);

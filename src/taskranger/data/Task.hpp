@@ -63,6 +63,10 @@ public:
     void noMatch() {
         this->includeInFilter = false;
     }
+
+    void reset() {
+        this->includeInFilter = true;
+    }
 };
 
 } // namespace taskranger

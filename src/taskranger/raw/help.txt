@@ -30,5 +30,5 @@ in zsh is handled differently from bash. In this specific example, if you're usi
 
     taskranger add test!
 
-is valid in Bash and zsh. The point being, some characters are handled differently, and may need to be escaped. If you get weird behavior when using certain characters, try to escape it. This is something Taskranger can't help with, unfortunately.
+is valid in Bash and zsh. The point being, some characters are handled differently, and may need to be escaped. If you get weird behavior when using certain characters, try to escape it. This is something Taskranger can't help with, unfortunately, because this is done before Taskranger gets the input from the terminal.
 )RAWDEL"
