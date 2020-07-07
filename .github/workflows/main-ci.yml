@@ -119,6 +119,7 @@ jobs:
         $path = [System.Environment]::GetEnvironmentVariable('PATH', 'Machine')
         $path = ($path.Split(';') | Where-Object { $_ -notlike '*Git*' }) -join ';'
         echo "::set-env name=PATH::$path"
+        conan profile update settings.compiler.runtime=MT default
     - name: Build
       run: |
         scons -j 2 debug=False
