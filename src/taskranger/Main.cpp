@@ -1,3 +1,4 @@
+#include <ios>
 #define TASKRANGER_NON_UNIT_TEST
 
 #include <iostream>
@@ -10,12 +11,16 @@
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/input/InputData.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
+#include "taskranger/util/TermUtils.hpp"
 
 int main(int argc, const char* argv[]) {
 
     using taskranger::ANSIFeature;
     using taskranger::Environment;
     using taskranger::InputParser;
+
+    // Init all the ANSI goodness
+    taskranger::TermUtils::TermData::initTerminal();
 
     InputParser parser;
     parser.parseInput(argc, argv);
