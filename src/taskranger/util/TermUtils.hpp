@@ -10,7 +10,7 @@
 #include <windows.h>
 
 // TTY check
-#define IsATTY _isatty;
+#define IsATTY _isatty
 #define FILENO _fileno
 
 // ANSI support check
