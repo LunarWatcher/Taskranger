@@ -12,7 +12,10 @@ sources += env.Glob("taskranger/config/*.cpp")
 env.appendSourcePath("#src/")
 env.appendSourcePath("#tabulate/include")
 
-lib = env.Library("taskranger", sources)
+# The library name cannot match the executable name, because
+# MSVC is incapable of telling taskranger.exe from taskranger.lib.
+# MSVC: the reason we can't have nice things
+lib = env.Library("taskrangersources", sources)
 
 exeEnv = env.Clone()
 exeEnv.withLibraries(lib, append = False)

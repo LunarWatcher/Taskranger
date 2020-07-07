@@ -2,7 +2,7 @@ Import("env")
 Import("lpath")
 Import("database")
 
-env.withLibraries("taskranger", append = False)
+env.withLibraries("taskrangersources", append = False)
 env.appendLibPath("#" + lpath)
 
 env.appendSourcePath("#Catch2/single_include")
