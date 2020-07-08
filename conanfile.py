@@ -7,9 +7,9 @@ class Taskranger(ConanFile):
     generators = "ycm", "scons"
 
     default_options = {
-        "icu:data_packaging": "static",
+        "icu:data_packaging": "archive",
         "icu:shared": False,
-        "icu:with_dyload": False
+        "icu:with_dyload": True
     }
 
     def requirements(self):
