@@ -4,6 +4,7 @@
 #include "taskranger/util/StrUtil.hpp"
 #include <map>
 #include <memory>
+#include <numeric>
 #include <string>
 #include <vector>
 
@@ -23,6 +24,26 @@ public:
 
     void removeTokens(const std::vector<std::string>& invalidFields);
     void removeInternalFields();
+
+    void createSelectiveFrom(std::shared_ptr<InputData> orig, std::vector<std::string> legalKeys);
+
+    std::map<std::string, std::string> getData(std::vector<std::string> blacklistedKeys) {
+        std::map<std::string, std::string> data = this->data;
+        bool tags = true;
+        for (auto& k : blacklistedKeys) {
+            auto it = data.find(k);
+            if (it != data.end()) {
+                data.erase(it);
+            } else if (k == "tags") {
+                tags = false;
+            }
+        }
+        if (tags) {
+            data["tags"] = std::accumulate(this->tags.begin(), this->tags.end(), std::string(""),
+                    [](std::string a, std::string b) { return (a.size() == 0 ? "" : a + ",") + b; });
+        }
+        return data;
+    }
 };
 
 } // namespace taskranger

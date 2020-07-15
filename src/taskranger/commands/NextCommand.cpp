@@ -37,7 +37,9 @@ void NextCommand::run() {
     auto& taskVec = database.getDatabase();
     auto filteredJson = TaskFilter::Filter::createFilter(input).filterTasks(taskVec);
     if (filteredJson.size())
-        TableUtil::TableBuilder().withKeys({"id", "description", "tags", "project", "due", "age"}).build(filteredJson);
+        TableUtil::TableBuilder()
+                .withKeys({"id", "description", "tags", "project", "due", "created"})
+                .build(filteredJson);
 
     // clang-format off
     std::cout

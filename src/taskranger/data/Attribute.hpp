@@ -155,19 +155,19 @@ public:
      * Returns a minimal representation of the attribute. This is mainly used
      * for commands like next and all.
      */
-    virtual Types::TableRow getMinimalRepresentationForTable(const Task& task) {
-        auto& json = task.getTaskJson();
+    virtual Types::TableRow getMinimalRepresentationForTable(const nlohmann::json& json) {
+
         auto it = json.find(this->name);
         if (it == json.end()) {
             return " ";
         }
-        return StrUtil::toString(task.getTaskJson().at(this->name), " ", "-");
+        return StrUtil::toString(*it, " ", "-");
     }
 
     /**
      * Used for tasks like information, where we want to include as much metadata as possible
      */
-    virtual Types::TableRow getMaxRepresentationForTable(const Task& task) {
+    virtual Types::TableRow getMaxRepresentationForTable(const nlohmann::json& task) {
         return getMinimalRepresentationForTable(task);
     }
 

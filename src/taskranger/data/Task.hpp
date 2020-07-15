@@ -25,7 +25,6 @@ private:
      * minor amount of clutter in the code
      */
     JSONDatabase* database;
-
     // fields computed internally that aren't written to disk
     // Keep in mind that some fields are computed on-demand to
     // to prevent wasting cycles, and therefore have a getter
@@ -56,6 +55,18 @@ public:
         return *itr->get<T>();
     }
 
+    /**
+     * This returns the ID for the task corresponding to a vector position.
+     * DO NOT confuse getIdx for getId - these two are very different functions
+     */
+    unsigned long long getIdx() {
+        return idx;
+    }
+
+    unsigned long long getIdx() const {
+        return idx;
+    }
+
     bool isIncludedInFilter() {
         return includeInFilter;
     }
@@ -66,6 +77,13 @@ public:
 
     void reset() {
         this->includeInFilter = true;
+    }
+
+    JSONDatabase* getDatabase() {
+        if (this->database == nullptr) {
+            throw "FATAL ERROR: Database pointer in task is nullptr";
+        }
+        return this->database;
     }
 };
 

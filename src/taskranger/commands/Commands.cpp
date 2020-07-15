@@ -9,6 +9,7 @@
 #include "DoneCommand.hpp"
 #include "HelpCommand.hpp"
 #include "InfoCommand.hpp"
+#include "ModifyCommand.hpp"
 #include "NextCommand.hpp"
 #include "VersionCommand.hpp"
 
@@ -24,9 +25,11 @@ Commands::Commands() {
     this->commands["next"] = std::make_shared<NextCommand>();
     this->commands["all"] = std::make_shared<AllCommand>();
     this->commands["info"] = std::make_shared<InfoCommand>();
+
     // RW
     this->commands["add"] = std::make_shared<AddCommand>();
     this->commands["done"] = std::make_shared<DoneCommand>();
+    this->commands["modify"] = std::make_shared<ModifyCommand>();
 
     // Meta
     this->commands["version"] = std::make_shared<VersionCommand>();

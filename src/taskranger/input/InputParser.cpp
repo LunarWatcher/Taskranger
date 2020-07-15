@@ -87,7 +87,12 @@ void InputParser::parseInput(int argc, const char* argv[]) {
                 // vs
                 // > +"some thing"
                 // because of the way shells convert quotes into strings or whatever *shrug*
-                tags.push_back(word);
+                if (std::find(tags.begin(), tags.end(), word) == tags.end()) {
+                    // ... and as a bonus, we need ot protect from duplicate tags.
+                    // Super basic check though; this doesn't avoid +tag -tag, but
+                    // meh. This avoids accidents; +tag -tag is more likely to be intentional.
+                    tags.push_back(word);
+                }
                 processed = true;
             } else if (word.at(0) == '@') {
                 // We have a project!

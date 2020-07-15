@@ -28,6 +28,12 @@ If any part of the documentation is too complicated, techy, or just weird, open 
 
 That being said, keep in mind that Taskranger is still far from ready for a stable release. As a result, certain parts will be missing simply because I haven't gotten around to it. Issues on missing documentation are still welcome. Documentation is also on the roadmap to v1.0.0, which is why criticism of documentation is important. Criticism means less shitty documentation, and yes, I'm more than willing to delay the v1.0.0 release (when that's an approaching reality) if the documentation is complete and utter garbage.
 
+### I don't like the input format
+
+At the moment, the input parser is fairly basic, in part because I've never written anything like it before. Additionally, I don't have a complete overview of all the things I'd like to include. Regardless of syntax changes, however, a major goal is to avoid ambiguity. The parser shouldn't have to fill in the gaps and guess what you mean - finding a balance between easy to read and write syntax, as well as syntax that isn't ambiguous is tricky, to say the least. The current syntax tries to achieve some balance, but it's not completely optimal either.
+
+There's going to be changes to the input syntax at some point:tm:, but that is a job for after v1.0.0.
+
 ## Dev setup
 
 The only requirements for this project are:

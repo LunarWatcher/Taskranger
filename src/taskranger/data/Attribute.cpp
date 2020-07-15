@@ -58,7 +58,7 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
         return std::make_shared<UUIDAttribute>();
     } else if (fieldName == "due") {
         return std::make_shared<DueAttribute>();
-    } else if (fieldName == "age") {
+    } else if (fieldName == "age" || fieldName == "created") {
         return std::make_shared<AgeAttribute>();
     } else {
         auto& config = *Environment::getInstance()->getConfig();

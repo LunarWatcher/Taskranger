@@ -4,7 +4,7 @@ import os
 
 class Taskranger(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
-    generators = "ycm", "scons"
+    generators = "scons"
 
     default_options = {
         "icu:data_packaging": "archive",

@@ -54,9 +54,11 @@ void AddCommand::run() {
     std::string uuid = uuid::generateUuidV4();
 
     data["uuid"] = uuid;
-    data["age"] = "RAW" + std::to_string(DateTimeUtil::currTime());
+    data["created"] = "RAW" + std::to_string(DateTimeUtil::currTime());
     Environment& env = *Environment::getInstance();
     if (input->tags.size() != 0) {
+        std::transform(input->tags.begin(), input->tags.end(), input->tags.begin(),
+                [](const std::string& rawTag) { return rawTag.at(0) == '-' ? "+" + rawTag.substr(1) : rawTag; });
         std::dynamic_pointer_cast<TagsAttribute>(env.getAttribute("tags"))->modify(mod, input->tags);
     }
 

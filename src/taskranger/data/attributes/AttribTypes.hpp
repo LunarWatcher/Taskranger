@@ -76,8 +76,8 @@ public:
     virtual void validate(nlohmann::json& /* attribValue */) override {}
 
     virtual void modify(nlohmann::json& task, const std::string& key, const std::string& input) override;
-    virtual Types::TableRow getMinimalRepresentationForTable(const Task& task) override;
-    virtual Types::TableRow getMaxRepresentationForTable(const Task& task) override;
+    virtual Types::TableRow getMinimalRepresentationForTable(const nlohmann::json& task) override;
+    virtual Types::TableRow getMaxRepresentationForTable(const nlohmann::json& task) override;
 };
 
 } // namespace taskranger

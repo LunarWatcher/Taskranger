@@ -40,7 +40,7 @@ void TableBuilder::build(std::vector<std::shared_ptr<Task>>& tasks) {
                 if (!attribPtr) {
                     columns[key].push_back(StrUtil::toString(*itr, " ", ""));
                 } else {
-                    columns[key].push_back(attribPtr->getMinimalRepresentationForTable(task));
+                    columns[key].push_back(attribPtr->getMinimalRepresentationForTable(json));
                 }
                 // This system is used to make sure only keys with at least one value are printed.
                 // The rest shouldn't be printed
@@ -134,7 +134,7 @@ void TableBuilder::build(std::vector<std::shared_ptr<Task>>& tasks) {
                 try {
                     auto attribute = env.getAttribute(k);
                     auto key = attribute->getLabel();
-                    taskTable.add_row({key, attribute->getMaxRepresentationForTable(*task)});
+                    taskTable.add_row({key, attribute->getMaxRepresentationForTable(json)});
                 } catch (std::string&) { taskTable.add_row({k, StrUtil::toString(v)}); }
             }
 

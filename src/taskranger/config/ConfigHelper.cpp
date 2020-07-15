@@ -15,12 +15,19 @@ void Config::loadStandards() {
     config = {
         { "dataDir", "~/.taskranger" },
         { "dates",  {
-                        {"default", "dd.MM.y HH:mm:ss"},
-                        {"zoned", "dd.MM.y HH:mm:ss'T'z"},
-                        {"tod", "HH:mm:ss"},
-                        {"day", "dd.MM"},
-                        {"date", "dd.MM HH:mm"}
+                {"default", "dd.MM.y HH:mm:ss"},
+                {"zoned", "dd.MM.y HH:mm:ss'T'z"},
+                {"tod", "HH:mm:ss"},
+                {"day", "dd.MM"},
+                {"date", "dd.MM HH:mm"}
+            },
+        },
+        { "warnings", {
+                {"modify", std::map<std::string, int> {
+                        {"bulk", 0},
                     }
+                }
+            }
         }
     };
     // clang-format on

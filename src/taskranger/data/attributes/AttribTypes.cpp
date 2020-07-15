@@ -97,8 +97,8 @@ void DateAttribute::modify(nlohmann::json& task, const std::string& key, const s
     }
 }
 
-Types::TableRow DateAttribute::getMinimalRepresentationForTable(const Task& task) {
-    auto& json = task.getTaskJson();
+Types::TableRow DateAttribute::getMinimalRepresentationForTable(const nlohmann::json& json) {
+
     auto it = json.find(this->name);
     if (it == json.end()) {
         return " ";
@@ -107,8 +107,8 @@ Types::TableRow DateAttribute::getMinimalRepresentationForTable(const Task& task
     return DateTimeUtil::formatDate(it->get<double>());
 }
 
-Types::TableRow DateAttribute::getMaxRepresentationForTable(const Task& task) {
-    auto& json = task.getTaskJson();
+Types::TableRow DateAttribute::getMaxRepresentationForTable(const nlohmann::json& json) {
+
     auto it = json.find(this->name);
     if (it == json.end()) {
         return " ";

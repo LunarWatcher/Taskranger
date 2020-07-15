@@ -7,11 +7,11 @@ namespace taskranger {
 class AgeAttribute : public DateAttribute {
 public:
     AgeAttribute() {
-        this->name = "age";
+        this->name = "created";
         this->label = "Created";
     }
 
-    virtual Types::TableRow getMinimalRepresentationForTable(const Task& task) override;
+    virtual Types::TableRow getMinimalRepresentationForTable(const nlohmann::json& task) override;
 };
 
 } // namespace taskranger
