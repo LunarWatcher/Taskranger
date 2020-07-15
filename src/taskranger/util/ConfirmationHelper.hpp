@@ -18,10 +18,9 @@ private:
     std::shared_ptr<Environment> environment;
 
     nlohmann::json computedChanges;
-
     size_t bulkWarn = 0;
-    bool allYes = false;
 
+    void preprocessChanges();
     void dumpChanges();
 
     void commitChanges(std::shared_ptr<Task> task);

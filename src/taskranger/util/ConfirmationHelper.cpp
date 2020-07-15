@@ -1,5 +1,6 @@
 #include "ConfirmationHelper.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
+#include "taskranger/util/DatetimeUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include "taskranger/util/TableUtil.hpp"
 #include "taskranger/util/TermUtils.hpp"
@@ -12,7 +13,7 @@ ConfirmationHelper::ConfirmationHelper(std::map<std::string, std::string> newDat
     this->bulkWarn = environment->getConfig()->findKey("warnings")->at("modify").at("bulk").get<size_t>();
 }
 
-void ConfirmationHelper::dumpChanges() {
+void ConfirmationHelper::preprocessChanges() {
     nlohmann::json rawChanges;
     // Save some time by converting and validating the fields here
     for (auto& [attrib, change] : this->changes) {
@@ -35,6 +36,9 @@ void ConfirmationHelper::dumpChanges() {
     }
 
     this->computedChanges = rawChanges;
+}
+void ConfirmationHelper::dumpChanges() {
+    preprocessChanges();
     tabulate::Table table;
     // Explanation for the - 2: the width per cell needs to account for
     // padding, which seems (in manual tests) to correspond to
@@ -51,7 +55,7 @@ void ConfirmationHelper::dumpChanges() {
     table.add_row({"Name", "Value"});
 
     size_t i = 1;
-    for (auto& [k, v] : rawChanges.items()) {
+    for (auto& [k, v] : computedChanges.items()) {
         if (k == "tags.add") {
             std::cout << "The following tags will be added: "
                       << std::accumulate(v.begin(), v.end(), std::string(""),
@@ -69,7 +73,7 @@ void ConfirmationHelper::dumpChanges() {
                       << std::endl;
         } else {
             auto attrib = this->environment->getAttribute(k);
-            table.add_row({attrib->getLabel(), attrib->getMaxRepresentationForTable(rawChanges)});
+            table.add_row({attrib->getLabel(), attrib->getMaxRepresentationForTable(computedChanges)});
             if (i % 2 == 0) {
                 table[i].format().background_color(tabulate::Color::white).font_color(tabulate::Color::grey);
             }
@@ -117,7 +121,9 @@ void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
             json[k] = v;
         }
     }
+    json["modified"] = DateTimeUtil::currTime();
 }
+
 size_t ConfirmationHelper::process() {
     if (bulkWarn >= 0 && this->filteredTasks.size() > bulkWarn) {
 
@@ -137,26 +143,92 @@ size_t ConfirmationHelper::process() {
         std::cout << "The following changes will be made:\n\n";
         dumpChanges();
 
-        // TODO (language): individual feels extremely awkward to use in this context.
-        std::cout << "Is this okay? ([Y]es/[n]o/[I]ndividual) ";
+        // TODO (language): Interactive might not be the best option here either. Works better than individual,
+        // but still awkward
+        std::cout << "Is this okay? ([Y]es/[n]o/[i]nteractive) ";
         std::string line;
         std::getline(std::cin, line);
         line = StrUtil::toLower(line);
-        if (line.size() == 0 || line.at(0) == 'y') {
+        if (line.size() == 0) {
+            line = "y";
+        }
+        switch (line.at(0)) {
+        case 'y':
             for (auto& task : this->filteredTasks) {
                 this->commitChanges(task);
             }
             return filteredTasks.size();
-        } else if (line.at(0) == 'n') {
+        case 'n':
             std::cout << "Aborting modifications..." << std::endl;
             return 0;
-        } else if (line.at(0) == 'i') {
-            return 34;
+        case 'i': {
+            bool changeRemaining = false;
+            size_t count = 0;
+            std::cout << "Entering interactive mode...\n";
+            for (auto& task : this->filteredTasks) {
+                TableUtil::TableBuilder builder;
+                builder.withKeys({"Name", "Value"})
+                        .withUniqueTables()
+                        .setFilterKeys(false)
+                        .setTransformKeys(false)
+                        .build({task});
+                bool legal = true;
+                if (!changeRemaining) {
+                    do {
+                        legal = true;
+
+                        std::cout << "Modify this task? ([Y]es/[n]o/[a]bort all/[c]hange remaining/[l]eave remaining) ";
+                        std::getline(std::cin, line);
+                        line = StrUtil::toLower(line);
+                        if (line.size() == 0) {
+                            // Optimization
+                            line = "y";
+                        }
+                        switch (line.at(0)) {
+                        case 'c':
+                            changeRemaining = true;
+                        case 'y':
+                            count++;
+                            this->commitChanges(task);
+                            break;
+                        case 'n':
+                            // This pretty much only exists to continue the outer for loop.
+                            break;
+                        case 'a':
+                            // The changes haven't been committed, so we return 0. 0 modified
+                            // tasks signals to ModifyCommand that the changes should _not_ be committed
+                            std::cout << "Aborting all changes...\n";
+                            return 0;
+                        case 'l':
+                            // Leave the rest
+                            return count;
+                        default:
+                            legal = false;
+                            std::cout << "\nInvalid option: " + line + " - please enter a valid option.\n";
+                            break;
+                        }
+
+                    } while (!legal);
+                } else {
+                    count++;
+                    this->commitChanges(task);
+                }
+            }
+            return count;
+        } break;
+        default:
+            std::cout << "Invalid option specified (" << line << "); aborting changes.\n\n";
+            return 0;
         }
+
         return 0;
+    } else {
+        this->preprocessChanges();
+        for (auto& task : this->filteredTasks) {
+            this->commitChanges(task);
+        }
+        return this->filteredTasks.size();
     }
-    return false;
-    return true;
 }
 
 } // namespace taskranger

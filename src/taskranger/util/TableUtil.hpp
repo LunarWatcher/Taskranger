@@ -63,7 +63,7 @@ public:
     /**
      * Builds the table
      */
-    void build(std::vector<std::shared_ptr<Task>>& tasks);
+    void build(const std::vector<std::shared_ptr<Task>>& tasks);
 };
 
 } // namespace TableUtil

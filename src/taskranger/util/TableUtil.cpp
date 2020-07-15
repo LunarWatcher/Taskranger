@@ -19,7 +19,7 @@ TableBuilder& TableBuilder::withKeys(const std::vector<std::string>& keys) {
     return *this;
 }
 
-void TableBuilder::build(std::vector<std::shared_ptr<Task>>& tasks) {
+void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
     std::vector<Types::TableRow> keysWithValues;
     auto& env = *Environment::getInstance();
     if (this->filterKeys) {

@@ -22,6 +22,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Add InfoCommand for displaying all task metadata
 * Date filtering + tests
 * before and after aliases for &lt; and &gt; respectively
+* ModifyCommand
 
 ## Changes
 * A Task is now represented by its own object rather than a `nlohmann::json` object
