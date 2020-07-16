@@ -133,6 +133,6 @@ jobs:
       run: |
         ./build/${{matrix.folder}}.64bit.release/tests/bin/tests
     - name: Run test (Windoze)
-      if: matrix.os == "windows-latest"
+      if: matrix.os == 'windows-latest'
       run: |
         ./build/${{matrix.folder}}.64bit.release/tests/bin/tests.exe
