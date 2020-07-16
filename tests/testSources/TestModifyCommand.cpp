@@ -11,7 +11,6 @@
  * This exists to make sure the IO redirection works
  */
 TEST_CASE("Test IO modification", "[IOStreamMod]") {
-    std::cout << "Testing IO stream redirection\n";
     CaptureStreams::StreamCapturer hijackOutput(std::cout);
     CaptureStreams::StreamCapturer hijackInput(std::cin);
 
@@ -19,7 +18,6 @@ TEST_CASE("Test IO modification", "[IOStreamMod]") {
     std::string line;
     getline(std::cin, line);
     std::cout << line;
-
     hijackInput.restore();
     hijackOutput.restore();
 
@@ -35,9 +33,7 @@ TEST_CASE("Test IO modification", "[IOStreamMod]") {
         // There's no good things that can happen by letting
         // this slide
         abort();
-        std::cout << "ABORT\n";
     }
-    std::cout << "out\n";
 }
 
 TEST_CASE("Add and remove tags", "[ModifyTags]") {
