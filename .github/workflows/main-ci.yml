@@ -123,8 +123,16 @@ jobs:
     - name: Build
       run: |
         scons -j 2 debug=False
-    - name: Build and run test
+    - name: Build test
       # The test doesn't strictly have to be run separately, but as the test base grows,
       # I'd like to be able to separate test failure from build failure
       run: |
         scons test -j 2 debug=False
+    - name: Run test (Posix)
+      if: matrix.os != 'windows-latest'
+      run: |
+        ./build/${{matrix.folder}}.64bit.release/tests/bin/tests
+    - name: Run test (Windoze)
+      if: matrix.os == "windows-latest"
+      run: |
+        ./build/${{matrix.folder}}.64bit.release/tests/bin/tests.exe

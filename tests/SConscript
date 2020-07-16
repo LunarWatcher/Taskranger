@@ -8,12 +8,12 @@ env.appendLibPath("#" + lpath)
 env.appendSourcePath("#Catch2/single_include")
 env.appendSourcePath("#tests/testSources")
 
-tests = env.Program("tests", env.Glob("testSources/*.cpp"))
+test = env.Program("tests", env.Glob("testSources/*.cpp"))
 
-testAlias = env.environment.Alias("test", [ tests ], tests[0].abspath)
-if "test" in BUILD_TARGETS:
-    AlwaysBuild(testAlias)
+# testAlias = env.environment.Alias("test", [ tests ], tests[0].abspath)
+# if "test" in BUILD_TARGETS:
+    # AlwaysBuild(testAlias)
 
 # Hack to make sure the database is built
 if (database is not None):
-    Depends(tests, database)
+    Depends(test, database)
