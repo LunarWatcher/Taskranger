@@ -99,7 +99,13 @@ void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
             if (json.find("tags") == json.end()) {
                 json["tags"] = std::vector<std::string>();
             }
-            json["tags"].insert(json["tags"].end(), v.begin(), v.end());
+            auto& tags = json["tags"];
+            for (auto& tag : v) {
+                if (std::find(tags.begin(), tags.end(), tag.get<std::string>()) == tags.end()) {
+                    tags.push_back(tag);
+                }
+            }
+
         } else if (k == "tags.remove") {
             // No tags? No problem. Fuck this :D
             if (json.find("tags") == json.end()) {
