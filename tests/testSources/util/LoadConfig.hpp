@@ -8,4 +8,4 @@
     auto config = taskranger::Environment::getInstance(true)->getConfig(); \
     if (config->findKey("loaded") != config->end()) { \
         throw "Failed to load config"; \
-    }\
+    }
