@@ -16,7 +16,7 @@ TEST_CASE("Test IO modification", "[IOStreamMod]") {
 
     hijackInput.getBuffer() << "Hello World!\n";
     std::string line = "Goodbye";
-    // getline(std::cin, line);
+    getline(std::cin, line);
     std::cout << line;
     hijackInput.restore();
     hijackOutput.restore();
