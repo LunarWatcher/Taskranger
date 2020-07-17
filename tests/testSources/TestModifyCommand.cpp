@@ -9,14 +9,14 @@
 
 /**
  * This exists to make sure the IO redirection works
- *
+ */
 TEST_CASE("Test IO modification", "[IOStreamMod]") {
     CaptureStreams::StreamCapturer hijackOutput(std::cout);
     CaptureStreams::StreamCapturer hijackInput(std::cin);
 
     hijackInput.getBuffer() << "Hello World!\n";
-    std::string line;
-    getline(std::cin, line);
+    std::string line = "Goodbye";
+    // getline(std::cin, line);
     std::cout << line;
     hijackInput.restore();
     hijackOutput.restore();
@@ -35,7 +35,7 @@ TEST_CASE("Test IO modification", "[IOStreamMod]") {
         abort();
     }
 }
-
+/*
 TEST_CASE("Add and remove tags", "[ModifyTags]") {
     LOAD_CONFIG("TaskFiltering.trconf");
     using namespace taskranger;
