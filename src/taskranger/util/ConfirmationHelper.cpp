@@ -37,6 +37,7 @@ void ConfirmationHelper::preprocessChanges() {
 
     this->computedChanges = rawChanges;
 }
+
 void ConfirmationHelper::dumpChanges() {
     preprocessChanges();
     tabulate::Table table;
@@ -54,10 +55,8 @@ void ConfirmationHelper::dumpChanges() {
     // clang-format on
     table.add_row({"Name", "Value"});
 
-    std::cout << computedChanges.size() << std::endl;
     size_t i = 1;
     for (auto& [k, v] : computedChanges.items()) {
-        std::cout << k << std::endl;
         if (k == "tags.add") {
             std::cout << "The following tags will be added: "
                       << std::accumulate(v.begin(), v.end(), std::string(""),
@@ -74,21 +73,16 @@ void ConfirmationHelper::dumpChanges() {
                                  })
                       << std::endl;
         } else {
-            std::cout << "Processing key: " << k << std::endl;
             auto attrib = this->environment->getAttribute(k);
-            std::cout << "attrib found. nullptr? " << (attrib == nullptr) << std::endl;
             table.add_row({attrib->getLabel(), attrib->getMaxRepresentationForTable(computedChanges)});
-            std::cout << "post-add" << std::endl;
             if (i % 2 == 0) {
-                std::cout << "pre-mod table" << std::endl;
                 table[i].format().background_color(tabulate::Color::white).font_color(tabulate::Color::grey);
-                std::cout << "post-mod table" << std::endl;
             }
-            std::cout << "incrementing i\n";
+
             i++;
         }
     }
-
+    std::cout << "after for" << std::endl;
     // the shape is (x, y). To check if there's more than one row (the header),
     // .second has to be used
     if (table.shape().second > 1ul) {
@@ -201,6 +195,9 @@ size_t ConfirmationHelper::process() {
                         switch (line.at(0)) {
                         case 'c':
                             changeRemaining = true;
+                            count++;
+                            this->commitChanges(task);
+                            break;
                         case 'y':
                             count++;
                             this->commitChanges(task);
