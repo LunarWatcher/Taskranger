@@ -72,26 +72,29 @@ void ConfirmationHelper::dumpChanges() {
                                  })
                       << std::endl;
         } else {
+            std::cout << "Processing key: " << k << std::endl;
             auto attrib = this->environment->getAttribute(k);
+            std::cout << "attrib found. nullptr? " << (attrib == nullptr) << std::endl;
             table.add_row({attrib->getLabel(), attrib->getMaxRepresentationForTable(computedChanges)});
+            std::cout << "post-add" << std::endl;
             if (i % 2 == 0) {
+                std::cout << "pre-mod table" << std::endl;
                 table[i].format().background_color(tabulate::Color::white).font_color(tabulate::Color::grey);
+                std::cout << "post-mod table" << std::endl;
             }
-
+            std::cout << "incrementing i\n";
             i++;
         }
     }
-    std::cout << "Pre-table\n";
+
     // the shape is (x, y). To check if there's more than one row (the header),
     // .second has to be used
     if (table.shape().second > 1ul) {
-        std::cout << "We have a table" << std::endl;
         // avoid printing empty tables
         table[0].format().font_style({tabulate::FontStyle::underline});
 
         std::cout << "The following metadata will be changed:\n\n" << table << std::endl;
     }
-    std::cout << "Exit table\n";
 }
 
 void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
