@@ -44,7 +44,11 @@ void ConfirmationHelper::dumpChanges() {
     // Explanation for the - 2: the width per cell needs to account for
     // padding, which seems (in manual tests) to correspond to
     // - 2.
-    table.format().width((TermUtils::getWidth() - 2) / 2);
+    auto width = TermUtils::getWidth();
+    std::cout << width << std::endl;
+    if (width > 0) {
+        table.format().width((width - 2) / 2);
+    }
     // clang-format off
     table.format()
         .border_right(" ")
@@ -82,7 +86,7 @@ void ConfirmationHelper::dumpChanges() {
             i++;
         }
     }
-    std::cout << "after for" << std::endl;
+
     // the shape is (x, y). To check if there's more than one row (the header),
     // .second has to be used
     if (table.shape().second > 1ul) {
