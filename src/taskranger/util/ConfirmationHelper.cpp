@@ -54,8 +54,10 @@ void ConfirmationHelper::dumpChanges() {
     // clang-format on
     table.add_row({"Name", "Value"});
 
+    std::cout << computedChanges.size() << std::endl;
     size_t i = 1;
     for (auto& [k, v] : computedChanges.items()) {
+        std::cout << k << std::endl;
         if (k == "tags.add") {
             std::cout << "The following tags will be added: "
                       << std::accumulate(v.begin(), v.end(), std::string(""),
