@@ -50,7 +50,7 @@ void ConfirmationHelper::dumpChanges() {
     // so we might as well see if we can find a way to fix it if it's in a consumer terminal
     // This also fixes an annoying as fuck CI issue causing random compiler
     // failures for no fucking reason :facepaw:
-    if (width > 0) {
+    if (width > 2) {
         table.format().width((width - 2) / 2);
     }
     // clang-format off
