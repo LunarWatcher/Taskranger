@@ -81,14 +81,17 @@ void ConfirmationHelper::dumpChanges() {
             i++;
         }
     }
+    std::cout << "Pre-table\n";
     // the shape is (x, y). To check if there's more than one row (the header),
     // .second has to be used
     if (table.shape().second > 1ul) {
+        std::cout << "We have a table" << std::endl;
         // avoid printing empty tables
         table[0].format().font_style({tabulate::FontStyle::underline});
 
         std::cout << "The following metadata will be changed:\n\n" << table << std::endl;
     }
+    std::cout << "Exit table\n";
 }
 
 void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
@@ -148,7 +151,7 @@ size_t ConfirmationHelper::process() {
         }
         std::cout << "The following changes will be made:\n\n";
         dumpChanges();
-
+        std::cout << "Out\n" << std::endl;
         // TODO (language): Interactive might not be the best option here either. Works better than individual,
         // but still awkward
         std::cout << "Is this okay? ([Y]es/[n]o/[i]nteractive) ";
