@@ -63,7 +63,12 @@ TEST_CASE("Add and remove tags", "[ModifyTags]") {
 
     hijackInput.getBuffer() << "y\n";
     INFO("Executing command");
-    command.run();
+    try {
+        command.run();
+    } catch (...) {
+        hijackInput.restore();
+        hijackOutput.restore();
+    }
     INFO("Restoring IO control");
     hijackInput.restore();
     hijackOutput.restore();

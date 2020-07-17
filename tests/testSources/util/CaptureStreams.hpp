@@ -27,6 +27,7 @@ public:
     void restore() {
         if (buffer != nullptr) {
             stream.rdbuf(buffer);
+            buffer = nullptr;
         }
     }
 
