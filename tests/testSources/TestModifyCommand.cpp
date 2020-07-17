@@ -35,7 +35,7 @@ TEST_CASE("Test IO modification", "[IOStreamMod]") {
         abort();
     }
 }
-/*
+
 TEST_CASE("Add and remove tags", "[ModifyTags]") {
     LOAD_CONFIG("TaskFiltering.trconf");
     using namespace taskranger;
@@ -83,4 +83,4 @@ TEST_CASE("Add and remove tags", "[ModifyTags]") {
 
     REQUIRE(firstJson.at("tags").at(0) == "+tag");
     REQUIRE(secondJson.at("tags").at(0) == "+tag");
-}*/
+}
