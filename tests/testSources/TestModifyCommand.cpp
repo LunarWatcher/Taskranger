@@ -42,15 +42,15 @@ TEST_CASE("Add and remove tags", "[ModifyTags]") {
     using CaptureStreams::StreamCapturer;
 
     ModifyCommand command;
-    std::cout << "Hijacking input and output streams" << std::endl;
-    // StreamCapturer hijackOutput(std::cout);
+    INFO("Hijacking input and output streams");
+    StreamCapturer hijackOutput(std::cout);
     StreamCapturer hijackInput(std::cin);
-    std::cout << "Disabling database writes..." << std::endl;
+    INFO("Disabling database writes...");
     auto active = Environment::getInstance()->getDatabase("active.json", true);
     auto unused = Environment::getInstance()->getDatabase("completed.json", false);
     unused->demoMode = active->demoMode = true;
 
-    std::cout << "Preparing input data" << std::endl;
+    INFO("Preparing input data");
     auto inputData = Environment::getInstance()->getInputData();
     auto& data = inputData->data;
     // 1 + 4 tests tag addition and removal when:
@@ -62,26 +62,25 @@ TEST_CASE("Add and remove tags", "[ModifyTags]") {
     inputData->tags = {"+tag", "-tag2"};
 
     hijackInput.getBuffer() << "y\n";
-    std::cout << "Executing command" << std::endl;
+    INFO("Executing command");
 
     command.run();
 
-    std::cout << "Restoring IO control" << std::endl;
+    INFO("Restoring IO control");
     hijackInput.restore();
-    // hijackOutput.restore();
+    hijackOutput.restore();
 
-    std::cout << "Checking stdout's content" << std::endl;
-    // std::string commandOutput = hijackOutput.getBufferContent();
-    std::string commandOutput = "2 tasks modified";
+    INFO("Checking stdout's content");
+    std::string commandOutput = hijackOutput.getBufferContent();
     INFO(commandOutput);
     REQUIRE(commandOutput.find("2 tasks modified") != std::string::npos);
 
     auto activeDB = active->getDatabase();
     auto firstJson = activeDB.at(0)->getTaskJson();
     auto secondJson = activeDB.at(3)->getTaskJson();
-    std::cout << "First JSON: " + firstJson.dump() << std::endl;
+    INFO("First JSON: " + firstJson.dump());
     REQUIRE(firstJson.at("tags").size() == 1);
-    std::cout << "Second JSON: " + secondJson.dump() << std::endl;
+    INFO("Second JSON: " + secondJson.dump());
     REQUIRE(secondJson.at("tags").size() == 1);
 
     REQUIRE(firstJson.at("tags").at(0) == "+tag");

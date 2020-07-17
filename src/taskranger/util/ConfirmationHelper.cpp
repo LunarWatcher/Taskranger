@@ -45,7 +45,11 @@ void ConfirmationHelper::dumpChanges() {
     // padding, which seems (in manual tests) to correspond to
     // - 2.
     auto width = TermUtils::getWidth();
-    std::cout << width << std::endl;
+    // fallback; if we can't find a width, we need to let Tabulate take
+    // care of the size. hardcoding a size is gonna look like trash anyway,
+    // so we might as well see if we can find a way to fix it if it's in a consumer terminal
+    // This also fixes an annoying as fuck CI issue causing random compiler
+    // failures for no fucking reason :facepaw:
     if (width > 0) {
         table.format().width((width - 2) / 2);
     }
@@ -137,7 +141,10 @@ void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
 }
 
 size_t ConfirmationHelper::process() {
-    if (bulkWarn >= 0 && this->filteredTasks.size() > bulkWarn) {
+    // Final part of the statement; cast to shut the compiler up about sign comparison.
+    // The long in the last part of the if statement will never be under 0,
+    // so this is a safe cast.
+    if (bulkWarn >= 0 && this->filteredTasks.size() > (unsigned long long)bulkWarn) {
 
         TableUtil::TableBuilder builder;
         if (this->filteredTasks.size() < 20) {
@@ -154,7 +161,7 @@ size_t ConfirmationHelper::process() {
         }
         std::cout << "The following changes will be made:\n\n";
         dumpChanges();
-        std::cout << "Out\n" << std::endl;
+
         // TODO (language): Interactive might not be the best option here either. Works better than individual,
         // but still awkward
         std::cout << "Is this okay? ([Y]es/[n]o/[i]nteractive) ";
