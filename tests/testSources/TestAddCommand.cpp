@@ -2,7 +2,6 @@
 #include "taskranger/commands/AddCommand.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
-#include "taskranger/input/EnvVars.hpp"
 #include "util/LoadConfig.hpp"
 #include <filesystem>
 

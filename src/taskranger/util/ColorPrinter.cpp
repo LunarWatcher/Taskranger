@@ -1,12 +1,12 @@
 #include "ColorPrinter.hpp"
-#include "TermUtils.hpp"
+#include "printable/utils/TermUtils.hpp"
 #include <codecvt>
 #include <locale>
 
 namespace taskranger {
 
 ColorPrinter::ColorPrinter(std::ostream& outputStream) : outputStream(outputStream) {
-    supportsAnsi = TermUtils::supportsAnsi(&outputStream);
+    supportsAnsi = printable::TermUtils::supportsAnsi(&outputStream);
 }
 
 ColorPrinter& operator<<(ColorPrinter& printer, ANSIFeature feature) {
