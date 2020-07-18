@@ -30,7 +30,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Optimize and improve task filtering
 * Taskranger now uses conanfile.py instead of conanfile.txt
 * [Internal] Minor overhaul to the table printing system
-* [Chore] Update Catch2 to 2.12.3
+* [Chore] Update Catch2 to 2.13.0
 * [Chore] Update Tabulate to whatever version of Tabulate is the latest xd
 * [Build] Enable CompilationDatabase (SCons 4.0.0 released). Support for 3.1.2 not broken (theoretically:tm:)
 * [Build] Clean up the buildscripts (+ remove UNITTEST macro to save build time)
