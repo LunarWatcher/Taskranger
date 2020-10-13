@@ -18,6 +18,7 @@ matrix:
           packages:
             - g++-9
             - python3-pip
+            - python3-setuptools
       env:
         - CC=gcc-9
         - CXX=g++-9
@@ -33,6 +34,7 @@ matrix:
           packages:
             - clang-9
             - python3-pip
+            - python3-setuptools
       env:
         - CC=clang-9
         - CXX=clang++-9
