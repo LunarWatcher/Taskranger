@@ -10,7 +10,7 @@ R"RAWDEL(
 
 Welcome to the incomplete help command. This will at some point contain some useful stuff. This is not the main documentation - this just covers some of the basics. There's eventually going to be a complete documentation, covering every aspect of Taskranger. This is also going to expand whenever I find things worth adding to it.
 
-~ Special symbols
+~ Special symbols
 
 Shells interpret some characters as special symbols. These may need to be escaped appropriately, depending on your shell. Some symbols that may have a special meaning are:
 
