@@ -36,6 +36,6 @@ before_install:
   - eval "${MATRIX_EVAL}"
 
 script:
-  . ./init.sh
-  scons -j 2 debug=False
-  scons -j 2 debug=False test
+  - . ./init.sh
+  - scons -j 2 debug=False
+  - scons -j 2 debug=False test
