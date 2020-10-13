@@ -1,4 +1,4 @@
-language: python
+sudo: true
 
 # Force master and develop only
 branches:
