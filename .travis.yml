@@ -1,8 +1,15 @@
 language: python
 
+# Force master and develop only
+branches:
+  only:
+    - master
+    - develop
+
 matrix:
   include:
     - os: linux
+      dist: bionic
       addons:
         apt:
           sources:
@@ -12,10 +19,14 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
     - os: linux
+      dist: bionic
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-bionic-9.0
           packages:
-            - clang-9
+            - clang-9.0
       env:
         - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
     - os: osx
