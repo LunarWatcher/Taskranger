@@ -101,9 +101,11 @@ jobs:
         echo "::set-env name=CC::${{ matrix.ccompiler }}"
         ${{ matrix.compiler }} --version
     # Install conan
+    # Note: currently installs the dev variant until 1.28.0 is properly released
     - name: Install conan
       run: |
-        python -m pip install conan
+        python -m pip install -r conan_requirements.txt
+        python -m pip install -i https://test.pypi.org/simple/ conan
         conan profile new --detect default
     # Install SCons
     - name: Install dependencies
