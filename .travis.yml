@@ -30,7 +30,7 @@ matrix:
             - sourceline: 'deb https://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
-            - clang-9.0
+            - clang-9
       env:
         - CC=clang-9
         - CXX=clang++-9
@@ -43,7 +43,4 @@ matrix:
 
 
 script:
-  - . ./init.sh
-  - conan profile new --detect default
-  - scons -j 2 debug=False
-  - scons -j 2 debug=False test
+  - . ./.travis/script.sh
