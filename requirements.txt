@@ -1,3 +1,4 @@
+setuptools
 conan
 scons
 pre-commit
