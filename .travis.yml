@@ -17,7 +17,7 @@ matrix:
           packages:
             - g++-9
       env:
-        - MATRIX_EVAL="CC=gcc-9 && CXX=g++-9"
+        - MATRIX_EVAL="export CC=gcc-9 && export CXX=g++-9"
     - os: linux
       dist: bionic
       addons:
@@ -29,7 +29,7 @@ matrix:
           packages:
             - clang-9.0
       env:
-        - MATRIX_EVAL="CC=clang-9 && CXX=clang++-9"
+        - MATRIX_EVAL="export CC=clang-9 && export CXX=clang++-9"
     - os: osx
       osx_image: xcode8
 
@@ -38,5 +38,6 @@ before_install:
 
 script:
   - . ./init.sh
+  - conan profile new --detect default
   - scons -j 2 debug=False
   - scons -j 2 debug=False test
