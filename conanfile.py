@@ -13,5 +13,5 @@ class Taskranger(ConanFile):
     }
 
     def requirements(self):
-        self.requires("nlohmann_json/3.8.0")
+        self.requires("nlohmann_json/3.9.1")
         self.requires("icu/67.1")
