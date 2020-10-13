@@ -17,6 +17,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-9
+            - python3-pip
       env:
         - CC=gcc-9
         - CXX=g++-9
@@ -31,6 +32,7 @@ matrix:
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
           packages:
             - clang-9
+            - python3-pip
       env:
         - CC=clang-9
         - CXX=clang++-9
