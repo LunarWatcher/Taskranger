@@ -7,7 +7,7 @@ class Taskranger(ConanFile):
     generators = "scons"
 
     default_options = {
-        "icu:data_packaging": "archive",
+        "icu:data_packaging": "static",
         "icu:shared": False,
         "icu:with_dyload": False
     }
