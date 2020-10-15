@@ -36,14 +36,15 @@ matrix:
             - python3-pip
             - python3-setuptools
       env:
-        - CC=clang-9
-        - CXX=clang++-9
+        - CC=clang-10
+        - CXX=clang++-10
         - TOXENV=py38
     - os: osx
       osx_image: xcode8
       env:
         - TOXENV=py38
-
+      before_install:
+        - brew install python@3.8
 
 
 script:

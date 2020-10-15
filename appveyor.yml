@@ -1,0 +1,21 @@
+version: Build {build} @ {branch}
+
+branches:
+  only:
+    - master
+    - develop
+
+skkip_tags: true
+
+skip_commits:
+  message: /.*\[skip-ci\].*/
+
+image: Visual Studio 2019
+
+services:
+  - python3
+install:
+  - python3 -m pip install setuptools
+  - python3 -m pip install scons conan
+  - scons -j 2
+  - scons -j 2 test
