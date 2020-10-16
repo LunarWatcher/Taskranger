@@ -10,7 +10,7 @@ branches:
 matrix:
   include:
     - os: linux
-      if: branch == "none" 
+      if: branch != "develop" || type != "pull_request"
       dist: bionic
       addons:
         apt:
@@ -25,7 +25,7 @@ matrix:
         - CXX=g++-9
         - TOXENV=py38
     - os: linux
-      if: branch == "none"
+      if: branch != "develop" || type != "pull_request"
       dist: bionic
       addons:
         apt:
@@ -44,7 +44,7 @@ matrix:
         - CXX=clang++-10
         - TOXENV=py38
     - os: osx
-      if: branch == "none"
+      if: branch != "develop" || type != "pull_request"
       osx_image: xcode12.2
       env:
         - TOXENV=py38
