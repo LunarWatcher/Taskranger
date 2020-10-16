@@ -42,7 +42,7 @@ matrix:
         - CXX=clang++-10
         - TOXENV=py38
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode12.2
       env:
         - TOXENV=py38
       before_install:
