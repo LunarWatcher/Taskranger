@@ -1,5 +1,10 @@
 version: Build {build} @ {branch}
 
+environment:
+  PYTHON: "C:\\Python38-x64"
+  PYTHON_VERSION: "3.8.x"
+  PYTHON_ARCH: "64"
+  
 branches:
   only:
     - master
@@ -11,10 +16,6 @@ skip_commits:
   message: /.*\[skip-ci\].*/
 
 image: Visual Studio 2019
-
-PYTHON: "C:\\Python38-x64"
-PYTHON_VERSION: "3.8.x"
-PYTHON_ARCH: "64"
 
 install:
   - python -m pip install setuptools
