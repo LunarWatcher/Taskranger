@@ -1,9 +1,10 @@
 version: Build {build} @ {branch}
 
 environment:
-  PYTHON: "C:\\Python38-x64"
-  PYTHON_VERSION: "3.8.x"
-  PYTHON_ARCH: "64"
+  matrix:
+    - PYTHON: "C:\\Python38-x64"
+      PYTHON_VERSION: "3.8.x"
+      PYTHON_ARCH: "64"
   
 branches:
   only:
