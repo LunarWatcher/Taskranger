@@ -45,8 +45,6 @@ matrix:
       osx_image: xcode12.2
       env:
         - TOXENV=py38
-      before_install:
-        - brew install python@3.8
 
 
 script:
