@@ -35,7 +35,8 @@ matrix:
             - clang-10
             - python3-pip
             - python3-setuptools
-            - libstdc++9
+            - libstdc++6
+            - libstdc++6-9-dev
       env:
         - CC=clang-10
         - CXX=clang++-10
