@@ -1,6 +1,6 @@
 #include "ConfigHelper.hpp"
+#include "printable/utils/EnvVariableHelper.hpp"
 #include "taskranger/data/Environment.hpp"
-#include "taskranger/input/EnvVars.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <fstream>
@@ -13,7 +13,22 @@ Config::Config() {}
 void Config::loadStandards() {
     // clang-format off
     config = {
-        { "dataDir", "~/.taskranger" }
+        { "dataDir", "~/.taskranger" },
+        { "dates",  {
+                {"default", "dd.MM.y HH:mm:ss"},
+                {"zoned", "dd.MM.y HH:mm:ss'T'z"},
+                {"tod", "HH:mm:ss"},
+                {"day", "dd.MM"},
+                {"date", "dd.MM HH:mm"}
+            },
+        },
+        { "warnings", {
+                {"modify", std::map<std::string, int> {
+                        {"bulk", 0},
+                    }
+                }
+            }
+        }
     };
     // clang-format on
 }
@@ -26,7 +41,7 @@ void Config::ensureLoaded() {
     }
     std::string configBasePath = "~/.trconf";
 
-    auto reassigned = Env::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
+    auto reassigned = printable::EnvVariable::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
     if (reassigned != configBasePath && reassigned != "") {
         // Make it possible to assign custom files, as long it contains trconf
         if (StrUtil::reverseSplitString(reassigned, ".", 1).front() != "trconf") {
@@ -50,7 +65,9 @@ void Config::ensureLoaded() {
 
     if (input) {
         try {
-            input >> config;
+            nlohmann::json inputConfig;
+            input >> inputConfig;
+            this->config.merge_patch(inputConfig);
         } catch (nlohmann::json::parse_error& err) {
             std::cout << err.what() << std::endl;
             throw "The JSON parser ran into an error when parsing the config JSON. Please make sure your JSON file is "
@@ -61,8 +78,8 @@ void Config::ensureLoaded() {
     }
 }
 
-std::string Config::getString(const std::string& key) {
-    return this->config.value(key, "");
+std::string Config::getString(const std::string& key, const std::string& defaultValue) {
+    return this->config.value(key, defaultValue);
 }
 
 unsigned long long Config::getULLong(const std::string& key) {

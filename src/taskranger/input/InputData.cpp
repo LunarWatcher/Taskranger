@@ -21,4 +21,11 @@ void InputData::removeInternalFields() {
     this->removeTokens({"id", "uuid"});
 }
 
+void InputData::createSelectiveFrom(std::shared_ptr<InputData> orig, std::vector<std::string> legalKeys) {
+    for (auto& k : legalKeys) {
+        if (orig->data.find(k) != orig->data.end()) {
+            this->data[k] = orig->data[k];
+        }
+    }
+}
 } // namespace taskranger

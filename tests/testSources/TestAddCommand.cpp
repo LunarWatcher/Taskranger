@@ -2,7 +2,6 @@
 #include "taskranger/commands/AddCommand.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
-#include "taskranger/input/EnvVars.hpp"
 #include "util/LoadConfig.hpp"
 #include <filesystem>
 
@@ -27,8 +26,8 @@ TEST_CASE("Verify AddCommand output", "[AddCommandOutput]") {
     REQUIRE(std::filesystem::exists("./tests/raw/data/AddTest"));
     REQUIRE(std::filesystem::exists("./tests/raw/data/AddTest/active.json"));
 
-    auto database = environment->getDatabase("active.json");
-    auto& raw = *database->getDatabase();
+    auto database = environment->getDatabase("active.json", true);
+    auto& raw = *database->getRawDatabase();
     REQUIRE(raw.size() == 1);
     REQUIRE(raw.at(0).at("description") == "Make sure AddCommand works");
     REQUIRE(raw.at(0).at("tags").size() == 1);
@@ -42,7 +41,7 @@ TEST_CASE("Test UDA", "[TestUDA]") {
     auto environment = taskranger::Environment::getInstance();
     auto addCommand = environment->getCommands()->getCommand("add");
     auto inputData = environment->getInputData();
-    auto database = environment->getDatabase("active.json");
+    auto database = environment->getDatabase("active.json", true);
     database->demoMode = true;
 
     // Test string
@@ -54,7 +53,7 @@ TEST_CASE("Test UDA", "[TestUDA]") {
     // clang-format on
     addCommand->run();
     REQUIRE(database->size() == 1);
-    REQUIRE(database->getDatabase()->at(0).at("string") == "abcd");
+    REQUIRE(database->getRawDatabase()->at(0).at("string") == "abcd");
 
     // Test number
     // clang-format off
@@ -65,7 +64,7 @@ TEST_CASE("Test UDA", "[TestUDA]") {
     // clang-format on
     addCommand->run();
     REQUIRE(database->size() == 2);
-    REQUIRE(database->getDatabase()->at(1).at("number") == 1234);
+    REQUIRE(database->getRawDatabase()->at(1).at("number") == 1234);
 
     // Test invalid number
     // clang-format off

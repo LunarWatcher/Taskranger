@@ -1,4 +1,4 @@
-This project mostly follows <https://keepachangelog.com/en/1.0.0/>, and uses [semantic versioning](https://semver.org/). (All dates are dd.mm.yyyy. Developer details in comments in this file)
+This project mostly follows <https://keepachangelog.com/en/1.0.0/>. (All dates are dd.mm.yyyy. Developer details in comments in this file)
 
 <!--
 This file syntax bases itself on https://keepachangelog.com/en/1.0.0/
@@ -13,7 +13,31 @@ This file currently cannot be automated. See #12: https://github.com/LunarWatche
 Generation tools either rely on issues and PRs, which breaks with my format, or commit messages, which breaks because not all commits actually make a change worth recording. Ideas for better tools are welcome, but until then, this will be handled manually.
 -->
 
-# [Unreleased] (TBD)
+# [v0.2.0] (TBD)
+
+## Added
+* Pretty-print date fields
+* Add ICU for dates
+* Add AgeAttribute
+* Add InfoCommand for displaying all task metadata
+* Date filtering + tests
+* before and after aliases for &lt; and &gt; respectively
+* ModifyCommand
+
+## Changes
+* A Task is now represented by its own object rather than a `nlohmann::json` object
+* JSONDatabases now store whether the database entries contains IDs or not
+* Optimize and improve task filtering
+* Taskranger now uses conanfile.py instead of conanfile.txt
+* [Internal] Minor overhaul to the table printing system
+* [Internal] Moved to Travis and AppVeyor (because GH actions is a bit of a mess)
+* [Chore] Update Catch2 to 2.13.0
+* [Chore] Update Tabulate to whatever version of Tabulate is the latest xd - Note that tabulate is scheduled to be replaced with printable in a later version
+* [Build] Enable CompilationDatabase (SCons 4.0.0 released). Support for 3.1.2 not broken (theoretically:tm:)
+* [Build] Clean up the buildscripts (+ remove UNITTEST macro to save build time)
+
+## Fixes
+* Fix ID ordering from task filtering
 
 # [v0.1.0] (19.06.20)
 
@@ -88,6 +112,7 @@ Base release. Unknown release date, because the Git tag was lost to unexpected a
 
 <!-- Links -->
 [Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...HEAD
+[v0.2.0]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...v0.2.0
 [v0.1.0]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...v0.1.0
 [v0.0.3]: //github.com/LunarWatcher/Taskranger/compare/v0.0.2...v0.0.3
 [v0.0.2]: //github.com/LunarWatcher/Taskranger/releases/tag/v0.0.2

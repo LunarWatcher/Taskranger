@@ -1,13 +1,17 @@
 #include "Commands.hpp"
-#include "AddCommand.hpp"
-#include "DoneCommand.hpp"
-#include "NextCommand.hpp"
-#include "taskranger/commands/AllCommand.hpp"
-#include "taskranger/commands/HelpCommand.hpp"
-#include "taskranger/commands/VersionCommand.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include <iostream>
+
+// Command includes
+#include "AddCommand.hpp"
+#include "AllCommand.hpp"
+#include "DoneCommand.hpp"
+#include "HelpCommand.hpp"
+#include "InfoCommand.hpp"
+#include "ModifyCommand.hpp"
+#include "NextCommand.hpp"
+#include "VersionCommand.hpp"
 
 namespace taskranger {
 
@@ -20,9 +24,12 @@ Commands::Commands() {
     // Listing
     this->commands["next"] = std::make_shared<NextCommand>();
     this->commands["all"] = std::make_shared<AllCommand>();
+    this->commands["info"] = std::make_shared<InfoCommand>();
+
     // RW
     this->commands["add"] = std::make_shared<AddCommand>();
     this->commands["done"] = std::make_shared<DoneCommand>();
+    this->commands["modify"] = std::make_shared<ModifyCommand>();
 
     // Meta
     this->commands["version"] = std::make_shared<VersionCommand>();

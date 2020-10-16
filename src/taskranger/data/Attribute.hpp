@@ -1,5 +1,8 @@
 #pragma once
 
+#include "tabulate/table.hpp"
+#include "taskranger/data/Task.hpp"
+#include "taskranger/metadata/Types.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <any>
 #include <memory>
@@ -129,8 +132,14 @@ public:
      * attempted modification if we're not allowing modifications.
      * If there's an attempted modification on a non-modifiable field, the
      * method throws.
+     *
+     * @param task      The JSON object to modify
+     * @param key       The key used to access the given attribute.
+     *                  Some attributes may use this for extended syntax. This notably
+     *                  applies to dates.
+     * @param input     The raw user input for the command
      */
-    virtual void modify(nlohmann::json& task, const std::string& input) {
+    virtual void modify(nlohmann::json& task, const std::string& /* key */, const std::string& input) {
         if (!this->modifiable && task.find(this->name) != task.end()) {
             throw "The field " + this->name + " cannot be modified";
         }
@@ -140,6 +149,26 @@ public:
                 throw "The value " + input + " is not allowed for " + this->name;
             }
         }
+    }
+
+    /**
+     * Returns a minimal representation of the attribute. This is mainly used
+     * for commands like next and all.
+     */
+    virtual Types::TableRow getMinimalRepresentationForTable(const nlohmann::json& json) {
+
+        auto it = json.find(this->name);
+        if (it == json.end()) {
+            return " ";
+        }
+        return StrUtil::toString(*it, " ", "-");
+    }
+
+    /**
+     * Used for tasks like information, where we want to include as much metadata as possible
+     */
+    virtual Types::TableRow getMaxRepresentationForTable(const nlohmann::json& task) {
+        return getMinimalRepresentationForTable(task);
     }
 
     /**
@@ -157,6 +186,9 @@ public:
 
     const std::string& getName() {
         return name;
+    }
+    const std::string& getLabel() {
+        return label;
     }
 
     FieldType getType() {

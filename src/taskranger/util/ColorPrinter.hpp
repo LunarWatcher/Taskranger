@@ -28,12 +28,41 @@ enum class ANSIFeature {
 
 class ColorPrinter {
 private:
+    /**
+     * Cache for whether or not the provided output stream supports ansi.
+     * This variable is a reflection of TermUtils::supportsAnsi(stream),
+     * and is calculated in the constructor.
+     *
+     * Note that certain variable changes involving processing256 will
+     * still be computed in order to drop all ANSI-related input.
+     * In the event this variable is false, the processing256 variable
+     * is a sign to drop the next variable instead of using it for
+     * something useful.
+     */
+    bool supportsAnsi;
+
+    /**
+     * Internal variable; used to tell certain operator<<
+     * functions that they're about to get ANSI input or ANSI-related
+     * input that requires special processing.
+     *
+     * If supportsAnsi = false, this doubles down as a flag to discard
+     * certain parts of the input.
+     */
     bool processing256 = false;
     std::ostream& outputStream;
 
+    bool shouldReturnEarly() {
+        if (!supportsAnsi && processing256) {
+            processing256 = false;
+            return true;
+        }
+        return false;
+    }
+
 public:
-    ColorPrinter() : outputStream(std::cout) {}
-    ColorPrinter(std::ostream& outputStream) : outputStream(outputStream) {}
+    ColorPrinter(std::ostream& outputStream);
+    ColorPrinter() : ColorPrinter(std::cout) {}
 
     template <typename T>
     friend ColorPrinter& operator<<(ColorPrinter&, T);

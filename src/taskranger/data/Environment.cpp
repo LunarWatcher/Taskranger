@@ -25,7 +25,11 @@ std::shared_ptr<Commands> Environment::getCommands() {
     return commands;
 }
 
-std::shared_ptr<Attribute> Environment::getAttribute(const std::string& attribName) {
+std::shared_ptr<Attribute> Environment::getAttribute(const std::string& rawAttribName) {
+    std::string attribName = rawAttribName;
+    if (attribName.find(".") != std::string::npos) {
+        attribName = StrUtil::splitString(attribName, ".", 1).at(0);
+    }
     if (attributes.find(attribName) == attributes.end()) {
         auto tryGet = Attribute::createAttrib(attribName);
         if (!tryGet) {
@@ -37,18 +41,18 @@ std::shared_ptr<Attribute> Environment::getAttribute(const std::string& attribNa
     return attributes.at(attribName);
 }
 
-std::shared_ptr<Environment> Environment::getInstance() {
-    if (INSTANCE == nullptr) {
+std::shared_ptr<Environment> Environment::getInstance(bool force) {
+    if (INSTANCE == nullptr || force) {
         INSTANCE = std::make_shared<Environment>();
     }
     return INSTANCE;
 }
 
-std::shared_ptr<JSONDatabase> Environment::getDatabase(const std::string& dbName) {
+std::shared_ptr<JSONDatabase> Environment::getDatabase(const std::string& dbName, bool hasPublicIds) {
     auto it = this->databases.find(dbName);
     if (it == this->databases.end()) {
 
-        auto db = std::make_shared<JSONDatabase>(dbName);
+        auto db = std::make_shared<JSONDatabase>(dbName, hasPublicIds);
         this->databases[dbName] = db;
         return db;
     }

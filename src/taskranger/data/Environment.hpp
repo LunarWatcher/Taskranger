@@ -4,7 +4,6 @@
 #include "taskranger/config/ConfigHelper.hpp"
 #include "taskranger/data/Attribute.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
-#include "taskranger/data/TaskInfo.hpp"
 #include "taskranger/input/InputData.hpp"
 
 #include <memory>
@@ -45,24 +44,9 @@ public:
      * return nullptr.
      */
     std::shared_ptr<Attribute> getAttribute(const std::string& attribName);
-    std::shared_ptr<JSONDatabase> getDatabase(const std::string& dbName);
+    std::shared_ptr<JSONDatabase> getDatabase(const std::string& dbName, bool hasPublicIds);
 
-    static std::shared_ptr<Environment> getInstance();
-
-#ifdef UNITTEST
-    /**
-     * This is a special unit test function that resets the entire instance.
-     * This should NEVER be used outside the scope of unit testing.
-     * It has also been macro-protected to avoid incorrect use.
-     */
-#ifdef TASKRANGER_NON_UNIT_TEST
-#error "NO! Read the god damn comment block!"
-#endif
-    static std::shared_ptr<Environment> createInstance() {
-        INSTANCE = std::make_shared<Environment>();
-        return INSTANCE;
-    }
-#endif
+    static std::shared_ptr<Environment> getInstance(bool force = false);
 };
 
 } // namespace taskranger

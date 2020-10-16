@@ -9,7 +9,7 @@
 
 namespace taskranger {
 
-JSONDatabase::JSONDatabase(const std::string& databaseName) {
+JSONDatabase::JSONDatabase(const std::string& databaseName, bool hasPublicIds) : hasPublicIds(hasPublicIds) {
     auto config = Environment::getInstance()->getConfig();
     std::string databaseFolder = config->getString("dataDir");
 
@@ -42,17 +42,26 @@ JSONDatabase::JSONDatabase(const std::string& databaseName) {
         std::filesystem::create_directories(databaseFolder);
     }
 
-    this->database = ptr;
+    this->rawDatabase = ptr;
     this->dbName = databaseName;
     this->dbFolder = databaseFolder;
+    if (rawDatabase->size() == 0) {
+        // The rest of the constructor is for non-empty databases only
+        return;
+    }
+    if (!rawDatabase->is_array()) {
+        throw "JSON database manually modified; the root element MUST be an array.";
+    }
+    for (size_t i = 0; i < rawDatabase->size(); i++) {
+        this->database.push_back(std::make_shared<Task>(this, i));
+    }
 }
 
 void JSONDatabase::commit() {
-#ifdef UNITTEST
+    // This is used in unit tests to prevent writing
     if (demoMode) {
         return;
     }
-#endif
 
     if (!std::filesystem::exists(this->dbFolder))
         std::filesystem::create_directories(this->dbFolder);
@@ -64,7 +73,7 @@ void JSONDatabase::commit() {
                 << ANSIFeature::CLEAR << "\n";
         return;
     }
-    stream << *database;
+    stream << *rawDatabase;
 }
 
 } // namespace taskranger

@@ -10,12 +10,20 @@ auto InputParserOperators::determineOperator(const std::string& attribKey, std::
     auto split = StrUtil::reverseSplitString(attribKey, ".", 1);
     // To handle aliases, this needs to be the rawKey.
     // The rawKey can then be used to retrieve the actual key
-    std::string& rawKey = split.back();
+    // Bonus: has to be split to deal with date weirdness
+    std::string rawKey = StrUtil::splitString(split.back(), '.').front();
+
     attribPtr = Environment::getInstance()->getAttribute(rawKey);
     if (!attribPtr) {
         throw "Unknown attribute: " + rawKey + " (debug: .1)";
     }
-    const std::string& key = attribPtr->getName();
+    std::string key;
+    if (attribPtr->getType() != FieldType::DATE) {
+        key = attribPtr->getName();
+    } else {
+        // For dates, assume the key is the first part of the split.
+        key = split.back();
+    }
 
     // The operator
     std::string& op = split.front();
@@ -24,9 +32,9 @@ auto InputParserOperators::determineOperator(const std::string& attribKey, std::
         return {Operator::IS, key};
     } else if (op == "not") {
         return {Operator::NOT, key};
-    } else if (op == "greater") {
+    } else if (op == "greater" || op == "after") {
         return {Operator::GREATER_THAN, key};
-    } else if (op == "less") {
+    } else if (op == "less" || op == "before") {
         return {Operator::LESS_THAN, key};
     } else if (op == "contains") {
         return {Operator::CONTAINS, key};

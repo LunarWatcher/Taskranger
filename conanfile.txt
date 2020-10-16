@@ -1,6 +1,0 @@
-[requires]
-nlohmann_json/3.8.0
-
-[generators]
-ycm
-scons

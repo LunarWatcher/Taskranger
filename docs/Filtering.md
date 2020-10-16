@@ -36,7 +36,19 @@ will return 4 tasks with the IDs listed in the command. However:
 taskranger next ids:1,2,3,6 project:@MyProject
 ```
 
+
 will only return the tasks that have the ID 1, 2, 3, or 6, but also is assigned to the project `@MyProject`. It will not return 4 tasks along with any tasks that happen to use the @MyProject project, which would be an or operation instead of an and. <!-- unclear? -->
+
+#### Filtering dates
+
+Dates have an extension of the general date syntax to facilidate date formats. As mentioned in Dates.md and Config.md, date formats can be customed. For reasons primarily outlined in Dates.md, the general syntax for selecting a date format is `dateAttribute.dateFormat`. The filtering extension is similar:
+```
+taskranger next dateAttribute[.dateFormat][.operator]:"Date"
+```
+
+both `dateFormat` and `operator` are optional; if dateFormat isn't specified, it'll use the default format. Of operator isn't specified, it assumes `is`. At the time of writing, I haven't fully determined the function of `is` and `not`, because both of them assume the dates are an exact match.
+
+Additionally, there's some syntactical sugar for dates; `before` and `after` are equivalent to `<` and `>` respectively. See the list undewr [filtering operators](#filtering-operators). Finally, if you're feeling up for that, you can supply raw dates in the UNIX format by typing `RAW<UNIX time without brackets>`. This is probably not something you'll be using a lot.
 
 ### Filtering projects and tags
 
@@ -78,12 +90,12 @@ The name is what you'd type after the `.` to specify which operator you're using
 
 * `is` (==): number, ullong, string, strlist (note: acts as `contains` with strlist for technical reasons)
 * `not` (!=): number, ullong, string, strlist (note: acts as `not contains` with strlist for technical reasons)
-* `greater` (&gt;): number, ullong
+* `greater` (also `after`; addition for dates) (&gt;): number, ullong, date
 *   Less excludes the first item. `ids.greater:1` will include 2, 3, 4, and higher, but excludes 1. If you want to capture 1, use `greatereq`.
-* `less` (&lt;): number, ullong
+* `less` (also `before`; addition for dates) (&lt;): number, ullong, date
     Less excludes the first item. `ids.less:5` will include 1, 2, 3, and 4, but not 5. If you want to capture 5, use `lesseq`.
-* `greatereq` (&gt;=): number, ullong
-* `lesseq` (&lt;=): number, ullong
+* `greatereq` (&gt;=): number, ullong, date
+* `lesseq` (&lt;=): number, ullong, date
 * `contains`: string (note: case-insensitive)
     Looks for one or more provided substrings within the attribute
 
