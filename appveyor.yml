@@ -23,7 +23,7 @@ install:
   - "SET PATH=%M_PYTHON%;%M_PYTHON%\\Scripts;%PATH%"
   - python -m pip install setuptools
   - python -m pip install scons conan
-  - conan profile create --detect default
+  - conan profile new --detect default
   - conan profile update settings.compiler.runtime=MT default
   - scons -j 2
   - scons -j 2 test
