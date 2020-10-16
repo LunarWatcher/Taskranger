@@ -25,5 +25,5 @@ install:
   - python -m pip install scons conan
   - conan profile new --detect default
   - conan profile update settings.compiler.runtime=MT default
-  - scons -j 2
-  - scons -j 2 test
+  - scons debug=False -j 2
+  - scons debug=False -j 2 test
