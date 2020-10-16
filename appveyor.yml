@@ -19,6 +19,8 @@ skip_commits:
 image: Visual Studio 2019
 
 install:
+  - ps: if (-not(Test-Path($env:PYTHON))) { & appveyor\install.ps1 }
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - python -m pip install setuptools
   - python -m pip install scons conan
   - scons -j 2
