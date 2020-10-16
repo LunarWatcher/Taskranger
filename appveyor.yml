@@ -8,8 +8,9 @@ environment:
 branches:
   only:
     - master
-    - develop
-
+    - develo
+    
+skip_branch_with_pr: true
 skip_tags: true
 build: script
 skip_commits:
