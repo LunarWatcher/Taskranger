@@ -5,7 +5,7 @@ branches:
     - master
     - develop
 
-skkip_tags: true
+skip_tags: true
 
 skip_commits:
   message: /.*\[skip-ci\].*/
