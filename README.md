@@ -1,6 +1,6 @@
 # Taskranger
 
-![CI](https://github.com/LunarWatcher/Taskranger/workflows/CI/badge.svg)
+[![Build Status (Travis)](https://travis-ci.org/LunarWatcher/Taskranger.svg?branch=master)](https://travis-ci.org/LunarWatcher/Taskranger) [![Build status (Appveyor)](https://ci.appveyor.com/api/projects/status/8e8c0tqi4fp85e15?svg=true)](https://ci.appveyor.com/project/LunarWatcher/taskranger)
 
 Taskranger is yet another CLI-based task manager.
 

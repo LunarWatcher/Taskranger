@@ -1,21 +1,31 @@
 version: Build {build} @ {branch}
 
+environment:
+  matrix:
+    - M_PYTHON: "C:\\Python38-x64"
+
+  
 branches:
   only:
     - master
     - develop
-
-skkip_tags: true
-
+    
+skip_branch_with_pr: true
+skip_tags: true
+build: script
 skip_commits:
   message: /.*\[skip-ci\].*/
 
 image: Visual Studio 2019
 
-services:
-  - python3
 install:
-  - python3 -m pip install setuptools
-  - python3 -m pip install scons conan
-  - scons -j 2
-  - scons -j 2 test
+  - git submodule update --init --recursive
+  - ps: if (-not(Test-Path($env:M_PYTHON))) { & appveyor\install.ps1 }
+  - "SET PATH=%M_PYTHON%;%M_PYTHON%\\Scripts;%PATH%"
+  - python -m pip install setuptools
+  - python -m pip install scons conan
+  - conan profile new --detect default
+  - conan profile update settings.compiler.runtime=MT default
+build_script:
+  - scons debug=False -j 2
+  - scons debug=False -j 2 test
