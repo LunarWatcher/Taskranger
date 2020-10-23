@@ -5,7 +5,7 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 // Used for the environment variable function
-#include "printable/utils/EnvVariableHelper.hpp"
+#include "taskranger/util/EnvVariableHelper.hpp"
 #endif
 
 namespace taskranger {
@@ -63,14 +63,14 @@ std::string FilesystemUtil::expandUserPath(const std::string& inputPath) {
 #if defined(_WIN32) || defined(_WIN64)
 
     if (!username.has_value()) {
-        auto userProfile = printable::EnvVariable::getEnv("USERPROFILE");
+        auto userProfile = EnvVariable::getEnv("USERPROFILE");
 
         if (userProfile == "") {
-            auto homeDrive = printable::EnvVariable::getEnv("HOMEDRIVE");
+            auto homeDrive = EnvVariable::getEnv("HOMEDRIVE");
             if (homeDrive == "")
                 homeDrive = "";
 
-            auto envHomePath = printable::EnvVariable::getEnv("HOMEPATH");
+            auto envHomePath = EnvVariable::getEnv("HOMEPATH");
 
             if (envHomePath == "") {
                 ColorPrinter printer;

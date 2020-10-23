@@ -2,6 +2,7 @@
 #include "tabulate/color.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/util/StrUtil.hpp"
+#include "taskranger/util/TermUtils.hpp"
 #include <algorithm>
 #include <iostream>
 
@@ -64,6 +65,7 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
     tabulate::Table table;
     // clang-format off
     table.format()
+        .width(TermUtils::getWidth())
         .border_top("")
         .border_bottom("")
         .border_left(" ")
@@ -137,7 +139,6 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
                     taskTable.add_row({key, attribute->getMaxRepresentationForTable(json)});
                 } catch (std::string&) { taskTable.add_row({k, StrUtil::toString(v)}); }
             }
-
             this->fixBackground(taskTable);
 
             std::cout << taskTable << "\n\n";

@@ -1,6 +1,6 @@
 #include "ConfigHelper.hpp"
-#include "printable/utils/EnvVariableHelper.hpp"
 #include "taskranger/data/Environment.hpp"
+#include "taskranger/util/EnvVariableHelper.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <fstream>
@@ -41,7 +41,7 @@ void Config::ensureLoaded() {
     }
     std::string configBasePath = "~/.trconf";
 
-    auto reassigned = printable::EnvVariable::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
+    auto reassigned = EnvVariable::getEnv("TASKRANGER_CONFIG_LOCATION", configBasePath);
     if (reassigned != configBasePath && reassigned != "") {
         // Make it possible to assign custom files, as long it contains trconf
         if (StrUtil::reverseSplitString(reassigned, ".", 1).front() != "trconf") {
