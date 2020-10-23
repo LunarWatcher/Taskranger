@@ -49,6 +49,7 @@ ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 
 # [p-ranav/tabulate](https://github.com/p-ranav/tabulate/blob/master/LICENSE)
+(Used with minor modifications; https://github.com/LunarWatcher/tabulate)
 
 MIT License
 
