@@ -1,6 +1,7 @@
 #include <filesystem>
 #define CATCH_CONFIG_RUNNER
-#include "catch2/catch.hpp"
+#include "catch2/catch_session.hpp"
+
 #include <iostream>
 
 // This is the primary testing file. Specifically, this defines the entry point.

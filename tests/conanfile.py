@@ -7,4 +7,4 @@ class Taskranger_Test(ConanFile):
     generators = "scons"
 
     def requirements(self):
-        self.requires("catch2/2.13.2")
+        # self.requires("catch2/2.13.2")

@@ -1,5 +1,4 @@
 #include "SetEnv.hpp"
-#include "catch2/catch.hpp"
 
 #include "taskranger/data/Environment.hpp"
 

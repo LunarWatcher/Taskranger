@@ -1,15 +1,35 @@
 import os
-
+import pathlib
 Import("env")
 Import("lpath")
 Import("database")
 
+# TODO: remove and replace with Conan
+# Temporary and ugly hack until Conan is updated. We're still running a preview version,
+# so that's fun :')
+# Bonus: this doesn't handle cases where rebuilding is necessary. Let's hope it never is.
+# :blobsweat:
+def fuglyBuildCatch2v3():
+
+    rootDir = Dir("#").abspath
+    if os.path.exists(os.path.join(rootDir, "catch2/Build/")):
+        print("Catch2 already built. Remove the build directory manually for a rebuild.")
+        return
+    baseCommand = os.path.join(rootDir, "catch2")
+    # Build has to be upper-case because of the gitignore :rolling_eyes:
+    os.system("cmake " + baseCommand + f" -B {os.path.join(baseCommand, 'Build')} ")
+    os.system(f"cmake --build {os.path.join(baseCommand, 'Build')}")
 
 env.withLibraries("taskrangersources", append = False)
 env.appendLibPath("#" + lpath)
 # env.withConan(conanfile = os.path.join(Dir("#").abspath, "tests/conanfile.py"))
 
-env.appendSourcePath("#catch2/single_include")
+fuglyBuildCatch2v3()
+
+env.appendLibPath("#catch2/Build/src/")
+env.withLibraries(["Catch2"])
+
+env.appendSourcePath("#catch2/src")
 env.appendSourcePath("#tests/testSources")
 
 tests = env.Program("tests", env.Glob("testSources/*.cpp"))

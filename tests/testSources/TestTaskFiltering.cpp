@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include "catch2/catch_test_macros.hpp"
 
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/Task.hpp"
