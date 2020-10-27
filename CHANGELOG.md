@@ -13,7 +13,12 @@ This file currently cannot be automated. See #12: https://github.com/LunarWatche
 Generation tools either rely on issues and PRs, which breaks with my format, or commit messages, which breaks because not all commits actually make a change worth recording. Ideas for better tools are welcome, but until then, this will be handled manually.
 -->
 
-# [v0.2.0] (TBD)
+# [Unreleased] (TBD)
+
+## Fixes
+* Make table width max out in supported tables
+
+# [v0.2.0] (16.10.20)
 
 ## Added
 * Pretty-print date fields
@@ -111,7 +116,7 @@ Base release. Unknown release date, because the Git tag was lost to unexpected a
 
 
 <!-- Links -->
-[Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...HEAD
+[Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.2.0...HEAD
 [v0.2.0]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...v0.2.0
 [v0.1.0]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...v0.1.0
 [v0.0.3]: //github.com/LunarWatcher/Taskranger/compare/v0.0.2...v0.0.3

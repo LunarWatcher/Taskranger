@@ -1,11 +1,15 @@
+import os
+
 Import("env")
 Import("lpath")
 Import("database")
 
+
 env.withLibraries("taskrangersources", append = False)
 env.appendLibPath("#" + lpath)
+# env.withConan(conanfile = os.path.join(Dir("#").abspath, "tests/conanfile.py"))
 
-env.appendSourcePath("#Catch2/single_include")
+env.appendSourcePath("#catch2/single_include")
 env.appendSourcePath("#tests/testSources")
 
 tests = env.Program("tests", env.Glob("testSources/*.cpp"))

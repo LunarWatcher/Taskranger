@@ -1,9 +1,9 @@
 [submodule "SConsStandard"]
 	path = SConsStandard
 	url = https://github.com/lunarwatcher/sconsstandard.git
-[submodule "Catch2"]
-	path = Catch2
-	url = https://github.com/catchorg/Catch2.git
 [submodule "tabulate"]
 	path = tabulate
 	url = https://github.com/lunarwatcher/tabulate
+[submodule "catch2"]
+	path = catch2
+	url = https://github.com/catchorg/catch2
