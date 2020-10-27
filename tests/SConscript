@@ -15,9 +15,11 @@ def fuglyBuildCatch2v3():
     if os.path.exists(os.path.join(rootDir, "catch2/Build/")):
         print("Catch2 already built. Remove the build directory manually for a rebuild.")
         return
+    os.mkdir(os.path.join(rootDir, "catch2/build"))
     baseCommand = os.path.join(rootDir, "catch2")
     # Build has to be upper-case because of the gitignore :rolling_eyes:
-    os.system("cmake -DCMAKE_BUILD_TYPE=Release " + baseCommand + f" -B {os.path.join(baseCommand, 'Build')} ")
+    fixBullshit = 'Release' if env.debug == False else 'Debug'
+    os.system("cmake -DCMAKE_BUILD_TYPE={fixBullshit} " + baseCommand + f" -B {os.path.join(baseCommand, 'Build')} ")
     os.system(f"cmake --build {os.path.join(baseCommand, 'Build')}")
 
 env.withLibraries("taskrangersources", append = False)
