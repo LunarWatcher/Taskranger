@@ -6,19 +6,11 @@
 
 **ETA**: None
 
-## The table looks weird if the terminal isn't wide enough
-
-This happens because no checks are done to make sure the table is narrow enough to fit inside the terminal.
-
-This is tracked, and a fix will be implemented whenever I figure out some issues related to column size.
-
-**ETA**: Soon
-
 ## The table overflows if there's too much content
 
 Happens because tabulate has no built-in size checks.
 
-**ETA**: Before v1.0.0
+**Patched:** v0.3.0
 
 ## The program will break on devices where time_t is 32 bit in 2038
 If you're still running 32 bit when the 2038 problem starts getting even closer, you should really update your hardware -- Taskranger breaking will be the tiniest problem
@@ -39,3 +31,12 @@ Note that you don't have to have MSYS2 installed; if you don't, there's a Conan 
 
 **Status**: wontfix
 **Workaround**: remove Git Bash from the `PATH` environment variable
+
+## Windows: linking issues related to MSVC frameworks
+
+Scons has been configured to use MTd and MT as MSVC frameworks. This presents a few interesting issues with Conan, since any given profile is either locked into release or debug.
+
+This limitation means Windows users need two profiles; one for release, and one for debug, and properly assign them. If you're only building one of the variants, you can update your conan profile to use the right framework.
+
+**Status**: wontfix (intended MSVC behavior)
+**Workaround**: Fix your conan profiles to build with the correct framework
