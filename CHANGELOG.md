@@ -18,6 +18,9 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 ## Fixes
 * Make table width max out in supported tables
 
+## Meta
+* Bump Catch2 to v3.0.0-preview3
+
 # [v0.2.0] (16.10.20)
 
 ## Added

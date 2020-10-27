@@ -26,7 +26,17 @@ env.appendLibPath("#" + lpath)
 
 fuglyBuildCatch2v3()
 
-env.appendLibPath("#catch2/Build/src/")
+from sys import platform
+if "win" in platform:
+    # Fuck Windows, fuck MSVC, and fuck both for deciding to put
+    # a binary in a non-standard place
+    env.appendLibPath([
+        "#catch2/Build/src",
+        "#catch2/Build/src/Debug",
+        "#catch2/Build/src/Release"
+        ])
+else:
+    env.appendLibPath("#catch2/Build/src/")
 env.withLibraries(["Catch2"])
 
 env.appendSourcePath("#catch2/src")
