@@ -23,7 +23,7 @@ def fuglyBuildCatch2v3():
     print(baseCommand, os.path.join(baseCommand, 'Build'))
     flags = ""
 
-    if "win" in platform:
+    if "win32" in platform:
         fCache = env.environment["CXXFLAGS"]
         flags += "-DMSVC_RUNTIME_LIBRARY="
         if "/MT" in fCache:
@@ -42,7 +42,7 @@ env.appendLibPath("#" + lpath)
 
 fuglyBuildCatch2v3()
 
-if "win" in platform:
+if "win32" in platform:
     # Fuck Windows, fuck MSVC, and fuck both for deciding to put
     # a binary in a non-standard place
     env.appendLibPath("#catch2/Build/src")
