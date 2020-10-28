@@ -1,3 +1,11 @@
+if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+  CMAKE_URL="https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4.tar.gz"
+  mkdir cmake && travis_retry wget --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+  export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+else
+  brew install cmake
+fi
+
 . ./init.sh
 conan profile new --detect default
 scons -j 2 debug=False
