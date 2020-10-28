@@ -19,6 +19,7 @@ def fuglyBuildCatch2v3():
     baseCommand = os.path.join(rootDir, "catch2")
     # Build has to be upper-case because of the gitignore :rolling_eyes:
     fixBullshit = 'Release' if env.debug == False else 'Debug'
+    print(baseCommand, os.path.join(baseCommand, 'Build'))
     os.system(f"cmake -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
     os.system(f"cmake --build {os.path.join(baseCommand, 'Build')}")
 
