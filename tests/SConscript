@@ -25,14 +25,15 @@ def fuglyBuildCatch2v3():
 
     if "win" in platform:
         fCache = env.environment["CXXFLAGS"]
+        flags += "-DMSVC_RUNTIME_LIBRARY="
         if "/MT" in fCache:
-            flags += "/MT"
+            flags += "MultiThreaded"
         elif "/MTd" in fCache:
-            flags += "/MTd"
+            flags += "MultiThreadedDebug"
         else:
-            flags += "/MT"
+            flags += "MultiThreaded"
 
-    os.system(f"cmake -DCMAKE_CXX_FLAGS='{flags}' -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
+    os.system(f"cmake {flags} -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
     os.system(f"cmake --build {os.path.join(baseCommand, 'Build')}")
 
 env.withLibraries("taskrangersources", append = False)
