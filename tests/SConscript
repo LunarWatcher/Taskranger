@@ -1,5 +1,6 @@
 import os
 import pathlib
+from sys import platform
 Import("env")
 Import("lpath")
 Import("database")
@@ -20,7 +21,18 @@ def fuglyBuildCatch2v3():
     # Build has to be upper-case because of the gitignore :rolling_eyes:
     fixBullshit = 'Release' if env.debug == False else 'Debug'
     print(baseCommand, os.path.join(baseCommand, 'Build'))
-    os.system(f"cmake -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
+    flags = ""
+
+    if "win" in platform:
+        fCache = env.environment["CXXFLAGS"]
+        if "/MT" in fCache:
+            flags += "/MT"
+        elif "/MTd" in fCache:
+            flags += "/MTd"
+        else:
+            flags += "/MT"
+
+    os.system(f"cmake -DCMAKE_CXX_FLAGS='{flags}' -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
     os.system(f"cmake --build {os.path.join(baseCommand, 'Build')}")
 
 env.withLibraries("taskrangersources", append = False)
@@ -29,7 +41,6 @@ env.appendLibPath("#" + lpath)
 
 fuglyBuildCatch2v3()
 
-from sys import platform
 if "win" in platform:
     # Fuck Windows, fuck MSVC, and fuck both for deciding to put
     # a binary in a non-standard place
