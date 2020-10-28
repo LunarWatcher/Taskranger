@@ -15,7 +15,7 @@ def fuglyBuildCatch2v3():
     if os.path.exists(os.path.join(rootDir, "catch2/Build/")):
         print("Catch2 already built. Remove the build directory manually for a rebuild.")
         return
-    os.mkdir(os.path.join(rootDir, "catch2/build"))
+    os.mkdir(os.path.join(rootDir, "catch2/Build"))
     baseCommand = os.path.join(rootDir, "catch2")
     # Build has to be upper-case because of the gitignore :rolling_eyes:
     fixBullshit = 'Release' if env.debug == False else 'Debug'
