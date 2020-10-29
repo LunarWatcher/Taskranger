@@ -32,7 +32,7 @@ def fuglyBuildCatch2v3():
             flags += "MultiThreadedDebug"
         else:
             flags += "MultiThreaded"
-
+    print(flags)
     os.system(f"cmake {flags} -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
     os.system(f"cmake --build {os.path.join(baseCommand, 'Build')}")
 
