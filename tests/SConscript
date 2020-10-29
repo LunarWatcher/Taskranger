@@ -21,11 +21,11 @@ def fuglyBuildCatch2v3():
     # Build has to be upper-case because of the gitignore :rolling_eyes:
     fixBullshit = 'Release' if env.debug == False else 'Debug'
     print(baseCommand, os.path.join(baseCommand, 'Build'))
-    flags = ""
+    flags = "-DCMAKE_BUILD_TYPE=" + fixBullshit + " "
 
     if "win32" in platform:
         fCache = env.environment["CXXFLAGS"]
-        flags += "-DMSVC_RUNTIME_LIBRARY="
+        flags += "-DCMAKE_MSVC_RUNTIME_LIBRARY="
         if "/MT" in fCache:
             flags += "MultiThreaded"
         elif "/MTd" in fCache:
