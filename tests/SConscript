@@ -30,7 +30,7 @@ def fuglyBuildCatch2v3():
         if "/MTd" in fCache:
             flags += "Debug"
 
-        buildFlags += "--config Release"
+        buildFlags += "--config " + fixBullshit
     print(flags)
     os.system(f"cmake {flags} -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
     os.system(f"cmake --build {os.path.join(baseCommand, 'Build')} {buildFlags}")
