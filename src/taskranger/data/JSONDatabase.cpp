@@ -4,7 +4,7 @@
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
-#include <filesystem>
+
 #include <fstream>
 
 namespace taskranger {
@@ -23,7 +23,7 @@ JSONDatabase::JSONDatabase(const std::string& databaseName, bool hasPublicIds) :
     std::shared_ptr<nlohmann::json> ptr = std::make_shared<nlohmann::json>();
     std::string path = databaseFolder + databaseName;
 
-    if (std::filesystem::exists(path)) {
+    if (fs::exists(path)) {
         std::ifstream stream(path);
         if (!stream) {
             ColorPrinter printer;
@@ -38,8 +38,8 @@ JSONDatabase::JSONDatabase(const std::string& databaseName, bool hasPublicIds) :
             throw "Failed to load database " + databaseName +
                     " - be careful when modifying it manually. If you didn't, open an issue on GitHub";
         }
-    } else if (!std::filesystem::exists(databaseFolder)) {
-        std::filesystem::create_directories(databaseFolder);
+    } else if (!fs::exists(databaseFolder)) {
+        fs::create_directories(databaseFolder);
     }
 
     this->rawDatabase = ptr;
@@ -63,8 +63,8 @@ void JSONDatabase::commit() {
         return;
     }
 
-    if (!std::filesystem::exists(this->dbFolder))
-        std::filesystem::create_directories(this->dbFolder);
+    if (!fs::exists(this->dbFolder))
+        fs::create_directories(this->dbFolder);
     std::ofstream stream(this->dbFolder + this->dbName);
 
     if (!stream) {

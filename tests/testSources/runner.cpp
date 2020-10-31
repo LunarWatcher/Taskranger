@@ -1,4 +1,4 @@
-#include <filesystem>
+#include "taskranger/util/FilesystemUtil.hpp"
 #define CATCH_CONFIG_RUNNER
 #include "catch2/catch_session.hpp"
 
@@ -13,9 +13,9 @@ int main(int argc, const char* argv[]) {
     const static auto directory = "./tests/raw/data";
 
     // Start test; make sure the data directory isn't polluted
-    if (std::filesystem::exists(directory)) {
+    if (fs::exists(directory)) {
         std::cout << "Data directory dirty; removing previously produced data..." << std::endl;
-        if (!std::filesystem::remove_all(directory)) {
+        if (!fs::remove_all(directory)) {
             throw "ABORT! cannot delete ./tests/raw/data";
         }
     }

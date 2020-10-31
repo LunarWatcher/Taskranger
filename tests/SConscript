@@ -5,10 +5,52 @@ Import("env")
 Import("lpath")
 Import("database")
 
+# TODO: remove and replace with Conan
+# Temporary and ugly hack until Conan is updated. We're still running a preview version,
+# so that's fun :')
+# Bonus: this doesn't handle cases where rebuilding is necessary. Let's hope it never is.
+# :blobsweat:
+def fuglyBuildCatch2v3():
+
+    rootDir = Dir("#").abspath
+    if os.path.exists(os.path.join(rootDir, "catch2/Build/")):
+        print("Catch2 already built. Remove the build directory manually for a rebuild.")
+        return
+
+    baseCommand = os.path.join(rootDir, "catch2")
+    # Build has to be upper-case because of the gitignore :rolling_eyes:
+    fixBullshit = 'Release' if env.debug == False else 'Debug'
+    print(baseCommand, os.path.join(baseCommand, 'Build'))
+    flags = "-DCMAKE_BUILD_TYPE=" + fixBullshit + " "
+    buildFlags = ""
+
+    if "win32" in platform:
+        fCache = env.environment["CXXFLAGS"]
+        flags += "-DCMAKE_CXX_FLAGS_RELEASE=/MT -DCMAKE_CXX_FLAGS_DEBUG=/MTd"
+        buildFlags += "--config " + fixBullshit
+    print(flags)
+    os.system(f"cmake {flags} -B{os.path.join(baseCommand, 'Build')} -S {baseCommand}")
+    os.system(f"cmake --build {os.path.join(baseCommand, 'Build')} {buildFlags}")
+
 env.withLibraries("taskrangersources", append = False)
 env.appendLibPath("#" + lpath)
-env.withConan(conanfile = os.path.join(Dir("#").abspath, "tests/conanfile.py"), remotes = [{"remote_name": "catch2", "url": "https://api.bintray.com/conan/catchorg/Catch2"}])
 
+# env.withConan(conanfile = os.path.join(Dir("#").abspath, "tests/conanfile.py"), remotes = [{"remote_name": "catch2", "url": "https://api.bintray.com/conan/catchorg/Catch2"}])
+
+fuglyBuildCatch2v3()
+
+if "win32" in platform:
+    # Fuck Windows, fuck MSVC, and fuck both for deciding to put
+    # a binary in a non-standard place
+    env.appendLibPath("#catch2/Build/src")
+    env.appendLibPath("#catch2/Build/src/Debug")
+    env.appendLibPath("#catch2/Build/src/Release")
+
+else:
+    env.appendLibPath("#catch2/Build/src/")
+env.withLibraries(["Catch2"])
+
+env.appendSourcePath("#catch2/src")
 env.appendSourcePath("#tests/testSources")
 
 tests = env.Program("tests", env.Glob("testSources/*.cpp"))

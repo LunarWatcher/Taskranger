@@ -4,3 +4,6 @@
 [submodule "tabulate"]
 	path = tabulate
 	url = https://github.com/lunarwatcher/tabulate
+[submodule "catch2"]
+	path = catch2
+	url = https://github.com/catchorg/catch2

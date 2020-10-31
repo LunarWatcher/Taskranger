@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include "FilesystemUtil.hpp"
 #include <iostream>
 #include <ostream>
 
@@ -58,8 +58,8 @@ public:
     static std::shared_ptr<TermData> getInstance() {
         if (INSTANCE == nullptr) {
             INSTANCE = std::make_shared<TermData>();
-            std::filesystem::path devnull("/dev/null");
-            if (std::filesystem::exists(devnull)) {
+            fs::path devnull("/dev/null");
+            if (fs::exists(devnull)) {
                 INSTANCE->hasDevNull = true;
             }
 #ifdef WINDOZE
