@@ -39,7 +39,8 @@ int main(int argc, const char* argv[]) {
         std::cerr << "Critical error: permission error:\n"
                   << permErr.what() << "\n"
                   << "This should never happen. Please make sure you have the proper file permissions, "
-                  << "and open an issue on GitHub if this goes further than permissions." << std::endl;
+                  << "and open an issue on GitHub if this goes further than permissions."
+                  << "(Tip: check that the taskranger folder is readable and writable." << std::endl;
         throw;
     }
 

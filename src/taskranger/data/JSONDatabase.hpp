@@ -37,6 +37,8 @@ public:
     size_t size() {
         return rawDatabase->size();
     }
+
+    void purge();
 };
 
 } // namespace taskranger

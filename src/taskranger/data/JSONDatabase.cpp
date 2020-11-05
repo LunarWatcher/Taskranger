@@ -5,6 +5,7 @@
 #include "taskranger/util/FilesystemUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 
+#include <filesystem>
 #include <fstream>
 
 namespace taskranger {
@@ -74,6 +75,14 @@ void JSONDatabase::commit() {
         return;
     }
     stream << *rawDatabase;
+}
+
+void JSONDatabase::purge() {
+    if (!fs::exists(this->dbFolder)) {
+        return;
+    }
+
+    fs::remove(this->dbFolder + this->dbName);
 }
 
 } // namespace taskranger

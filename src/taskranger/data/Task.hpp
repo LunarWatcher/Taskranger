@@ -33,6 +33,8 @@ private:
 
     bool includeInFilter{true};
 
+    std::vector<std::shared_ptr<std::string>> dependsOn;
+
 public:
     Task(JSONDatabase* taskList, unsigned long long idx);
 
