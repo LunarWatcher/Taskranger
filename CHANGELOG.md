@@ -15,6 +15,9 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 # [Unreleased] (TBD)
 
+## Added
+* Task dependency
+
 ## Fixes
 * Make table width max out in supported tables
 

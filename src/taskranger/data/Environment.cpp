@@ -30,9 +30,13 @@ std::shared_ptr<Attribute> Environment::getAttribute(const std::string& rawAttri
     if (attribName.find(".") != std::string::npos) {
         attribName = StrUtil::splitString(attribName, ".", 1).at(0);
     }
+    if (attribName == "ids") {
+        attribName = "id";
+    }
     if (attributes.find(attribName) == attributes.end()) {
         auto tryGet = Attribute::createAttrib(attribName);
         if (!tryGet) {
+            std::cout << "null" << std::endl;
             return nullptr;
         }
         attributes[attribName] = tryGet;
@@ -54,6 +58,7 @@ std::shared_ptr<JSONDatabase> Environment::getDatabase(const std::string& dbName
 
         auto db = std::make_shared<JSONDatabase>(dbName, hasPublicIds);
         this->databases[dbName] = db;
+        db->initVTags();
         return db;
     }
     return it->second;

@@ -130,6 +130,34 @@ std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::sh
     return output;
 }
 
+Filter& Filter::disableConditionally(const std::string& key, const std::string& value) {
+    for (auto& fa : this->filters) {
+        if (fa->fieldName == key) {
+            for (auto& item : fa->inputs) {
+                // Op-independent: item overridden
+                if (std::any_cast<std::string>(item) == value) {
+                    return *this;
+                }
+            }
+            // op-specific: add
+            if (fa->op == InputParserOperators::Operator::NOT) {
+                fa->inputs.push_back(value);
+                return *this;
+            }
+        }
+    }
+
+    // No neg op: add
+    auto filter = std::make_shared<FilterInfo>();
+    filter->op = InputParserOperators::Operator::NOT;
+    filter->fieldType = FieldType::STRLIST;
+    filter->inputs = {value};
+    filter->fieldName = key;
+    filters.push_back(filter);
+
+    return *this;
+}
+
 Filter Filter::createFilter(std::shared_ptr<InputData> input) {
     using namespace std::literals;
 

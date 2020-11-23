@@ -82,7 +82,9 @@ void ConfirmationHelper::dumpChanges() {
                       << std::endl;
         } else {
             auto attrib = this->environment->getAttribute(k);
+
             table.add_row({attrib->getLabel(), attrib->getMaxRepresentationForTable(computedChanges)});
+
             if (i % 2 == 0) {
                 table[i].format().background_color(tabulate::Color::white).font_color(tabulate::Color::grey);
             }
@@ -102,6 +104,8 @@ void ConfirmationHelper::dumpChanges() {
 }
 
 void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
+    // We _could_ use the local JSON, but due to runtime changes (like adding an ID where applicable), this isn't really
+    // a good idea
     auto& json = task->getDatabase()->getRawDatabase()->at(task->getIdx());
 
     for (auto& [k, v] : computedChanges.items()) {

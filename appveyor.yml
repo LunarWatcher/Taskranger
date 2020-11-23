@@ -4,12 +4,12 @@ environment:
   matrix:
     - M_PYTHON: "C:\\Python38-x64"
 
-  
+
 branches:
   only:
     - master
     - develop
-    
+
 skip_branch_with_pr: true
 skip_tags: true
 build: script

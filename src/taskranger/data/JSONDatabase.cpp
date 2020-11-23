@@ -1,4 +1,5 @@
 #include "JSONDatabase.hpp"
+#include "nlohmann/json.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
@@ -83,6 +84,27 @@ void JSONDatabase::purge() {
     }
 
     fs::remove(this->dbFolder + this->dbName);
+}
+
+std::shared_ptr<Task> JSONDatabase::contains(const std::string& fieldName, const std::string& value) {
+    for (auto& taskObj : this->database) {
+        auto& task = taskObj->getTaskJson();
+        if (task.find(fieldName) != task.end() && task.at(fieldName) == value) {
+            return taskObj;
+        }
+    }
+    return nullptr;
+}
+
+bool JSONDatabase::containsAny(const std::string& fieldName, const std::vector<std::string>& allowedValues) {
+    for (auto& task : *this->rawDatabase) {
+        if (task.find(fieldName) != task.end() &&
+                std::find(allowedValues.begin(), allowedValues.end(), task.at(fieldName).get<std::string>()) !=
+                        allowedValues.end()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace taskranger

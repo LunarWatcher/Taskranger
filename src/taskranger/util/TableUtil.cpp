@@ -41,6 +41,7 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
                 if (!attribPtr) {
                     columns[key].push_back(StrUtil::toString(*itr, " ", ""));
                 } else {
+
                     columns[key].push_back(attribPtr->getMinimalRepresentationForTable(json));
                 }
                 // This system is used to make sure only keys with at least one value are printed.
@@ -112,16 +113,8 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
             table.add_row(row);
         }
         this->fixBackground(table);
-
-        // Limit the description size (temporary)
-        // TODO: fix table sizing
-        // for (auto& cell : table.row(0)) {
-        // if (cell.get_text() == "Description") {
-        // cell.format().width(60);
-        // break;
-        //}
-        //}
         this->fixWidth(table);
+
         std::cout << table << std::endl;
     } else {
         for (auto task : tasks) {
@@ -137,11 +130,13 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
                 try {
                     auto attribute = env.getAttribute(k);
                     auto key = attribute->getLabel();
+
                     taskTable.add_row({key, attribute->getMaxRepresentationForTable(json)});
                 } catch (std::string&) { taskTable.add_row({k, StrUtil::toString(v)}); }
             }
             this->fixBackground(taskTable);
             this->fixWidth(taskTable);
+
             std::cout << taskTable << "\n\n";
         }
     }

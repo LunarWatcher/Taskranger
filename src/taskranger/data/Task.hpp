@@ -25,6 +25,8 @@ private:
      * minor amount of clutter in the code
      */
     JSONDatabase* database;
+    nlohmann::json taskJson;
+
     // fields computed internally that aren't written to disk
     // Keep in mind that some fields are computed on-demand to
     // to prevent wasting cycles, and therefore have a getter
@@ -44,7 +46,7 @@ public:
     unsigned long long getId();
     unsigned long long getId() const;
 
-    const nlohmann::json getTaskJson() const;
+    const nlohmann::json& getTaskJson() const;
     bool hasPublicIds();
     std::string getUUID();
     template <typename T>
@@ -72,6 +74,8 @@ public:
     bool isIncludedInFilter() {
         return includeInFilter;
     }
+
+    void initVTags();
 
     void noMatch() {
         this->includeInFilter = false;

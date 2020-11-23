@@ -8,6 +8,7 @@
 // it just looks a lot ugler than subclassing
 #include "taskranger/data/attributes/AgeAttribute.hpp"
 #include "taskranger/data/attributes/AttribTypes.hpp"
+#include "taskranger/data/attributes/DependencyAttribute.hpp"
 #include "taskranger/data/attributes/DescriptionAttribute.hpp"
 #include "taskranger/data/attributes/DueAttribute.hpp"
 #include "taskranger/data/attributes/ProjectAttribute.hpp"
@@ -46,20 +47,8 @@ void Attribute::checkField(nlohmann::json& attributeValue) {
 std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName) {
     using namespace std::literals;
 
-    if (fieldName == "id" || fieldName == "ids") {
-        return std::make_shared<IDAttribute>();
-    } else if (fieldName == "description") {
-        return std::make_shared<DescriptionAttribute>();
-    } else if (fieldName == "tags") {
-        return std::make_shared<TagsAttribute>();
-    } else if (fieldName == "project") {
-        return std::make_shared<ProjectAttribute>();
-    } else if (fieldName == "uuid") {
-        return std::make_shared<UUIDAttribute>();
-    } else if (fieldName == "due") {
-        return std::make_shared<DueAttribute>();
-    } else if (fieldName == "age" || fieldName == "created") {
-        return std::make_shared<AgeAttribute>();
+    if (auto ptr = Attribute::initMap.find(fieldName); ptr != Attribute::initMap.end()) {
+        return (ptr->second)();
     } else {
         auto& config = *Environment::getInstance()->getConfig();
         auto udaIt = config.findKey("uda");
@@ -81,5 +70,13 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
         return UDAAttribute::makeAttribute(fieldName);
     }
 }
+
+#define MakeShared(attrib) []() { return std::make_shared<attrib>(); }
+
+std::map<std::string, std::function<std::shared_ptr<Attribute>()>> Attribute::initMap = {
+        {"id", MakeShared(IDAttribute)}, {"description", MakeShared(DescriptionAttribute)},
+        {"tags", MakeShared(TagsAttribute)}, {"project", MakeShared(ProjectAttribute)},
+        {"uuid", MakeShared(UUIDAttribute)}, {"due", MakeShared(DueAttribute)}, {"age", MakeShared(AgeAttribute)},
+        {"created", MakeShared(AgeAttribute)}, {"depends", MakeShared(DependencyAttribute)}};
 
 } // namespace taskranger

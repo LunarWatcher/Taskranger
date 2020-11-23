@@ -3,11 +3,11 @@
 #include "tabulate/table.hpp"
 #include "taskranger/data/Task.hpp"
 #include "taskranger/metadata/Types.hpp"
+#include "taskranger/util/CompatUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include <any>
 #include <memory>
 #include <nlohmann/json.hpp>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -74,6 +74,7 @@ public:
 
 class Attribute {
 protected:
+    static std::map<std::string /*key*/, std::function<std::shared_ptr<Attribute>()>> initMap;
     /**
      * The attribute name.
      */
@@ -113,7 +114,7 @@ protected:
      * by not having to use std::any, and/or std::variant, and get
      * stuck with a type conversion clusterfuck.
      */
-    std::optional<nlohmann::json> allowedValues;
+    StdOptional<nlohmann::json> allowedValues;
 
 public:
     Attribute() {}
@@ -143,7 +144,6 @@ public:
         if (!this->modifiable && task.find(this->name) != task.end()) {
             throw "The field " + this->name + " cannot be modified";
         }
-
         if (this->type != FieldType::STRLIST) {
             if (!isValueAllowed(input)) {
                 throw "The value " + input + " is not allowed for " + this->name;

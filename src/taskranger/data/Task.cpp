@@ -1,9 +1,16 @@
 #include "Task.hpp"
 #include "JSONDatabase.hpp"
+#include "taskranger/data/Environment.hpp"
+#include <algorithm>
 
 namespace taskranger {
 
-Task::Task(JSONDatabase* database, unsigned long long idx) : database(database), idx(idx) {}
+Task::Task(JSONDatabase* database, unsigned long long idx)
+        : database(database), taskJson(database->getRawDatabase()->at(idx)), idx(idx) {
+    if (database->hasPublicIds) {
+        this->taskJson["id"] = idx + 1;
+    }
+}
 
 unsigned long long Task::getId() {
     return database->hasPublicIds ? idx + 1 : 0;
@@ -13,20 +20,19 @@ unsigned long long Task::getId() const {
     return database->hasPublicIds ? idx + 1 : 0;
 }
 
-const nlohmann::json Task::getTaskJson() const {
-    nlohmann::json data = database->getRawDatabase()->at(this->idx);
-    // Append internal fields
-    auto id = this->getId();
-    if (id != 0) {
-        data["id"] = id;
-    } else {
-        auto itr = data.find("id");
-        if (itr != data.end()) {
-            data.erase(itr);
-        }
-    }
+const nlohmann::json& Task::getTaskJson() const {
+    return this->taskJson;
+}
 
-    return data;
+void Task::initVTags() {
+
+    // Compute virtual tags
+
+    if (std::get<std::string>(Environment::getInstance()->getAttribute("depends")->getMaxRepresentationForTable(
+                this->taskJson)) != " ") {
+
+        this->taskJson["tags"].push_back("+BLOCKED");
+    }
 }
 
 bool Task::hasPublicIds() {
@@ -34,7 +40,7 @@ bool Task::hasPublicIds() {
 }
 
 std::string Task::getUUID() {
-    return database->getRawDatabase()->at(this->idx).at("uuid");
+    return taskJson.at("uuid");
 }
 
 } // namespace taskranger
