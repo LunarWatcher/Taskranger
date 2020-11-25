@@ -30,8 +30,8 @@ void Task::initVTags() {
 
     if (std::get<std::string>(Environment::getInstance()->getAttribute("depends")->getMaxRepresentationForTable(
                 this->taskJson)) != " ") {
-
-        this->taskJson["tags"].push_back("+BLOCKED");
+        this->taskJson["vtags"] = {};
+        this->taskJson["vtags"].push_back("+BLOCKED");
     }
 }
 

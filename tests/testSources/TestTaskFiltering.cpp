@@ -55,7 +55,7 @@ TEST_CASE("Filter operator: not", "[TaskFilterOpNot]") {
     dataPtr->data["tags.not"] = "+tag";
     auto testNotTags = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
     // Note: tag exclusion also includes tagless posts (because technically, they match the criteria).
-    REQUIRE(testNotTags.size() == 2);
+    REQUIRE(testNotTags.size() == 3);
 
     // Make sure we excluded the right shit
     // If this worked, +tag shouldn't be present anywhere.
@@ -144,4 +144,38 @@ TEST_CASE("Date filtering", "[DateFiltering]") {
     dataPtr->data["ids.greater"] = "1";
     auto testIdDateCombo = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
     REQUIRE(testIdDateCombo.size() == 1);
+}
+
+TEST_CASE("Test automatic block", "[AUTOB]") {
+    INFO("Loading config and databse...");
+    LOAD_CONFIG("TaskFiltering.trconf");
+    auto json = taskranger::Environment::getInstance()->getDatabase("active.json", true);
+
+    SECTION("Vtag not supplied as arg") {
+        InputPtr dataPtr = std::make_shared<InputData>();
+        INFO("Running filter");
+        auto filtered =
+                Filter::createFilter(dataPtr).disableConditionally("tags", "+BLOCKED").filterTasks(json->getDatabase());
+        INFO("Requirements");
+        REQUIRE(filtered.size() == 4);
+        for (auto& task : filtered) {
+            auto tJson = task->getTaskJson();
+            REQUIRE(tJson.find("depends") == tJson.end());
+        }
+    }
+
+    SECTION("VTag supplied as arg") {
+        InputPtr dataPtr = std::make_shared<InputData>();
+        INFO("Adding override...");
+        dataPtr->data["tags"] = "+BLOCKED";
+        INFO("Running filter");
+        auto filtered =
+                Filter::createFilter(dataPtr).disableConditionally("tags", "+BLOCKED").filterTasks(json->getDatabase());
+        INFO("Requirements");
+        REQUIRE(filtered.size() == 1);
+        for (auto& task : filtered) {
+            auto tJson = task->getTaskJson();
+            REQUIRE(tJson.find("depends") != tJson.end());
+        }
+    }
 }

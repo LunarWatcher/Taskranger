@@ -60,7 +60,7 @@ Types::TableRow DependencyAttribute::getMaxRepresentationForTable(const nlohmann
     if (depends == task.end()) {
         return std::string{" "};
     }
-    std::string concat = " ";
+    std::string concat = "";
     auto& active = *Environment::getInstance()->getDatabase("active.json", true);
     for (auto& uuid : depends.value()) {
         if (auto task = active.contains("uuid", uuid.get<std::string>())) {
@@ -68,7 +68,7 @@ Types::TableRow DependencyAttribute::getMaxRepresentationForTable(const nlohmann
         }
     }
 
-    return concat;
+    return concat.size() == 0 ? " " : concat;
 }
 
 } // namespace taskranger

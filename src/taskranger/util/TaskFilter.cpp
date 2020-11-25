@@ -12,28 +12,6 @@
 
 namespace taskranger {
 
-void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::string value) {
-    inOut.erase(std::remove_if(inOut.begin(), inOut.end(),
-                        [key, value](const auto& json) -> bool {
-                            return json.find(key) == json.end() || json.at(key) != value;
-                        }),
-            inOut.end());
-}
-
-void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::vector<std::string> values) {
-    inOut.erase(std::remove_if(inOut.begin(), inOut.end(),
-                        [key, values](const auto& json) -> bool {
-                            if (json.find(key) == json.end())
-                                return true;
-                            auto storedValues = json.at(key);
-                            for (auto& value : values)
-                                if (std::find(storedValues.begin(), storedValues.end(), value) == storedValues.end())
-                                    return true;
-                            return false;
-                        }),
-            inOut.end());
-}
-
 namespace TaskFilter {
 
 std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::shared_ptr<Task>>& tasks) {

@@ -1,3 +1,7 @@
+# Breakpoints
+breakpoints/
+lldbBreakpoints
+
 # Build ignores
 
 .sconf_temp/

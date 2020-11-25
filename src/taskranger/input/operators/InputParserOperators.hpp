@@ -93,14 +93,17 @@ bool evalOperator(Operator op, const std::vector<G>& input, const std::vector<G>
                 if constexpr (std::is_same<G, std::string>::value) {
                     if (StrUtil::istrEquals(a, b)) {
                         found = true;
+                        break;
                     }
                 } else if (a == b) {
                     found = true;
+                    break;
                 }
             }
             if (!found)
                 return false;
         }
+
         return true;
     case Operator::NOT:
         for (auto& a : input) {

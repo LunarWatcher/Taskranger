@@ -74,9 +74,15 @@ std::shared_ptr<Attribute> Attribute::createAttrib(const std::string& fieldName)
 #define MakeShared(attrib) []() { return std::make_shared<attrib>(); }
 
 std::map<std::string, std::function<std::shared_ptr<Attribute>()>> Attribute::initMap = {
-        {"id", MakeShared(IDAttribute)}, {"description", MakeShared(DescriptionAttribute)},
-        {"tags", MakeShared(TagsAttribute)}, {"project", MakeShared(ProjectAttribute)},
-        {"uuid", MakeShared(UUIDAttribute)}, {"due", MakeShared(DueAttribute)}, {"age", MakeShared(AgeAttribute)},
-        {"created", MakeShared(AgeAttribute)}, {"depends", MakeShared(DependencyAttribute)}};
+        {"id", MakeShared(IDAttribute)}, //
+        {"description", MakeShared(DescriptionAttribute)}, //
+        {"tags", MakeShared(TagsAttribute)}, //
+        {"vtags", MakeShared(VTagsAttribute)}, //
+        {"project", MakeShared(ProjectAttribute)}, //
+        {"uuid", MakeShared(UUIDAttribute)}, //
+        {"due", MakeShared(DueAttribute)}, //
+        {"age", MakeShared(AgeAttribute)}, //
+        {"created", MakeShared(AgeAttribute)}, //
+        {"depends", MakeShared(DependencyAttribute)}};
 
 } // namespace taskranger

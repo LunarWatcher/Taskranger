@@ -17,9 +17,12 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 ## Added
 * Task dependency
+* Base support for virtual tags (currently only `+BLOCKED`), as well as standard filtering for these
 
 ## Fixes
 * Make table width max out in supported tables
+* Performance: cache JSON in tasks
+* Performance: don't `find` JSON twice while filtering
 
 ## Meta
 * Bump Catch2 to v3.0.0-preview3
