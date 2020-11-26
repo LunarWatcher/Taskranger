@@ -59,6 +59,14 @@ std::pair<Operator, std::string> determineOperator(const std::string& attribKey,
  * Vector<*> (searches items):
  *  - IS (strings: case-intensive)
  *  - NOT (strings: case-intensitive)
+ *
+ *
+ * @param input        Input from the user, to be clear. Defines what one or more valid value(s) for relativeTo are.
+ * @param relativeTo   The value stored in the task.
+ *
+ * Note that different template specializations may have different systems. For an instance, with vectors, input
+ * defines what has to be in relativeTo for `is`. Exact matches are excluded because design reasons.
+ * Fite me (https://github.com/LunarWatcher/Taskranger/issues/new/choose)
  */
 template <typename T>
 bool evalOperator(Operator op, const T& input, const T& relativeTo) {

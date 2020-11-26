@@ -37,6 +37,7 @@ inline double currTime() {
 }
 
 inline double parseRelative(const std::string& inputDate) {
+    auto now = std::chrono::system_clock::now();
 
     try {
         size_t parseEndPos;
@@ -44,7 +45,12 @@ inline double parseRelative(const std::string& inputDate) {
         if (parseEndPos == inputDate.size()) {
             return -1;
         }
-        auto now = std::chrono::system_clock::now();
+
+        // Potentially a microoptimization, but only go through the if statement if the
+        // inputDate's length is greater than or equal to three. This
+        // prevents wasted time trying to parse too short dates.
+        if (parseEndPos == 0 && inputDate.size() >= 3) {}
+
         switch (inputDate[parseEndPos]) {
         case 'd':
             return std::chrono::duration_cast<millis>((now + days(numUnits)).time_since_epoch()).count();
@@ -60,7 +66,35 @@ inline double parseRelative(const std::string& inputDate) {
             return -1;
         }
 
-    } catch (std::invalid_argument&) { return -1; }
+    } catch (std::invalid_argument&) {
+        // ign0re
+    }
+
+    using namespace icu;
+    using namespace std::literals;
+    using CF = UCalendarDateFields;
+
+    // This is blatantly ignored, because I cannot be reasonably expected to check this for _every single call_
+    // What a backwater API though.
+    UErrorCode status = U_ZERO_ERROR;
+
+    auto cal = Calendar::createInstance(status);
+    cal->setTime(UDate{(std::chrono::duration_cast<millis>(now.time_since_epoch())).count()}, status);
+
+    if (inputDate == "today" || inputDate == "eod") {
+        cal->set(CF::UCAL_HOUR_OF_DAY, 23);
+        cal->set(CF::UCAL_MINUTE, 59);
+        cal->set(CF::UCAL_SECOND, 0); // Could strictly speaking be 59, but because floating point is the fucking worst,
+                                      // a 60 second margin prevents any nasty fuckups
+    } else if (inputDate == "tomorrow") {
+        cal->add(CF::UCAL_DAY_OF_MONTH, 1, status);
+        cal->set(CF::UCAL_HOUR_OF_DAY, 0);
+        cal->set(CF::UCAL_MINUTE, 0);
+        cal->set(CF::UCAL_SECOND, 0);
+    } else {
+        return -1;
+    }
+    return cal->getTime(status);
 }
 
 inline double parseTime(const std::string& format, const std::string& inputDate) {
@@ -80,6 +114,10 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
     // Get the calendar early; before anything is parsed, it is set to the current
     // day and time, which we can use later C:
     Calendar* cal = const_cast<Calendar*>(sdf.getCalendar());
+
+    // The _current_ day, month, and year.
+    // Used if there's missing components and TR has to make assumptions wrt.
+    // dates.
     auto day = cal->get(CF::UCAL_DAY_OF_MONTH, status);
     auto month = cal->get(CF::UCAL_MONTH, status);
     auto year = cal->get(CF::UCAL_YEAR, status);
@@ -113,6 +151,8 @@ inline double parseTime(const std::string& format, const std::string& inputDate)
         }
     }
 
+    // Returns real UNIX time (relative to GMT, not relative to localtime. Phew)
+    // (Milliseconds btw. Not like I can't found digits or anything :kekw:)
     time = cal->getTime(status);
     return time;
 }
