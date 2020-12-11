@@ -27,7 +27,8 @@ private:
 
 public:
     std::vector<std::shared_ptr<Task>> filterTasks(const std::vector<std::shared_ptr<Task>>& rawInput);
-    Filter& disableConditionally(const std::string& field, const std::string& value);
+    Filter& disableConditionally(
+            const std::string& field, const std::string& value, FieldType type = FieldType::STRLIST);
 
     static Filter createFilter(std::shared_ptr<InputData> input);
 };

@@ -79,6 +79,7 @@ std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::sh
                 }
             } break;
             case FieldType::STRLIST: {
+
                 std::vector<std::string> vec;
                 for (auto& value : filter->inputs) {
                     if (value.type() != typeid(std::string)) {
@@ -108,7 +109,7 @@ std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::sh
     return output;
 }
 
-Filter& Filter::disableConditionally(const std::string& key, const std::string& value) {
+Filter& Filter::disableConditionally(const std::string& key, const std::string& value, FieldType type) {
     for (auto& fa : this->filters) {
         if (fa->fieldName == key) {
             for (auto& item : fa->inputs) {
@@ -128,7 +129,7 @@ Filter& Filter::disableConditionally(const std::string& key, const std::string& 
     // No neg op: add
     auto filter = std::make_shared<FilterInfo>();
     filter->op = InputParserOperators::Operator::NOT;
-    filter->fieldType = FieldType::STRLIST;
+    filter->fieldType = type;
     filter->inputs = {value};
     filter->fieldName = key;
     filters.push_back(filter);

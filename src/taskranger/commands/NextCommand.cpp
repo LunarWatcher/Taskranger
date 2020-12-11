@@ -37,10 +37,11 @@ void NextCommand::run() {
     auto& taskVec = database.getDatabase();
     auto filteredJson = TaskFilter::Filter::createFilter(input) //
                                 .disableConditionally("tags", "+BLOCKED")
+                                .disableConditionally("tasktype", "rtemplate", FieldType::STRING)
                                 .filterTasks(taskVec);
     if (filteredJson.size())
         TableUtil::TableBuilder()
-                .withKeys({"id", "description", "tags", "project", "due", "created"})
+                .withKeys({"id", "description", "recur", "tags", "project", "due", "created"})
                 .build(filteredJson);
 
     // clang-format off

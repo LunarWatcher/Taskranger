@@ -11,7 +11,11 @@
 #include "taskranger/data/attributes/DependencyAttribute.hpp"
 #include "taskranger/data/attributes/DescriptionAttribute.hpp"
 #include "taskranger/data/attributes/DueAttribute.hpp"
+#include "taskranger/data/attributes/ModifiedAttribute.hpp"
+#include "taskranger/data/attributes/ParentAttribute.hpp"
 #include "taskranger/data/attributes/ProjectAttribute.hpp"
+#include "taskranger/data/attributes/RecurAttribute.hpp"
+#include "taskranger/data/attributes/SinkAttribute.hpp"
 #include "taskranger/data/attributes/TagsAttribute.hpp"
 #include "taskranger/data/attributes/UDAAttribute.hpp"
 #include "taskranger/data/attributes/UUIDAttribute.hpp"
@@ -38,7 +42,7 @@ bool Attribute::isValueAllowed(const nlohmann::json& input) {
 }
 
 void Attribute::checkField(nlohmann::json& attributeValue) {
-    validate(attributeValue);
+    validate(attributeValue, attributeValue);
     if (!isValueAllowed(attributeValue)) {
         throw "Invalid value: " + attributeValue.dump() + ". Value may only be " + this->allowedValues->dump();
     }
@@ -83,6 +87,12 @@ std::map<std::string, std::function<std::shared_ptr<Attribute>()>> Attribute::in
         {"due", MakeShared(DueAttribute)}, //
         {"age", MakeShared(AgeAttribute)}, //
         {"created", MakeShared(AgeAttribute)}, //
-        {"depends", MakeShared(DependencyAttribute)}};
+        {"modified", MakeShared(ModifiedAttribute)}, //
+        {"depends", MakeShared(DependencyAttribute)}, //
+        {"recur", MakeShared(RecurAttribute)}, //
+        {"parent", MakeShared(ParentAttribute)}, //
+        {"tasktype", []() { return std::make_shared<SinkAttribute>("tasktype"); }}, //
+        {"init", []() { return std::make_shared<SinkAttribute>("init"); }}, //
+};
 
 } // namespace taskranger

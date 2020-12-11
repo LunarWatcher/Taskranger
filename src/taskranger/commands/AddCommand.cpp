@@ -71,12 +71,21 @@ void AddCommand::run() {
         }
 
         attrib->modify(mod, key, value);
-        // Has to be attrib->name to prevent issues with scoped
-        // attributes (like dates)
-        if (auto attribPayload = mod.find(attrib->getName()); attribPayload != mod.end()) {
-            attrib->validate(*attribPayload);
-        }
+        // We don't want to validate yet.
+        // Some attributes, like RecurAttribute, require full task context,
+        // which requires all attributes to be initialized before validating.
+        // Consequentially, validation has been split into a new for-loop.
+        // Not _really_ optimal (wasted CPU cycles on work done for nothing),
+        // but beats giving additional access.
+        // That requires
     }
+
+    for (auto& [key, value] : mod.items()) {
+        auto attrib = env.getAttribute(key);
+        // We've filtered out the attributes not existing
+        attrib->validate(value, mod);
+    }
+
     // TODO at a later point: add the time of the task's creation
     (*database.getRawDatabase()).push_back(mod);
     database.commit();

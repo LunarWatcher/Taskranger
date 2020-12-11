@@ -36,8 +36,11 @@ inline double currTime() {
             .count();
 }
 
-inline double parseRelative(const std::string& inputDate) {
-    auto now = std::chrono::system_clock::now();
+inline double parseRelative(const std::string& inputDate, double relativeTo = -1) {
+    double parseRelativeTo =
+            relativeTo >= 0
+                    ? relativeTo
+                    : std::chrono::duration_cast<millis>(std::chrono::system_clock::now().time_since_epoch()).count();
 
     try {
         size_t parseEndPos;
@@ -53,15 +56,15 @@ inline double parseRelative(const std::string& inputDate) {
 
         switch (inputDate[parseEndPos]) {
         case 'd':
-            return std::chrono::duration_cast<millis>((now + days(numUnits)).time_since_epoch()).count();
+            return std::chrono::duration_cast<millis>(days(numUnits)).count() + parseRelativeTo;
         case 'm':
-            return std::chrono::duration_cast<millis>((now + months(numUnits)).time_since_epoch()).count();
+            return std::chrono::duration_cast<millis>(months(numUnits)).count() + parseRelativeTo;
         case 'y':
-            return std::chrono::duration_cast<millis>((now + years(numUnits)).time_since_epoch()).count();
+            return std::chrono::duration_cast<millis>(years(numUnits)).count() + parseRelativeTo;
         case 'w':
-            return std::chrono::duration_cast<millis>((now + weeks(numUnits)).time_since_epoch()).count();
+            return std::chrono::duration_cast<millis>(weeks(numUnits)).count() + parseRelativeTo;
         case 'h':
-            return std::chrono::duration_cast<millis>((now + hours(numUnits)).time_since_epoch()).count();
+            return std::chrono::duration_cast<millis>(hours(numUnits)).count() + parseRelativeTo;
         default:
             return -1;
         }
@@ -79,7 +82,7 @@ inline double parseRelative(const std::string& inputDate) {
     UErrorCode status = U_ZERO_ERROR;
 
     auto cal = Calendar::createInstance(status);
-    cal->setTime(UDate{(std::chrono::duration_cast<millis>(now.time_since_epoch())).count()}, status);
+    cal->setTime(UDate{parseRelativeTo}, status);
 
     if (inputDate == "today" || inputDate == "eod") {
         cal->set(CF::UCAL_HOUR_OF_DAY, 23);

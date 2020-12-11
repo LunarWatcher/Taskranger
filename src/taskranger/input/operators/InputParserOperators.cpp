@@ -57,7 +57,7 @@ bool InputParserOperators::evalOperator(Operator op, const std::string& input, c
     case Operator::IS:
         return StrUtil::istrEquals(input, relativeTo);
     case Operator::NOT:
-        return StrUtil::istrEquals(input, relativeTo);
+        return !StrUtil::istrEquals(input, relativeTo);
     case Operator::CONTAINS:
         return StrUtil::toLower(relativeTo).find(StrUtil::toLower(input)) != std::string::npos;
     default:

@@ -1,10 +1,12 @@
 #include "TableUtil.hpp"
 #include "tabulate/color.hpp"
 #include "taskranger/data/Environment.hpp"
+#include "taskranger/data/attributes/SinkAttribute.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include "taskranger/util/TermUtils.hpp"
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 namespace taskranger {
 
@@ -81,6 +83,11 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
             std::string key = std::get<std::string>(fuckingBullshitFormat);
             try {
                 attribute = env.getAttribute(key);
+
+                if (std::dynamic_pointer_cast<SinkAttribute>(attribute) != nullptr) {
+                    // Hide SinkAttributes
+                    continue;
+                }
             } catch (std::string&) {}
             if (!attribute) {
                 tfKeys.push_back(key);
@@ -129,6 +136,10 @@ void TableBuilder::build(const std::vector<std::shared_ptr<Task>>& tasks) {
             for (auto& [k, v] : json.items()) {
                 try {
                     auto attribute = env.getAttribute(k);
+                    if (std::dynamic_pointer_cast<SinkAttribute>(attribute) != nullptr) {
+                        // Hide SinkAttributes
+                        continue;
+                    }
                     auto key = attribute->getLabel();
 
                     taskTable.add_row({key, attribute->getMaxRepresentationForTable(json)});

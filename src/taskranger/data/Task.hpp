@@ -5,6 +5,7 @@
 
 namespace taskranger {
 
+class RecurAttribute;
 class JSONDatabase;
 class Task {
 private:
@@ -38,6 +39,7 @@ private:
     std::vector<std::shared_ptr<std::string>> dependsOn;
 
 public:
+    Task(JSONDatabase* taskList);
     Task(JSONDatabase* taskList, unsigned long long idx);
 
     /**
@@ -50,13 +52,13 @@ public:
     bool hasPublicIds();
     std::string getUUID();
     template <typename T>
-    T getOrElse(const std::string& key, const T& def) {
+    T getOrElse(const std::string& key, const T& def) const {
         auto& json = this->getTaskJson();
         auto itr = json.find(key);
         if (itr == json.end()) {
             return def;
         }
-        return *itr->get<T>();
+        return itr->get<T>();
     }
 
     /**
@@ -76,6 +78,7 @@ public:
     }
 
     void initVTags();
+    void set(const std::string& key, const nlohmann::json& value);
 
     void noMatch() {
         this->includeInFilter = false;
@@ -91,6 +94,11 @@ public:
         }
         return this->database;
     }
+
+    void commitChanges();
+
+    void operator>>(Task& target) const;
+    friend class RecurAttribute;
 };
 
 } // namespace taskranger

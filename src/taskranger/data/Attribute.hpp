@@ -182,7 +182,7 @@ public:
      *
      * Fields may also modify the attribValue if necessary.
      */
-    virtual void validate(nlohmann::json& /* attribValue */) {}
+    virtual void validate(nlohmann::json& /* attribValue */, nlohmann::json& /* task */) {}
 
     const std::string& getName() {
         return name;
