@@ -9,10 +9,7 @@ void RecurAttribute::update(Task& task /*template  task*/, JSONDatabase& databas
         // Safeguard to prevent recur tasks from spawning recur tasks
         return;
     }
-    // Covers the bulk of recurrence logic
-    // TODO: determine when to recur
-    // TODO: determine due dates from stuff I guess, idk
-    // TODO: save some data to indicate last recurrence
+    // Covers the recur logic
     auto dueIt = task.getTaskJson().find("due");
     if (dueIt == task.getTaskJson().end()) {
         std::cout << std::string("ERROR: Recurring task doesn't contain a due date. UUID ") +

@@ -27,7 +27,7 @@ taskranger = exeEnv.Program("taskranger", "taskranger/Main.cpp")
 Default(taskranger)
 
 # Hack to make sure the database is built
-if (database is not None):
-    Depends(taskranger, database)
+# if (database is not None):
+    # Depends(taskranger, database)
 
 Return("taskranger")

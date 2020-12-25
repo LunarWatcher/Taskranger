@@ -1,12 +1,14 @@
 # Breakpoints
 breakpoints/
 lldbBreakpoints
+/tags
 
 # Build ignores
 
 .sconf_temp/
 .sconsign.dblite
 build
+build*/
 config.log
 
 # YCM ignores
@@ -27,6 +29,7 @@ compile_commands.json
 # Ignore symlinks used for easy debugging
 /task
 /test
+/taskranger
 
 # Test output
 /tests/raw/data

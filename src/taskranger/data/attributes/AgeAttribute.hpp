@@ -1,6 +1,7 @@
 #pragma once
 
 #include "taskranger/data/attributes/AttribTypes.hpp"
+#include "taskranger/metadata/Types.hpp"
 
 namespace taskranger {
 

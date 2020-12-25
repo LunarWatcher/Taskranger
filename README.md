@@ -59,4 +59,9 @@ VirtualEnv is highly recommended for installing SCons and Conan on Linux, and es
 
 Conan grabs the other dependencies.
 
+## Goals
+* Ease of use: explicit syntax to avoid ambiguities in input. Caveat: potentially boilerplate
+* Modern C++
+* Working with as many workflows/methodologies as possible, if not all.
+
 <i>Made with &lt;3 and Vim</i>
