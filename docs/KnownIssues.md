@@ -1,4 +1,4 @@
-#Known issues
+# Known issues
 
 ## Newlines in the text breaks the table
 
@@ -10,12 +10,17 @@
 
 Happens because tabulate has no built-in size checks.
 
-**Patched:** v0.3.0
+**Patched:** v0.3.0 -- may not account for unicode
 
-## The program will break on devices where time_t is 32 bit in 2038
-If you're still running 32 bit when the 2038 problem starts getting even closer, you should really update your hardware -- Taskranger breaking will be the tiniest problem
+## Windows: ICU and MSYS2
+Compiling in MSYS2 should help. [MSYS2 is added as a dependency](https://github.com/conan-io/conan-center-index/blob/master/recipes/icu/all/conanfile.py#L66-L68) if Bash isn't detected, which may be set up to detect MSYS. Not entirely sure to be honest.
 
-**Status**: wontfix
+This should be a one-time problem. When Conan has installed MSYS2, it doesn't need to redownload it until the recipe receives an update. There's some caching, at least.
+
+It's by no means optimal to have a that big dependency sourced in when compiling this relatively tiny program, but there's not a lot of good time and date libraries available for C++. There's largely `<chrono>`, HowardHinnant/date (in C++20: `<chrono>` extensions -- doesn't work because it doesn't have all the necessary features), ICU, probably Boost (haven't checked, don't want to), and largely outdated libraries. If you know of a datetime library that's modern, stays up to date, and is on par with ICU's feature set as required by this project, do open an issue. ICU is, to a certain degree, complete overkill with all the other stuff it includes.
+
+**Status:** By design
+**Workaround:** Install MSYS2.
 
 ## Windows: ICU fails to compile
 

@@ -13,7 +13,7 @@ This file currently cannot be automated. See #12: https://github.com/LunarWatche
 Generation tools either rely on issues and PRs, which breaks with my format, or commit messages, which breaks because not all commits actually make a change worth recording. Ideas for better tools are welcome, but until then, this will be handled manually.
 -->
 
-# [Unreleased]
+# [Unreleased] (TBD)
 
 # [v0.3.0] (27.12.20)
 
