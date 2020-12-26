@@ -15,15 +15,16 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 # [Unreleased]
 
-# [v0.3.0] (26.12.20)
+# [v0.3.0] (27.12.20)
 
 ## Added
 * Task dependency
 * Base support for virtual tags (currently only `+BLOCKED`), as well as standard filtering for these
 * Recurring tasks
 * [#19](https://github.com/LunarWatcher/Taskranger/issues/19): Installation for Mac, Linux, and Windows if /usr/bin exists.
-    * ... as well as `--prefix` to specify a prefix for /usr/bin. May be changed in the future to specify the path instead.
+    * ... as well as `prefix` variable to specify a prefix for /usr/bin. May be changed in the future to specify the path instead.
 * Install docs, and partial attribute docs
+* Help when `scons -h` is run. Also lists all the variables. (Bonus points for looking clean :D)
 
 ## Fixes
 * Make table width max out in supported tables
@@ -36,6 +37,7 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Bump SConsStandard. Changes:
     * Added `buildDir`
     * Flattened the build directory layout
+    * Restructure internals
 
 # [v0.2.0] (16.10.20)
 
