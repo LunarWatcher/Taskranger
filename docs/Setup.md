@@ -28,6 +28,7 @@ Before you can build, as mentioned in the README, you need to install SCons and 
 
 The build process is straight-forward: run `scons debug=no` in the root directory of the project. As with other make-like tools, you can `scons -j<thread count> debug=no` to speed up the build. I recommend not exceeding the number of supported threads (check your CPU details for the number), as this will instead slow the build down.
 
+See also `scons -h` for help with the SConstruct defined by Taskranger, as well as `scons -H` for help with SCons itself.
 
 ## Install (Linux, Mac, etc.)
 
@@ -68,3 +69,9 @@ You forgot `git submodule update --init --recursive`.
 `scons` has to be installed in a way that's accessible for root or sudo. Virtualenvs aren't "passed down" through sudo, which means you'll have to install it system-wide with `sudo pip3 install scons`.
 
 ... or just jump into the root user, activate the virtualenv, and run `scons install`. Or possibly use some other trick I don't know of, in which case, an amendment to this section is more  than welcome.
+
+### Uninstall
+
+For WSL and MinGW et al, see the Linux uninstall instructions.
+
+No automatic install means no automatic uninstall. Remove the binary from whereever you placed it.

@@ -6,7 +6,9 @@ This project is govern by a [Code of Conduct](https://github.com/LunarWatcher/Ta
 
 ## I have a question!
 
-For the time being, questions should be directed to [the issue tracker][1]. Use the question template to get started. Don't forget to include all relevant information. If you're having trouble with a specific feature, it's usually a good idea to try to reproduce it just from the details in your question. A Discord server may be set up in the future, but for now, use GitHub issues.
+For the time being, questions should be directed to [GitHub discussions][2]. [The issue tracker][1] can also be used, but it's preferred to use GitHub discussions. Issues should primarily be reserved for bugs, or questions where there's a _very high_ probability it's triggered by a bug.
+
+Use the question template to get started if you pick issues. Either way, don't forget to include all relevant information. If you're having trouble with a specific feature, it's usually a good idea to try to reproduce it just from the details in your question - if you can't reproduce it with the steps you have in your issue/discussion, how are others meant to? A Discord server may be set up in the future, but for now, use GitHub discussions.
 
 ## I found the issue templates to be unclear
 
@@ -26,7 +28,7 @@ pip3 install -r requirements.txt
 pre-commit install
 ```
 
-Pre-commit will also clean up common problems when you try to commit.
+Pre-commit will also clean up common problems when you try to commit - you'll have to re-add files and commit again if the hooks error out.
 
 ## Code style
 
@@ -34,6 +36,9 @@ Pre-commit will also clean up common problems when you try to commit.
 * Variable and function names are camelCase.
 * Class names and namespaces used to emulate a class-like scope must start with an upper-case letter.
 
-[.clang-format](https://github.com/LunarWatcher/Taskranger/blob/master/.clang-format) defines general style conventions that it can fix.
+**Formatting and general style:**
+* Spaces, not tabs.
+* Aside those listed here, [.clang-format](https://github.com/LunarWatcher/Taskranger/blob/master/.clang-format) defines general style conventions that it can fix.
 
 [1]: https://github.com/LunarWatcher/Taskranger/issues
+[2]: https://github.com/LunarWatcher/Taskranger/discussions

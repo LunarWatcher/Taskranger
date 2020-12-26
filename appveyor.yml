@@ -27,5 +27,5 @@ install:
   - conan profile new --detect default
   - conan profile update settings.compiler.runtime=MT default
 build_script:
-  - scons debug=False -j 2
-  - scons debug=False -j 2 test
+  - scons debug=no -j 2
+  - scons debug=no -j 2 test

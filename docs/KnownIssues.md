@@ -34,9 +34,16 @@ Note that you don't have to have MSYS2 installed; if you don't, there's a Conan 
 
 ## Windows: linking issues related to MSVC frameworks
 
-Scons has been configured to use MTd and MT as MSVC frameworks. This presents a few interesting issues with Conan, since any given profile is either locked into release or debug.
+By default, Taskranger builds with MT and MTd. This is purely a design choice and is based on how I personally prefer having everything the binary needs bundled with the binary.
 
-This limitation means Windows users need two profiles; one for release, and one for debug, and properly assign them. If you're only building one of the variants, you can update your conan profile to use the right framework.
+If you run SCons with `scons dynamic=yes`, MD and MDd will be used instead.
+
+That aside, the linking issue comes into play when we're dealing with debug vs. non-debug. By default, Conan is MD (IIRC), or at the very least builds for a release variant. Because Windows is incapable of mixing different optimization levels, this causes a linking error. If you're building with MT, but the conan profile is MD, you can use `scons dynamic=yes debug=no`. If, however, you're building debug, you have no choice but to modify the profile.
+
+```
+conan profile update settings.compiler.runtime=MT default
+```
+Where `default` is the name of whatever profile you're using, and `MT` is whatever framework you want to use. If you want to build for debug on MD, you need to set it to MDd.
 
 **Status**: wontfix (intended MSVC behavior)
-**Workaround**: Fix your conan profiles to build with the correct framework
+**Workaround**: Fix your conan profiles to build with the correct framework. For release builds, you can use `scons dynamic=yes` to build with MD instead of MT.

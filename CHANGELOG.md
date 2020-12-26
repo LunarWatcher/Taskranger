@@ -13,12 +13,17 @@ This file currently cannot be automated. See #12: https://github.com/LunarWatche
 Generation tools either rely on issues and PRs, which breaks with my format, or commit messages, which breaks because not all commits actually make a change worth recording. Ideas for better tools are welcome, but until then, this will be handled manually.
 -->
 
-# [Unreleased] (TBD)
+# [Unreleased]
+
+# [v0.3.0] (26.12.20)
 
 ## Added
 * Task dependency
 * Base support for virtual tags (currently only `+BLOCKED`), as well as standard filtering for these
 * Recurring tasks
+* [#19](https://github.com/LunarWatcher/Taskranger/issues/19): Installation for Mac, Linux, and Windows if /usr/bin exists.
+    * ... as well as `--prefix` to specify a prefix for /usr/bin. May be changed in the future to specify the path instead.
+* Install docs, and partial attribute docs
 
 ## Fixes
 * Make table width max out in supported tables
@@ -26,8 +31,11 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 * Performance: don't `find` JSON twice while filtering
 * Fix `stringattrib.not` being equivalent to `stringattrib.is`
 
-## Meta
+## Changes
 * Bump Catch2 to v3.0.0-preview3
+* Bump SConsStandard. Changes:
+    * Added `buildDir`
+    * Flattened the build directory layout
 
 # [v0.2.0] (16.10.20)
 
@@ -127,7 +135,8 @@ Base release. Unknown release date, because the Git tag was lost to unexpected a
 
 
 <!-- Links -->
-[Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.2.0...HEAD
+[Unreleased]: //github.com/LunarWatcher/Taskranger/compare/v0.3.0...HEAD
+[v0.3.0]: //github.com/LunarWatcher/Taskranger/compare/v0.2.0...v0.3.0
 [v0.2.0]: //github.com/LunarWatcher/Taskranger/compare/v0.1.0...v0.2.0
 [v0.1.0]: //github.com/LunarWatcher/Taskranger/compare/v0.0.3...v0.1.0
 [v0.0.3]: //github.com/LunarWatcher/Taskranger/compare/v0.0.2...v0.0.3
