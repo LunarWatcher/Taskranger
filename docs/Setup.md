@@ -56,3 +56,15 @@ Due to how Windows works, there's no place to just dump the binary and have it w
 You can still build taskranger by running `scons` in your terminal, but moving it to a place covered by your PATH variable is something that isn't supported as a part of the script.
 
 If, however, you have a portable way of making this work on different systems, a PR to the SConstruct is welcome.
+
+## Known build issues
+
+### SconsStandard not found, catch2 not found, tabulate not found, or some or all of those directories are empty
+
+You forgot `git submodule update --init --recursive`.
+
+### `sudo scons install` results in command not found
+
+`scons` has to be installed in a way that's accessible for root or sudo. Virtualenvs aren't "passed down" through sudo, which means you'll have to install it system-wide with `sudo pip3 install scons`.
+
+... or just jump into the root user, activate the virtualenv, and run `scons install`. Or possibly use some other trick I don't know of, in which case, an amendment to this section is more  than welcome.
