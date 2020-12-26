@@ -1,6 +1,7 @@
 import os
 import time
 import sys
+from platform import system as pf
 
 print("========== Bootstrapper ==========")
 print("Initializing submodules...")
@@ -23,10 +24,10 @@ if venv:
     # Install the requirements in the virtualenv
     os.system("./env/bin/pip install -r requirements.txt")
 
-    if input("Do you also wish to install SCons system-wide? (Required for `sudo scons install`) [yes/no]: ").lower() == "yes":
-        os.system("python3 -m pip install --upgrade scons")
+    if input("Do you also wish to install SCons system-wide? (Required for `sudo scons install`; requires sudo if you're not on Windows) [yes/no]: ").lower() == "yes":
+        os.system(f"{'sudo ' if 'Windows' not in pf() else ''}python3 -m pip install --upgrade scons")
 else:
-    os.system("python3 -m pip install -r requirements.txt")
+    os.system(f"{'sudo ' if 'Windows' not in pf() else ''}python3 -m pip install --upgrade -r requirements.txt")
 
 
 print("""-----------------------------------
