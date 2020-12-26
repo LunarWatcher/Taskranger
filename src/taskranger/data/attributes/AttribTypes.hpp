@@ -10,7 +10,7 @@ public:
         this->type = FieldType::NUMBER;
     }
 
-    virtual void validate(nlohmann::json& attribValue) override {
+    virtual void validate(nlohmann::json& attribValue, nlohmann::json&) override {
         if (!attribValue.is_number()) {
             throw this->name + " only accepts numbers.";
         }
@@ -25,7 +25,7 @@ public:
         this->type = FieldType::ULLONG;
     }
 
-    virtual void validate(nlohmann::json& attribValue) override {
+    virtual void validate(nlohmann::json& attribValue, nlohmann::json&) override {
         if (!attribValue.is_number() || attribValue.is_number_float() || !attribValue.is_number_unsigned()) {
             throw this->name + " only accepts unsigned numbers.";
         }
@@ -40,7 +40,7 @@ public:
         this->type = FieldType::STRING;
     }
 
-    virtual void validate(nlohmann::json& attribValue) override {
+    virtual void validate(nlohmann::json& attribValue, nlohmann::json&) override {
         if (!attribValue.is_string()) {
             throw this->name + " only accepts strings.";
         }
@@ -55,7 +55,7 @@ public:
         this->type = FieldType::STRLIST;
     }
 
-    virtual void validate(nlohmann::json& attribValue) override {
+    virtual void validate(nlohmann::json& attribValue, nlohmann::json&) override {
         if (!attribValue.is_array()) {
             // Only checking for strings could cause some problems, but we'll treat everything as a
             // string, so it should be fine.
@@ -73,7 +73,7 @@ public:
         this->type = FieldType::DATE;
     }
 
-    virtual void validate(nlohmann::json& /* attribValue */) override {}
+    virtual void validate(nlohmann::json& /* attribValue */, nlohmann::json& /* task */) override {}
 
     virtual void modify(nlohmann::json& task, const std::string& key, const std::string& input) override;
     virtual Types::TableRow getMinimalRepresentationForTable(const nlohmann::json& task) override;

@@ -12,28 +12,6 @@
 
 namespace taskranger {
 
-void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::string value) {
-    inOut.erase(std::remove_if(inOut.begin(), inOut.end(),
-                        [key, value](const auto& json) -> bool {
-                            return json.find(key) == json.end() || json.at(key) != value;
-                        }),
-            inOut.end());
-}
-
-void TaskFilter::mutateModifyJson(nlohmann::json& inOut, const std::string key, const std::vector<std::string> values) {
-    inOut.erase(std::remove_if(inOut.begin(), inOut.end(),
-                        [key, values](const auto& json) -> bool {
-                            if (json.find(key) == json.end())
-                                return true;
-                            auto storedValues = json.at(key);
-                            for (auto& value : values)
-                                if (std::find(storedValues.begin(), storedValues.end(), value) == storedValues.end())
-                                    return true;
-                            return false;
-                        }),
-            inOut.end());
-}
-
 namespace TaskFilter {
 
 std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::shared_ptr<Task>>& tasks) {
@@ -101,6 +79,7 @@ std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::sh
                 }
             } break;
             case FieldType::STRLIST: {
+
                 std::vector<std::string> vec;
                 for (auto& value : filter->inputs) {
                     if (value.type() != typeid(std::string)) {
@@ -128,6 +107,34 @@ std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::sh
     }
 
     return output;
+}
+
+Filter& Filter::disableConditionally(const std::string& key, const std::string& value, FieldType type) {
+    for (auto& fa : this->filters) {
+        if (fa->fieldName == key) {
+            for (auto& item : fa->inputs) {
+                // Op-independent: item overridden
+                if (std::any_cast<std::string>(item) == value) {
+                    return *this;
+                }
+            }
+            // op-specific: add
+            if (fa->op == InputParserOperators::Operator::NOT) {
+                fa->inputs.push_back(value);
+                return *this;
+            }
+        }
+    }
+
+    // No neg op: add
+    auto filter = std::make_shared<FilterInfo>();
+    filter->op = InputParserOperators::Operator::NOT;
+    filter->fieldType = type;
+    filter->inputs = {value};
+    filter->fieldName = key;
+    filters.push_back(filter);
+
+    return *this;
 }
 
 Filter Filter::createFilter(std::shared_ptr<InputData> input) {

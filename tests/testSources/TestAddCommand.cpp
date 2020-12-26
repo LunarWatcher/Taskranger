@@ -1,9 +1,10 @@
-#include "catch2/catch.hpp"
+#include "catch2/catch_test_macros.hpp"
+
 #include "taskranger/commands/AddCommand.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
+#include "taskranger/util/FilesystemUtil.hpp"
 #include "util/LoadConfig.hpp"
-#include <filesystem>
 
 TEST_CASE("Verify AddCommand output", "[AddCommandOutput]") {
     LOAD_CONFIG("AddTest.trconf");
@@ -22,9 +23,9 @@ TEST_CASE("Verify AddCommand output", "[AddCommandOutput]") {
 
     addCommand->run();
 
-    REQUIRE(std::filesystem::exists("./tests/raw/data"));
-    REQUIRE(std::filesystem::exists("./tests/raw/data/AddTest"));
-    REQUIRE(std::filesystem::exists("./tests/raw/data/AddTest/active.json"));
+    REQUIRE(fs::exists("./tests/raw/data"));
+    REQUIRE(fs::exists("./tests/raw/data/AddTest"));
+    REQUIRE(fs::exists("./tests/raw/data/AddTest/active.json"));
 
     auto database = environment->getDatabase("active.json", true);
     auto& raw = *database->getRawDatabase();

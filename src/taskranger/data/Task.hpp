@@ -5,6 +5,7 @@
 
 namespace taskranger {
 
+class RecurAttribute;
 class JSONDatabase;
 class Task {
 private:
@@ -25,6 +26,8 @@ private:
      * minor amount of clutter in the code
      */
     JSONDatabase* database;
+    nlohmann::json taskJson;
+
     // fields computed internally that aren't written to disk
     // Keep in mind that some fields are computed on-demand to
     // to prevent wasting cycles, and therefore have a getter
@@ -33,7 +36,10 @@ private:
 
     bool includeInFilter{true};
 
+    std::vector<std::shared_ptr<std::string>> dependsOn;
+
 public:
+    Task(JSONDatabase* taskList);
     Task(JSONDatabase* taskList, unsigned long long idx);
 
     /**
@@ -42,17 +48,17 @@ public:
     unsigned long long getId();
     unsigned long long getId() const;
 
-    const nlohmann::json getTaskJson() const;
+    const nlohmann::json& getTaskJson() const;
     bool hasPublicIds();
     std::string getUUID();
     template <typename T>
-    T getOrElse(const std::string& key, const T& def) {
+    T getOrElse(const std::string& key, const T& def) const {
         auto& json = this->getTaskJson();
         auto itr = json.find(key);
         if (itr == json.end()) {
             return def;
         }
-        return *itr->get<T>();
+        return itr->get<T>();
     }
 
     /**
@@ -71,6 +77,9 @@ public:
         return includeInFilter;
     }
 
+    void initVTags();
+    void set(const std::string& key, const nlohmann::json& value);
+
     void noMatch() {
         this->includeInFilter = false;
     }
@@ -85,6 +94,11 @@ public:
         }
         return this->database;
     }
+
+    void commitChanges();
+
+    void operator>>(Task& target) const;
+    friend class RecurAttribute;
 };
 
 } // namespace taskranger

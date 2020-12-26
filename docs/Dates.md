@@ -66,6 +66,20 @@ While date formats can be configured in any way you want, there's one key that's
 
 ## Relative time
 
-In addition to using date formats, it's also possible to use relative dates. Note that these will take priority over date formats whereever possible.
+In addition to using date formats, it's also possible to use relative dates. Note that these will take priority over date formats whereever possible, because design choices.
 
-The general idea is that you'll be able to write `dateAttribute:2days`, and Taskranger will automagically calculate the date.
+Basically:
+
+```
+dateattribute:number<unit without brackets>
+```
+
+Where number is the number of the unit. the supported units are:
+
+| Unit | Meaning |
+| ---- | ------- |
+| d    | Day     |
+| m    | Month   |
+| y    | Year    |
+| w    | Week    |
+| h    | Hour    |

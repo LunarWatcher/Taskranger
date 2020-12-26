@@ -1,9 +1,11 @@
 #include "JSONDatabase.hpp"
+#include "nlohmann/json.hpp"
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/exceptions/Exceptions.hpp"
 #include "taskranger/util/ColorPrinter.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
+
 #include <filesystem>
 #include <fstream>
 
@@ -23,7 +25,7 @@ JSONDatabase::JSONDatabase(const std::string& databaseName, bool hasPublicIds) :
     std::shared_ptr<nlohmann::json> ptr = std::make_shared<nlohmann::json>();
     std::string path = databaseFolder + databaseName;
 
-    if (std::filesystem::exists(path)) {
+    if (fs::exists(path)) {
         std::ifstream stream(path);
         if (!stream) {
             ColorPrinter printer;
@@ -38,8 +40,8 @@ JSONDatabase::JSONDatabase(const std::string& databaseName, bool hasPublicIds) :
             throw "Failed to load database " + databaseName +
                     " - be careful when modifying it manually. If you didn't, open an issue on GitHub";
         }
-    } else if (!std::filesystem::exists(databaseFolder)) {
-        std::filesystem::create_directories(databaseFolder);
+    } else if (!fs::exists(databaseFolder)) {
+        fs::create_directories(databaseFolder);
     }
 
     this->rawDatabase = ptr;
@@ -63,8 +65,8 @@ void JSONDatabase::commit() {
         return;
     }
 
-    if (!std::filesystem::exists(this->dbFolder))
-        std::filesystem::create_directories(this->dbFolder);
+    if (!fs::exists(this->dbFolder))
+        fs::create_directories(this->dbFolder);
     std::ofstream stream(this->dbFolder + this->dbName);
 
     if (!stream) {
@@ -74,6 +76,35 @@ void JSONDatabase::commit() {
         return;
     }
     stream << *rawDatabase;
+}
+
+void JSONDatabase::purge() {
+    if (!fs::exists(this->dbFolder)) {
+        return;
+    }
+
+    fs::remove(this->dbFolder + this->dbName);
+}
+
+std::shared_ptr<Task> JSONDatabase::contains(const std::string& fieldName, const std::string& value) {
+    for (auto& taskObj : this->database) {
+        auto& task = taskObj->getTaskJson();
+        if (task.find(fieldName) != task.end() && task.at(fieldName) == value) {
+            return taskObj;
+        }
+    }
+    return nullptr;
+}
+
+bool JSONDatabase::containsAny(const std::string& fieldName, const std::vector<std::string>& allowedValues) {
+    for (auto& task : *this->rawDatabase) {
+        if (task.find(fieldName) != task.end() &&
+                std::find(allowedValues.begin(), allowedValues.end(), task.at(fieldName).get<std::string>()) !=
+                        allowedValues.end()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 } // namespace taskranger

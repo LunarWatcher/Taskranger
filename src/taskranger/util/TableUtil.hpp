@@ -27,6 +27,7 @@ private:
      * Row 0 excluded
      */
     void fixBackground(tabulate::Table& table);
+    void fixWidth(tabulate::Table& table);
 
 public:
     TableBuilder();

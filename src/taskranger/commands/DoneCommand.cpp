@@ -12,7 +12,7 @@ namespace taskranger {
 DoneCommand::DoneCommand() {
     this->name = "done";
     this->help = "Marks one or more tasks as done";
-    this->help = "taskranger done <ids>";
+    this->usage = "taskranger done <ids>";
 }
 
 void DoneCommand::run() {
@@ -59,7 +59,7 @@ void DoneCommand::run() {
             std::cout << "Skipped task " << id << " - invalid ID" << std::endl;
             continue;
         }
-        // TODO: strip now invalid properties from it
+
         completedSetPtr->push_back(currentSetPtr->at(id - 1));
         currentSetPtr->erase(id - 1);
         complete++;

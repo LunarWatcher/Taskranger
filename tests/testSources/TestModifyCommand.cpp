@@ -1,4 +1,4 @@
-#include "catch2/catch.hpp"
+#include "catch2/catch_test_macros.hpp"
 
 #include "taskranger/commands/ModifyCommand.hpp"
 #include "taskranger/data/Environment.hpp"
@@ -48,7 +48,8 @@ TEST_CASE("Add and remove tags", "[ModifyTags]") {
     INFO("Disabling database writes...");
     auto active = Environment::getInstance()->getDatabase("active.json", true);
     auto unused = Environment::getInstance()->getDatabase("completed.json", false);
-    unused->demoMode = active->demoMode = true;
+    unused->demoMode = true;
+    active->demoMode = true;
 
     INFO("Preparing input data");
     auto inputData = Environment::getInstance()->getInputData();
@@ -75,9 +76,14 @@ TEST_CASE("Add and remove tags", "[ModifyTags]") {
     INFO(commandOutput);
     REQUIRE(commandOutput.find("2 tasks modified") != std::string::npos);
 
-    auto activeDB = active->getDatabase();
-    auto firstJson = activeDB.at(0)->getTaskJson();
-    auto secondJson = activeDB.at(3)->getTaskJson();
+    // Note: due to changes in the internals, getDatabase returns a "useless"
+    // database. It holds the old object rather than the new one.
+    // This is not something that causes a problem in production, only in
+    // unit tests, since the caching only helps with performance and doesn't
+    // expect the data to be read after modifying.
+    auto activeDB = active->getRawDatabase();
+    auto firstJson = activeDB->at(0);
+    auto secondJson = activeDB->at(3);
     INFO("First JSON: " + firstJson.dump());
     REQUIRE(firstJson.at("tags").size() == 1);
     INFO("Second JSON: " + secondJson.dump());

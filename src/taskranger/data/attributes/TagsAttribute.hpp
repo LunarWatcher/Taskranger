@@ -11,4 +11,12 @@ public:
     }
 };
 
+class VTagsAttribute : public StrListAttribute {
+public:
+    VTagsAttribute() {
+        this->name = "vtags";
+        this->label = "Virtual tags";
+    }
+};
+
 } // namespace taskranger

@@ -3,7 +3,9 @@
 
 #include "nlohmann/json.hpp"
 #include "taskranger/data/Task.hpp"
+#include "taskranger/util/CompatUtil.hpp"
 #include <any>
+#include <functional>
 
 namespace taskranger {
 
@@ -36,6 +38,17 @@ public:
 
     size_t size() {
         return rawDatabase->size();
+    }
+
+    void purge();
+
+    std::shared_ptr<Task> contains(const std::string& fieldName, const std::string& value);
+    bool containsAny(const std::string& fieldName, const std::vector<std::string>& allowedValues);
+
+    void initVTags() {
+        for (auto task : this->database) {
+            task->initVTags();
+        }
     }
 };
 

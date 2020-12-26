@@ -1,9 +1,9 @@
 #include "ConfirmationHelper.hpp"
-#include "printable/utils/TermUtils.hpp"
 #include "taskranger/input/operators/InputParserOperators.hpp"
 #include "taskranger/util/DatetimeUtil.hpp"
 #include "taskranger/util/StrUtil.hpp"
 #include "taskranger/util/TableUtil.hpp"
+#include "taskranger/util/TermUtils.hpp"
 
 namespace taskranger {
 
@@ -44,7 +44,7 @@ void ConfirmationHelper::dumpChanges() {
     // Explanation for the - 2: the width per cell needs to account for
     // padding, which seems (in manual tests) to correspond to
     // - 2.
-    auto width = printable::TermUtils::getWidth();
+    auto width = TermUtils::getWidth();
     // fallback; if we can't find a width, we need to let Tabulate take
     // care of the size. hardcoding a size is gonna look like trash anyway,
     // so we might as well see if we can find a way to fix it if it's in a consumer terminal
@@ -82,7 +82,9 @@ void ConfirmationHelper::dumpChanges() {
                       << std::endl;
         } else {
             auto attrib = this->environment->getAttribute(k);
+
             table.add_row({attrib->getLabel(), attrib->getMaxRepresentationForTable(computedChanges)});
+
             if (i % 2 == 0) {
                 table[i].format().background_color(tabulate::Color::white).font_color(tabulate::Color::grey);
             }
@@ -102,6 +104,8 @@ void ConfirmationHelper::dumpChanges() {
 }
 
 void ConfirmationHelper::commitChanges(std::shared_ptr<Task> task) {
+    // We _could_ use the local JSON, but due to runtime changes (like adding an ID where applicable), this isn't really
+    // a good idea
     auto& json = task->getDatabase()->getRawDatabase()->at(task->getIdx());
 
     for (auto& [k, v] : computedChanges.items()) {

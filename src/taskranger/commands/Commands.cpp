@@ -11,16 +11,12 @@
 #include "InfoCommand.hpp"
 #include "ModifyCommand.hpp"
 #include "NextCommand.hpp"
+#include "PurgeDoneCommand.hpp"
 #include "VersionCommand.hpp"
 
 namespace taskranger {
 
 Commands::Commands() {
-    // This feels inefficient as fuck.
-    // TODO: benchmark.
-    // Scalability beats an if-else or a switch cascade,
-    // but allocating unused memory is still a way to slow
-    // down the program
     // Listing
     this->commands["next"] = std::make_shared<NextCommand>();
     this->commands["all"] = std::make_shared<AllCommand>();
@@ -30,7 +26,7 @@ Commands::Commands() {
     this->commands["add"] = std::make_shared<AddCommand>();
     this->commands["done"] = std::make_shared<DoneCommand>();
     this->commands["modify"] = std::make_shared<ModifyCommand>();
-
+    this->commands["purge"] = std::make_shared<PurgeDoneCommand>();
     // Meta
     this->commands["version"] = std::make_shared<VersionCommand>();
     this->commands["help"] = std::make_shared<HelpCommand>();

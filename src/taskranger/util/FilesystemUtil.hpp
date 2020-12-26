@@ -19,6 +19,7 @@
 #endif
 
 // required for getenv. Allegedly cross-platform
+#include "taskranger/util/CompatUtil.hpp"
 #include <cstdlib>
 
 namespace taskranger {
