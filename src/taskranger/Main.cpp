@@ -42,6 +42,9 @@ int main(int argc, const char* argv[]) {
                   << "and open an issue on GitHub if this goes further than permissions. "
                   << "(Tip: check that the taskranger folder is readable and writable." << std::endl;
         throw;
+    } catch (taskranger::ConfigurationError& err) {
+        taskranger::ColorPrinter printer(std::cerr);
+        printer << ANSIFeature::FOREGROUND << 9 << "Invalid config: " << err.what() << ANSIFeature::CLEAR << std::endl;
     }
 
     // Unnecessary, but let's just be explicit about it

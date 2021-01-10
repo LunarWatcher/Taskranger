@@ -14,12 +14,13 @@
         const char* what() const noexcept override { \
             return msg; \
         } \
-    };
+    }
 
 namespace taskranger {
 
-DeclareException(PermissionError)
+DeclareException(PermissionError);
+DeclareException(ConfigurationError);
 
-}
+} // namespace taskranger
 
 #endif

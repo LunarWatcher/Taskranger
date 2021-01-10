@@ -57,7 +57,7 @@ void RecurAttribute::modify(nlohmann::json& task, const std::string& key, const 
     task["tasktype"] = "rtemplate";
 }
 
-void RecurAttribute::validate(nlohmann::json& value, nlohmann::json& task) {
+void RecurAttribute::validate(nlohmann::json& /* value */, nlohmann::json& task) {
     using namespace std::literals;
     if (task.find("due") == task.end()) {
         throw "Must have a due date"s;

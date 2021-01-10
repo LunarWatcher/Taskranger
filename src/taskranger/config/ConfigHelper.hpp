@@ -36,6 +36,13 @@ public:
     size_t size() {
         return config.size();
     }
+
+    const nlohmann::json& getConfig() {
+        return config;
+    }
+    const nlohmann::json& getConfig() const {
+        return config;
+    }
 };
 
 } // namespace taskranger
