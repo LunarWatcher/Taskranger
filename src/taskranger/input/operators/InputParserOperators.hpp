@@ -88,6 +88,8 @@ bool evalOperator(Operator op, const T& input, const T& relativeTo) {
     }
 }
 
+bool evalDateOperator(Operator op, const double& input, const double& relativeTo);
+
 template <>
 bool evalOperator(Operator op, const std::string& input, const std::string& relativeTo);
 

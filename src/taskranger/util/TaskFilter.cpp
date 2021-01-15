@@ -63,7 +63,11 @@ std::vector<std::shared_ptr<Task>> Filter::filterTasks(const std::vector<std::sh
                         throw "Somehow ended up with a non-double passed to a number field";
                     }
                     double dValue = std::any_cast<double>(value);
-                    if (checkTask(filter->op, filter->fieldName, taskJson, dValue)) {
+
+                    if ((filter->fieldType == FieldType::NUMBER &&
+                                checkTask(filter->op, filter->fieldName, taskJson, dValue)) ||
+                            (filter->fieldType == FieldType::DATE &&
+                                    checkTask<double, true>(filter->op, filter->fieldName, taskJson, dValue))) {
                         hasMatch = true;
                         break;
                     }

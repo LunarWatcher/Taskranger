@@ -146,8 +146,46 @@ TEST_CASE("Date filtering", "[DateFiltering]") {
     REQUIRE(testIdDateCombo.size() == 1);
 }
 
+TEST_CASE("Date filtering with formats", "[DateFilteringFormats]") {
+    const double latestDate = 1594044564000.0;
+
+    INFO("Loading config and database...");
+    LOAD_CONFIG("TaskFiltering.trconf");
+
+    auto json = taskranger::Environment::getInstance()->getDatabase("active.json", true);
+    InputPtr dataPtr = std::make_shared<InputData>();
+
+    // Should be fine; this invokes the current year, which should be greater than 2020
+    // for all dates.
+    dataPtr->data["age.day.before"] = "15.01";
+    auto testBeforeOp = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+
+    // Since all the ages were added last year, it should return all three tasks.
+    // No idea if this is a good way to write tests or not.
+    // Should be fine, I doubt anyone is gonna run the code code I just wrote a year ago :P
+    // (but if you do, and changing the system time doesn't count, do let me know. Would be
+    // interested in your means of time travel :eyes:)
+    REQUIRE(testBeforeOp.size() == 3);
+
+    dataPtr->data.erase("age.day.before");
+    dataPtr->data["age.default.after"] = "1.7.2020 00:00:00";
+
+    auto testAfterOp = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+
+    // One is june, the other two are july. Two are still unmarked and therefore don't matter
+    REQUIRE(testAfterOp.size() == 2);
+
+    dataPtr->data.erase("age.default.after");
+    dataPtr->data["age.zoned"] = "6.7.2020 03:09:24T+0";
+
+    auto testFormatNoOp = Filter::createFilter(dataPtr).filterTasks(json->getDatabase());
+    // +- 12 hours means there's two tasks included.
+    // Same day would also mean that, even if there's no such check at this time.
+    REQUIRE(testFormatNoOp.size() == 2);
+}
+
 TEST_CASE("Test automatic block", "[AUTOB]") {
-    INFO("Loading config and databse...");
+    INFO("Loading config and database...");
     LOAD_CONFIG("TaskFiltering.trconf");
     auto json = taskranger::Environment::getInstance()->getDatabase("active.json", true);
 

@@ -46,7 +46,7 @@ public:
 /**
  * Utility for checking if a field matches the conditions supplied.
  */
-template <typename T>
+template <typename T, bool D = 0>
 bool checkTask(InputParserOperators::Operator op, const std::string& fieldName, const nlohmann::json& taskJson,
         const T& input) {
     // TODO: rewrite this steaming pile of garbage
@@ -104,8 +104,13 @@ bool checkTask(InputParserOperators::Operator op, const std::string& fieldName, 
         }
     }
 
-    return (op == InputParserOperators::Operator::NOT && missesField) ||
-           (!missesField && InputParserOperators::evalOperator(op, input, fieldValue));
+    if constexpr (D && std::is_same<T, double>::value) {
+        return (op == InputParserOperators::Operator::NOT && missesField) ||
+               (!missesField && InputParserOperators::evalDateOperator(op, input, fieldValue));
+    } else {
+        return (op == InputParserOperators::Operator::NOT && missesField) ||
+               (!missesField && InputParserOperators::evalOperator(op, input, fieldValue));
+    }
 }
 
 } // namespace TaskFilter

@@ -3,15 +3,22 @@
 
 namespace taskranger {
 
-std::vector<std::string> StrUtil::splitString(std::string input, const char delimiter) {
-    if (delimiter == 0)
+std::vector<std::string> StrUtil::splitString(std::string input, const char delimiter, int limit) {
+    if (limit == 0)
         return {input};
 
     std::vector<std::string> out;
     std::stringstream stream(input);
     std::string line;
+    int count = 0;
     while (getline(stream, line, delimiter)) {
         out.push_back(line);
+        count++;
+        if (count == limit) {
+            getline(stream, line);
+            out.push_back(line);
+            break;
+        }
     }
     return out;
 }
@@ -25,7 +32,7 @@ std::vector<std::string> StrUtil::splitString(std::string input, const std::stri
     // altering operations when the delimiter is a single
     // char, and there is no limit
     if (limit == -1 && delimiter.length() == 1)
-        return splitString(input, delimiter.at(0));
+        return splitString(input, delimiter.at(0), limit);
 
     std::vector<std::string> out;
     size_t pos = 0;

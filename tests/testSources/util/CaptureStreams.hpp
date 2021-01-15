@@ -16,12 +16,18 @@ private:
 
 public:
     StreamCapturer(T& stream) : stream(stream) {
-        this->buffer = stream.rdbuf();
-        this->stream.rdbuf(control.rdbuf());
+        hijack();
     }
 
     ~StreamCapturer() {
         restore();
+    }
+
+    void hijack() {
+        this->control.clear();
+        this->control.str("");
+        this->buffer = stream.rdbuf();
+        this->stream.rdbuf(control.rdbuf());
     }
 
     void restore() {
@@ -29,10 +35,6 @@ public:
             stream.rdbuf(buffer);
             buffer = nullptr;
         }
-    }
-
-    void reset() {
-        stream.rdbuf(buffer);
     }
 
     std::stringstream& getBuffer() {

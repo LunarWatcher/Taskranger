@@ -4,6 +4,7 @@
 #include "taskranger/data/Environment.hpp"
 #include "taskranger/data/JSONDatabase.hpp"
 #include "taskranger/util/FilesystemUtil.hpp"
+#include "util/CaptureStreams.hpp"
 #include "util/LoadConfig.hpp"
 
 TEST_CASE("Verify AddCommand output", "[AddCommandOutput]") {
@@ -21,7 +22,11 @@ TEST_CASE("Verify AddCommand output", "[AddCommandOutput]") {
     // clang-format on
     inputData->tags = {"+test"};
 
+    CaptureStreams::StreamCapturer hOut(std::cout);
     addCommand->run();
+    INFO("Checking if output is as expected...");
+    REQUIRE(taskranger::StrUtil::startsWith(hOut.getBufferContent(), "Successfully created task 1."));
+    hOut.restore();
 
     REQUIRE(fs::exists("./tests/raw/data"));
     REQUIRE(fs::exists("./tests/raw/data/AddTest"));
@@ -52,7 +57,12 @@ TEST_CASE("Test UDA", "[TestUDA]") {
         {"string", "abcd"}
     };
     // clang-format on
+    CaptureStreams::StreamCapturer hOut(std::cout);
     addCommand->run();
+    INFO("Checking if output is as expected... Buffer content: " + hOut.getBufferContent());
+    REQUIRE(taskranger::StrUtil::startsWith(hOut.getBufferContent(), "Successfully created task 1."));
+    INFO("OK.");
+    hOut.restore();
     REQUIRE(database->size() == 1);
     REQUIRE(database->getRawDatabase()->at(0).at("string") == "abcd");
 
@@ -63,7 +73,12 @@ TEST_CASE("Test UDA", "[TestUDA]") {
         {"number", "1234"}
     };
     // clang-format on
+    hOut.hijack();
     addCommand->run();
+    INFO("Checking if output is as expected... Buffer content: " + hOut.getBufferContent());
+    REQUIRE(taskranger::StrUtil::startsWith(hOut.getBufferContent(), "Successfully created task 2."));
+    INFO("OK.");
+    hOut.restore();
     REQUIRE(database->size() == 2);
     REQUIRE(database->getRawDatabase()->at(1).at("number") == 1234);
 

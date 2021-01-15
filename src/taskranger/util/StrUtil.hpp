@@ -14,7 +14,7 @@
 namespace taskranger {
 namespace StrUtil {
 
-std::vector<std::string> splitString(std::string input, const char delimiter);
+std::vector<std::string> splitString(std::string input, const char delimiter, int limit = -1);
 
 /**
  * Splits a string by a provided delimiter. If the length of the delimiter is 1,

@@ -43,12 +43,25 @@ auto InputParserOperators::determineOperator(const std::string& attribKey, std::
     } else if (op == "lesseq") {
         return {Operator::LESS_EQ, key};
     }
+
     /**
      * If we fail to split, assume the operator is Operator::IS,
      * and that whatever was chucked in has a reason for containing
      * a `.`. This is heavily for future compatibility.
+     *
+     * Note to self; this is also compatible with dates where the format
+     * is supplied, but the operator isn't.
      */
     return {Operator::IS, attribKey};
+}
+
+bool InputParserOperators::evalDateOperator(Operator op, const double& input, const double& relativeTo) {
+    switch (op) {
+    case Operator::IS:
+        return input - 43200000 <= relativeTo && input + 43200000 >= relativeTo;
+    default:
+        return evalOperator(op, input, relativeTo);
+    }
 }
 
 template <>

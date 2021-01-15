@@ -15,6 +15,10 @@ Generation tools either rely on issues and PRs, which breaks with my format, or 
 
 # [Unreleased] (TBD)
 
+## Changed
+* Made the `is` operator for dates more sensible; `is` is true if the date is in a +- 12 hour interval rather than _exactly_ one number.
+* [Meta] Added StreamCapturer to the AddCommand tests for a second metric, as well as just making output more quiet.
+
 # [v0.3.0] (27.12.20)
 
 ## Added
